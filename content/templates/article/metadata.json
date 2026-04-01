@@ -1,0 +1,9 @@
+{
+  "type": "article",
+  "slug": "example-article-slug",
+  "title": "示例文章标题",
+  "description": "示例摘要：一句话说清这篇文章的核心价值。",
+  "date": "2026-04-01",
+  "category": "成长思考",
+  "tags": ["成长思考", "AI观点"]
+}

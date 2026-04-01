@@ -1,0 +1,50 @@
+[
+  {
+    "id": "shipinhao-thesis-workflow",
+    "platform": "视频号",
+    "title": "AI工具实战：论文提纲 20 分钟重构",
+    "description": "白板讲解 + 录屏实操，演示课程论文从题目到结构的快速拆解流程。",
+    "cover": "",
+    "url": "portfolio-items/shipinhao-thesis-workflow.html"
+  },
+  {
+    "id": "xiaohongshu-learning-system",
+    "platform": "小红书",
+    "title": "爆款笔记：双非大学生如何搭建AI学习体系",
+    "description": "把工具清单升级成场景清单，展示普通人可复制的执行框架。",
+    "cover": "",
+    "url": "portfolio-items/xiaohongshu-learning-system.html"
+  },
+  {
+    "id": "gongzhonghao-ai-structure",
+    "platform": "公众号",
+    "title": "深度长文：AI不会替代你，但会放大你的策略",
+    "description": "用能力、流程、杠杆三层框架解释 AI 应用的长期价值。",
+    "cover": "",
+    "url": "portfolio-items/gongzhonghao-ai-structure.html"
+  },
+  {
+    "id": "tencent-ima-campus",
+    "platform": "合作项目",
+    "title": "腾讯 ima 校园知识库增长合作",
+    "description": "从知识组织到校园传播，搭建可持续增长的内容闭环。",
+    "cover": "",
+    "url": "portfolio-items/tencent-ima-campus.html"
+  },
+  {
+    "id": "xushi-mcn-creator",
+    "platform": "合作项目",
+    "title": "虚实传媒 AI MCN：账号共创与商业化试验",
+    "description": "在选题、内容节奏、转化路径上持续迭代，验证校园场景商业模型。",
+    "cover": "",
+    "url": "portfolio-items/xushi-mcn-creator.html"
+  },
+  {
+    "id": "shipinhao-weekly-experiment",
+    "platform": "视频号",
+    "title": "系列栏目：AI+学业效率周更实验",
+    "description": "连续更新校园场景实操内容，沉淀可迁移的知识资产与案例库。",
+    "cover": "",
+    "url": "portfolio-items/shipinhao-weekly-experiment.html"
+  }
+]

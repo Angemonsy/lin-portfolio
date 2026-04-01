@@ -1,0 +1,9 @@
+{
+  "type": "knowledge",
+  "slug": "example-knowledge-item-slug",
+  "title": "示例知识条目标题",
+  "description": "示例描述：这个条目能帮读者解决什么问题。",
+  "date": "2026-04-01",
+  "categoryId": "ai-tools",
+  "tags": ["AI工具指南"]
+}

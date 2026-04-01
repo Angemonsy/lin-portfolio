@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇绩怪谈AIQ | 关于我</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandFrom: "#3b82f6",
+            brandTo: "#6366f1",
+            softBg: "#f8fafc"
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="antialiased">
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="assets/avatar-kunki.jpg" alt="奇绩怪谈AIQ Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">奇绩怪谈AIQ</span></a>
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="about.html">关于我</a>
+        </div>
+      </div>
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-24 pb-16">
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-6 lg:grid-cols-5">
+        <aside class="reveal lg:col-span-2">
+          <div class="card-lift rounded-3xl border border-blue-200 bg-blue-50/60 p-6">
+            <div class="aspect-square overflow-hidden rounded-2xl border border-blue-200 bg-white">
+              <!-- 已接入头像图：assets/avatar-kunki.jpg -->
+              <img
+                src="assets/avatar-kunki.jpg"
+                alt="Kunki头像"
+                class="h-full w-full object-cover"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              >
+              <div class="hidden h-full w-full items-center justify-center border-2 border-dashed border-blue-300 text-sm text-slate-500">
+                头像图片加载失败，请检查 assets/avatar-kunki.jpg
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="reveal rounded-3xl border border-slate-200 bg-white p-7 lg:col-span-3">
+          <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">About Kunki</p>
+          <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">你好，我是 Kunki</h1>
+          <div class="mt-4 max-w-2xl space-y-3 text-base leading-relaxed text-slate-600">
+            <p>我长期专注一件事：把 AI 从“会用工具”变成“能落地的系统能力”。</p>
+            <p>这个站点沉淀的是可执行的方法、模板和复盘，不只讲概念。</p>
+            <p>我的目标很简单：帮更多起点普通的人，用 AI 更快做出结果，并把结果沉淀成长期复利的能力。</p>
+          </div>
+          <a href="https://gqkkndrhn25.feishu.cn/docx/UScudQQl9oxIC1x3BZ0cjN9gnRb" target="_blank" rel="noopener" class="mt-6 inline-flex rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:opacity-95">阅读我的完整个人说明书</a>
+        </section>
+      </div>
+
+      <section class="mt-10 reveal rounded-3xl border border-slate-200 bg-white p-7">
+        <h2 class="text-2xl font-bold text-slate-900">里程碑时间线</h2>
+        <div class="mt-6 border-l-2 border-blue-100 pl-4">
+          <div class="timeline-item pb-6">
+            <p class="text-sm font-semibold text-blue-700">2023</p>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">入学广外，开始系统探索经济学与国际贸易，建立学术与竞赛基本盘。</p>
+          </div>
+          <div class="timeline-item pb-6">
+            <p class="text-sm font-semibold text-blue-700">2024</p>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">发表 SCI 论文，拿下国奖，开始深度接触 AI 工具并应用到学业流程。</p>
+          </div>
+          <div class="timeline-item pb-6">
+            <p class="text-sm font-semibold text-blue-700">2025</p>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">创立奇绩怪谈AIQ，签约虚实传媒 AI MCN，成为腾讯 ima 校园大使，持续输出 AI+学业内容。</p>
+          </div>
+          <div class="timeline-item">
+            <p class="text-sm font-semibold text-blue-700">2026</p>
+            <p class="mt-1 text-sm leading-relaxed text-slate-600">保研冲刺中，搭建个人知识库与数字资产体系，探索更多“普通人可落地”的 AI 实践。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-10 reveal rounded-3xl border border-slate-200 bg-white p-7">
+        <h2 class="text-2xl font-bold text-slate-900">联系方式</h2>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">微信：<span class="font-semibold text-slate-800">Alphakk999</span>（请备注来意）</p>
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          <button class="platform-btn" data-qr-platform="wechat" type="button">微信</button>
+          <button class="platform-btn" data-qr-platform="shipinhao" type="button">视频号</button>
+          <button class="platform-btn" data-qr-platform="xiaohongshu" type="button">小红书</button>
+          <button class="platform-btn" data-qr-platform="gongzhonghao" type="button">公众号</button>
+          <button class="platform-btn" data-qr-platform="douyin" type="button">抖音</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white/90">
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-slate-600 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <p>© 2026 奇绩怪谈AIQ</p>
+      <p class="text-slate-500">把自己点亮，世界才会靠近。</p>
+      <div class="flex items-center gap-2">
+        <button class="platform-btn" data-qr-platform="shipinhao" type="button">视频号</button>
+        <button class="platform-btn" data-qr-platform="xiaohongshu" type="button">小红书</button>
+        <button class="platform-btn" data-qr-platform="gongzhonghao" type="button">公众号</button>
+        <button class="platform-btn" data-qr-platform="douyin" type="button">抖音</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/data-fallback.js"></script>
+  <script src="assets/site-common.js"></script>
+  <script>
+    (function () {
+      SiteCommon.initNav({ currentKey: "about" });
+      SiteCommon.initQrModal({ assetPrefix: "" });
+      SiteCommon.initReveal(document);
+    })();
+  </script>
+</body>
+</html>
+
