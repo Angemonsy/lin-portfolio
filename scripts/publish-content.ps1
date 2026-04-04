@@ -121,9 +121,12 @@ function Flush-ParagraphBuffer {
   )
 
   if ($ParagraphBuffer.Count -eq 0) { return }
-  $text = ($ParagraphBuffer -join " ").Trim()
-  if (-not [string]::IsNullOrWhiteSpace($text)) {
-    $OutputLines.Add("<p>" + (Convert-InlineMarkdown $text) + "</p>")
+  foreach ($line in $ParagraphBuffer) {
+    $text = $line.Trim()
+    if (-not [string]::IsNullOrWhiteSpace($text)) {
+      # 飞书导出的 markdown 往往“每行即一段”，这里按行输出段落，避免整块文字挤在一起。
+      $OutputLines.Add("<p>" + (Convert-InlineMarkdown $text) + "</p>")
+    }
   }
   $ParagraphBuffer.Clear()
 }
@@ -258,8 +261,9 @@ function Convert-MarkdownToHtml {
       continue
     }
 
+    Flush-ParagraphBuffer -ParagraphBuffer $paragraphBuffer -OutputLines $output
     Close-ListIfNeeded -InList ([ref]$inList) -OutputLines $output
-    $paragraphBuffer.Add($trimmed)
+    $output.Add("<p>" + (Convert-InlineMarkdown $trimmed) + "</p>")
   }
 
   Flush-ParagraphBuffer -ParagraphBuffer $paragraphBuffer -OutputLines $output
