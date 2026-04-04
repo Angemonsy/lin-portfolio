@@ -212,11 +212,13 @@ function Convert-MarkdownToHtml {
     if ($trimmed -match "^!\[(.*?)\]\((.*?)\)$") {
       Flush-ParagraphBuffer -ParagraphBuffer $paragraphBuffer -OutputLines $output
       Close-ListIfNeeded -InList ([ref]$inList) -OutputLines $output
-      $altText = HtmlEncode($Matches[1])
+      $altRaw = "$($Matches[1])".Trim()
+      $altText = HtmlEncode($altRaw)
       $imgPath = HtmlEncode($Matches[2])
       $output.Add('<figure class="my-6">')
       $output.Add('  <img src="' + $imgPath + '" alt="' + $altText + '" class="w-full rounded-xl border border-slate-200">')
-      if (-not [string]::IsNullOrWhiteSpace($Matches[1])) {
+      # “配图”是自动导入时的占位文案，不显示图下注释；其余 alt 仍保留说明。
+      if (-not [string]::IsNullOrWhiteSpace($altRaw) -and $altRaw -ne "配图") {
         $output.Add('  <figcaption class="mt-2 text-xs text-slate-500">' + $altText + "</figcaption>")
       }
       $output.Add("</figure>")
