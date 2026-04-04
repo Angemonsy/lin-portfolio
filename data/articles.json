@@ -1,11 +1,27 @@
 [
   {
+    "id": "ai-6-core-cognitions",
+    "title": "用AI的6个底层认知，我后悔没早点知道",
+    "description": "一篇关于 AI 时代认知升级、执行策略与商业化路径的深度复盘。",
+    "date": "2026-04-04",
+    "category": "AI观点",
+    "tags": [
+      "AI观点",
+      "商业思维",
+      "成长思考"
+    ],
+    "url": "articles/ai-6-core-cognitions.html"
+  },
+  {
     "id": "from-economics-to-ai",
     "title": "从先雅塔到AI圈：我为什么做了这个选择",
     "description": "讲述我从传统经济学训练切换到 AI 应用实践的真实路径，以及背后的关键决策。",
     "date": "2026-03-26",
     "category": "成长思考",
-    "tags": ["成长思考", "经济学×AI"],
+    "tags": [
+      "成长思考",
+      "经济学×AI"
+    ],
     "url": "articles/from-economics-to-ai.html"
   },
   {
@@ -14,7 +30,9 @@
     "description": "绩点、竞赛、论文背后不是鸡汤，而是时间预算与方法复利。",
     "date": "2026-03-19",
     "category": "大学攻略",
-    "tags": ["大学攻略"],
+    "tags": [
+      "大学攻略"
+    ],
     "url": "articles/rank1-cost.html"
   },
   {
@@ -23,7 +41,9 @@
     "description": "同一工具为什么带来完全不同的结果？关键在问题定义和流程设计。",
     "date": "2026-03-12",
     "category": "AI观点",
-    "tags": ["AI观点"],
+    "tags": [
+      "AI观点"
+    ],
     "url": "articles/ai-accelerator.html"
   },
   {
@@ -32,7 +52,9 @@
     "description": "把机会成本、边际收益与信息不对称映射到 AI 产品决策中。",
     "date": "2026-03-07",
     "category": "经济学×AI",
-    "tags": ["经济学×AI"],
+    "tags": [
+      "经济学×AI"
+    ],
     "url": "articles/econ-framework-for-ai.html"
   },
   {
@@ -41,7 +63,9 @@
     "description": "从内容服务到咨询交付，拆解第一轮稳定变现路径。",
     "date": "2026-02-28",
     "category": "副业变现",
-    "tags": ["副业变现"],
+    "tags": [
+      "副业变现"
+    ],
     "url": "articles/first-cashflow.html"
   },
   {
@@ -50,7 +74,9 @@
     "description": "如何在焦虑期保持输出并重建自我节奏。",
     "date": "2026-02-20",
     "category": "成长思考",
-    "tags": ["成长思考"],
+    "tags": [
+      "成长思考"
+    ],
     "url": "articles/light-yourself.html"
   }
 ]
