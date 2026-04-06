@@ -3,7 +3,7 @@ window.FALLBACK_DATA = {
   articles: [
     {
       id: "from-economics-to-ai",
-      title: "从先雅塔到AI圈：我为什么做了这个选择",
+      title: "从象牙塔到AI圈：我为什么做了这个选择",
       description: "讲述我从传统经济学训练切换到 AI 应用实践的真实路径，以及背后的关键决策。",
       date: "2026-03-26",
       category: "成长思考",
@@ -297,3 +297,4 @@ window.FALLBACK_DATA = {
     }
   }
 };
+
