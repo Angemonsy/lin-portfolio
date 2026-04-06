@@ -56,8 +56,13 @@ function Normalize-FeishuMarkdown {
   $tokens = [regex]::Matches($Markdown, '<image token="([^"]+)"') | ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
 
   foreach ($token in $tokens) {
-    $outputBase = Join-Path $imagesDir $token
-    lark-cli docs +media-download --as user --token $token --output $outputBase --overwrite | Out-Null
+    Push-Location -LiteralPath $imagesDir
+    try {
+      # docs +media-download 仅允许相对输出路径，切到图片目录后使用 ./token 形式写入。
+      lark-cli docs +media-download --as user --token $token --output "./$token" --overwrite | Out-Null
+    } finally {
+      Pop-Location
+    }
     $downloaded = Get-ChildItem -LiteralPath $imagesDir -File | Where-Object { $_.BaseName -eq $token -or $_.Name -like "$token.*" } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if ($downloaded) {
       $tokenToRel[$token] = "images/$($downloaded.Name)"
@@ -167,23 +172,23 @@ function Get-FolderSignature {
 
 function Invoke-GitWithRetry {
   param(
-    [string[]]$Args,
+    [string[]]$GitArgs,
     [int]$MaxAttempts = 3
   )
 
   for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
-    $output = & git @Args 2>&1
+    $output = & git @GitArgs 2>&1
     $code = $LASTEXITCODE
     if ($code -eq 0) { return }
 
     $text = "$output"
     if ($attempt -lt $MaxAttempts -and ($text -match "index\.lock" -or $text -match "Permission denied")) {
-      Write-Warn "git $($Args -join ' ') 失败（尝试 $attempt/$MaxAttempts），3 秒后重试。"
+      Write-Warn "git $($GitArgs -join ' ') 失败（尝试 $attempt/$MaxAttempts），3 秒后重试。"
       Start-Sleep -Seconds 3
       continue
     }
 
-    throw "git $($Args -join ' ') 失败：$text"
+    throw "git $($GitArgs -join ' ') 失败：$text"
   }
 }
 
@@ -253,7 +258,7 @@ if ([string]::IsNullOrWhiteSpace("$status")) {
   exit 0
 }
 
-Invoke-GitWithRetry -Args @("add", "-A")
+Invoke-GitWithRetry -GitArgs @("add", "-A")
 $statusAfterAdd = (& git status --porcelain)
 if ([string]::IsNullOrWhiteSpace("$statusAfterAdd")) {
   Write-Done "git add 后无变更，结束。"
@@ -261,8 +266,8 @@ if ([string]::IsNullOrWhiteSpace("$statusAfterAdd")) {
 }
 
 $msg = "content: publish " + ((Get-Date).ToString("yyyy-MM-dd HH:mm")) + " (" + (($pending | ForEach-Object { $_.Name }) -join ", ") + ")"
-Invoke-GitWithRetry -Args @("commit", "-m", $msg)
-Invoke-GitWithRetry -Args @("push", "origin", "main")
+Invoke-GitWithRetry -GitArgs @("commit", "-m", $msg)
+Invoke-GitWithRetry -GitArgs @("push", "origin", "main")
 
 $deployUrl = ""
 if (-not $SkipDeploy) {

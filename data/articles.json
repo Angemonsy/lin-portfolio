@@ -1,5 +1,14 @@
 [
   {
+    "id": "ai-3",
+    "title": "别只用来写论文！大学生用悟空AI搞学习、做副业的3个高阶玩",
+    "description": "自动从飞书导入，请按需补充摘要。",
+    "date": "2026-04-06",
+    "category": "AI观点",
+    "tags": "AI观点",
+    "url": "articles/ai-3.html"
+  },
+  {
     "id": "ai-6-core-cognitions",
     "title": "用AI的6个底层认知，我后悔没早点知道",
     "description": "一篇关于 AI 时代认知升级、执行策略与商业化路径的深度复盘。",
@@ -80,4 +89,3 @@
     "url": "articles/light-yourself.html"
   }
 ]
-
