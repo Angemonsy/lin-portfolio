@@ -202,12 +202,24 @@
     });
   }
 
+  function uniqueByTitle(items) {
+    var seen = {};
+    return (items || []).filter(function (item) {
+      var key = String((item && item.title) || "").trim().replace(/\s+/g, " ").toLowerCase();
+      if (!key) return true;
+      if (seen[key]) return false;
+      seen[key] = true;
+      return true;
+    });
+  }
+
   window.SiteCommon = {
     fetchWithFallback: fetchWithFallback,
     resolvePath: resolvePath,
     initNav: initNav,
     initReveal: initReveal,
     initQrModal: initQrModal,
-    sortByDateDesc: sortByDateDesc
+    sortByDateDesc: sortByDateDesc,
+    uniqueByTitle: uniqueByTitle
   };
 })();

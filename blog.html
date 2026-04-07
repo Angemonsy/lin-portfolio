@@ -126,7 +126,7 @@
       });
 
       SiteCommon.fetchWithFallback("data/articles.json", "articles").then(function (posts) {
-        allPosts = SiteCommon.sortByDateDesc(posts);
+        allPosts = SiteCommon.uniqueByTitle(SiteCommon.sortByDateDesc(posts));
         renderPosts();
       });
 

@@ -176,7 +176,7 @@
 
       var container = document.getElementById("featured-posts");
       SiteCommon.fetchWithFallback("data/articles.json", "articles").then(function (articles) {
-        var top3 = SiteCommon.sortByDateDesc(articles).slice(0, 3);
+        var top3 = SiteCommon.uniqueByTitle(SiteCommon.sortByDateDesc(articles)).slice(0, 3);
         container.innerHTML = top3.map(function (item) {
           var tags = (item.tags && item.tags.length ? item.tags[0] : item.category) || "文章";
           return [
