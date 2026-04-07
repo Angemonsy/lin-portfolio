@@ -368,6 +368,31 @@ function Build-TagBadgesHtml {
     }) -join "`n            "
 }
 
+function Remove-DuplicateArticlesByTitle {
+  param(
+    [array]$Articles,
+    [string]$KeepTitle,
+    [string]$KeepId
+  )
+
+  $removed = 0
+  $result = @()
+  foreach ($item in @($Articles)) {
+    $sameTitle = ("$($item.title)".Trim() -eq "$KeepTitle".Trim())
+    $sameId = ("$($item.id)".Trim() -eq "$KeepId".Trim())
+    if ($sameTitle -and -not $sameId) {
+      $removed++
+      continue
+    }
+    $result += $item
+  }
+
+  return [PSCustomObject]@{
+    Articles = @($result)
+    RemovedCount = $removed
+  }
+}
+
 function Build-DetailPageHtml {
   param(
     [string]$PageTitle,
@@ -591,6 +616,12 @@ if ($type -eq "article") {
   } else {
     $articles = @($record) + @($articles)
     Write-Info "已新增文章记录到 data/articles.json：$slug"
+  }
+
+  $dedup = Remove-DuplicateArticlesByTitle -Articles $articles -KeepTitle $title -KeepId $slug
+  $articles = @($dedup.Articles)
+  if ($dedup.RemovedCount -gt 0) {
+    Write-Info "已清理同标题重复文章 $($dedup.RemovedCount) 条：$title"
   }
 
   if (-not $DryRun) {
