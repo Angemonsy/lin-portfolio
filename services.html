@@ -52,7 +52,8 @@
   </header>
 
   <main class="pt-24 pb-16">
-    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 sm:px-6 lg:px-8"></section>
+    <section class="site-static mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="reveal rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-8 md:p-10">
         <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Services</p>
         <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">我的服务</h1>
@@ -105,6 +106,13 @@
     (function () {
       SiteCommon.initNav({ currentKey: "services" });
       SiteCommon.initQrModal({ assetPrefix: "" });
+      SiteCommon.renderPageOverride({
+        pageId: "services",
+        containerId: "dynamic-page-content",
+        staticSelector: ".site-static",
+        dataPath: "data/site-pages.json",
+        fallbackKey: "sitePages"
+      });
       SiteCommon.initReveal(document);
 
       // 微信咨询按钮已切换为二维码弹窗，不再使用展开文本交互

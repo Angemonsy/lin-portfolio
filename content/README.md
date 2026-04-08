@@ -1,119 +1,105 @@
-# 内容更新工作流（小白版）
+# 内容同步工作流（飞书文件夹 -> 网站）
 
-你以后只做一件事：**把文字和图片放到同一个投稿文件夹里**。  
-然后运行一条命令，网站会自动生成详情页并更新列表数据。
-
----
-
-## 1. 你要放内容到哪里
-
-请在这个目录下新建一个投稿文件夹：
-
-`lin-portfolio/content/inbox/你的投稿文件夹名/`
-
-这个投稿文件夹里固定放 2 个文件：
-
-1. `metadata.json`（标题、分类等信息）
-2. `content.md`（正文）
-
-如果正文里有图片，就把图片也放在同一个投稿文件夹里。  
-在 `content.md` 里直接这样引用：
-
-```md
-![流程图](flow.png)
-```
-
-不需要你把图片和文字分开交给我，也不需要手动改 HTML。
+你以后只负责在飞书里写内容。
+Codex 自动完成：抓取内容 -> 生成页面 -> 更新数据 -> Git 推送 -> 网站部署。
 
 ---
 
-## 2. metadata.json 怎么写
+## 1) 飞书目录建议（根目录可递归）
 
-### 文章（发布到 blog + articles）
+推荐在飞书根目录里按下面结构放文档（支持多层子目录）：
 
-```json
-{
-  "type": "article",
-  "slug": "ai-study-sop-2026",
-  "title": "我如何用 AI 重构课程学习 SOP",
-  "description": "从任务拆解到复盘闭环，一套可复制的学习流程。",
-  "date": "2026-04-01",
-  "category": "大学攻略",
-  "tags": ["大学攻略", "AI观点"]
-}
-```
+- `articles/<分类>/你的文档`
+- `knowledge/<分类>/你的文档`
+- `portfolio/<平台>/你的文档`
+- `pages/<页面>/你的文档`
 
-### 知识库条目（发布到 knowledge-items + 对应分类）
-
-```json
-{
-  "type": "knowledge",
-  "slug": "ai-tools-paper-workflow-v2",
-  "title": "论文任务的 AI 协作工作流（升级版）",
-  "description": "把选题、阅读、写作、润色串成一条线。",
-  "date": "2026-04-01",
-  "categoryId": "ai-tools",
-  "tags": ["AI工具指南"]
-}
-```
-
-`categoryId` 可选值：
-
-- `university`
-- `ai-tools`
-- `monetize`
-- `digital-economy`
-- `alpha`
+分类/平台/页面会自动映射（见下方规则）。
 
 ---
 
-## 3. content.md 怎么写（支持图片）
+## 2) 自动映射规则
 
-支持常用 Markdown：
+### `articles/<分类>/...`
+- 自动生成 `type: article`
+- 发布到 `articles/*.html`
+- 更新 `data/articles.json`
+- `<分类>` 会映射为文章分类（默认 `AI观点`）
 
-- 段落
-- 二级标题 `## 标题`
-- 列表 `- 条目`
-- 引用 `> 引用`
-- 图片 `![说明](图片文件名.png)`
-- 链接 `[文字](https://...)`
+### `knowledge/<分类>/...`
+- 自动生成 `type: knowledge`
+- 发布到 `knowledge-items/*.html`
+- 更新 `data/knowledge.json`
+- `<分类>` 映射到 `categoryId`，支持：
+  - `university`
+  - `ai-tools`
+  - `monetize`
+  - `digital-economy`
+  - `alpha`
+
+### `portfolio/<平台>/...`
+- 自动生成 `type: portfolio`
+- 发布到 `portfolio-items/*.html`
+- 更新 `data/portfolio.json`
+- `<平台>` 映射：`视频号/小红书/公众号/抖音/合作项目`
+
+### `pages/<页面>/...`
+- 自动生成 `type: page`
+- 不新建详情页，直接更新 `data/site-pages.json`
+- 覆盖对应页面的主文案区（已支持）：
+  - `index`
+  - `blog`
+  - `knowledge`
+  - `portfolio`
+  - `services`
+  - `about`
 
 ---
 
-## 4. 一键发布命令
+## 3) 如果你想手动精细控制
 
-在 `lin-portfolio` 根目录打开终端，运行：
+仍可在本地投稿目录手动放：
+
+- `metadata.json`
+- `content.md`
+- 图片文件（在 `content.md` 用相对路径引用）
+
+如果 `metadata.json` 已存在，自动流程会尊重你手动配置，不会覆盖类型和字段。
+
+---
+
+## 4) 一键自动发布命令
+
+在仓库根目录执行：
 
 ```powershell
-pwsh .\scripts\publish-content.ps1 -InputFolder ".\content\inbox\你的投稿文件夹名"
+pwsh .\scripts\auto-publish.ps1
 ```
 
-成功后会自动完成：
+它会自动：
 
-1. 生成详情页（文章在 `articles/`，知识库在 `knowledge-items/`）
-2. 自动拷贝图片到 `assets/content/slug/`
-3. 自动更新数据文件（`data/articles.json` 或 `data/knowledge.json`）
+1. 递归扫描飞书根文件夹和所有子文件夹
+2. 仅同步新增/更新文档（增量）
+3. 生成/更新站点内容
+4. `git add/commit/push`
+5. 触发 Vercel 生产部署
 
 ---
 
-## 5. 本地预览
+## 5) 单稿件调试（可选）
 
-运行：
+如果只想发布某一个本地投稿目录：
 
 ```powershell
-pwsh .\scripts\start-local.ps1
+pwsh .\scripts\publish-content.ps1 -InputFolder ".\content\inbox\your-folder"
 ```
 
-浏览器打开：
-
-`http://127.0.0.1:5511/index.html`
+支持类型：`article / knowledge / portfolio / page`
 
 ---
 
-## 6. 最推荐的协作方式（你最省心）
+## 6) 最推荐协作方式
 
-1. 你新建投稿文件夹，放 `metadata.json + content.md + 图片`
-2. 你告诉我：“发布 `content/inbox/xxx`”
-3. 我来执行发布、检查排版、修细节、回传可预览链接
-
-这样你始终只负责内容，不碰代码。
+1. 你只在飞书目录中写内容和组织目录。
+2. Codex 负责同步、映射、渲染、发布与部署。
+3. 出现异常时只需告诉我“哪篇文档没同步对”。

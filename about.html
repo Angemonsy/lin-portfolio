@@ -52,7 +52,8 @@
   </header>
 
   <main class="pt-24 pb-16">
-    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 sm:px-6 lg:px-8"></section>
+    <section class="site-static mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="grid gap-6 lg:grid-cols-5">
         <aside class="reveal lg:col-span-2">
           <div class="card-lift rounded-3xl border border-blue-200 bg-blue-50/60 p-6">
@@ -138,6 +139,13 @@
     (function () {
       SiteCommon.initNav({ currentKey: "about" });
       SiteCommon.initQrModal({ assetPrefix: "" });
+      SiteCommon.renderPageOverride({
+        pageId: "about",
+        containerId: "dynamic-page-content",
+        staticSelector: ".site-static",
+        dataPath: "data/site-pages.json",
+        fallbackKey: "sitePages"
+      });
       SiteCommon.initReveal(document);
     })();
   </script>

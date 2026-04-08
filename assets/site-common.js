@@ -213,6 +213,57 @@
     });
   }
 
+  function resolvePageOverride(data, pageId) {
+    if (!data || !pageId) return null;
+    if (Array.isArray(data)) {
+      for (var i = 0; i < data.length; i += 1) {
+        if (data[i] && data[i].id === pageId) return data[i];
+      }
+      return null;
+    }
+    if (typeof data === "object") {
+      return data[pageId] || null;
+    }
+    return null;
+  }
+
+  function renderPageOverride(config) {
+    var options = config || {};
+    var pageId = options.pageId;
+    var containerId = options.containerId || "dynamic-page-content";
+    var staticSelector = options.staticSelector || ".site-static";
+    var dataPath = options.dataPath || "data/site-pages.json";
+    var fallbackKey = options.fallbackKey || "sitePages";
+    var container = document.getElementById(containerId);
+    if (!pageId || !container) return Promise.resolve();
+
+    return fetchWithFallback(dataPath, fallbackKey).then(function (data) {
+      var page = resolvePageOverride(data, pageId);
+      if (!page || !page.contentHtml) return;
+
+      if (page.title) {
+        document.title = "奇绩怪谈AIQ | " + page.title;
+      }
+
+      container.innerHTML = [
+        '<article class="reveal rounded-3xl border border-slate-200 bg-white p-6 md:p-10">',
+        '  <p class="text-sm font-semibold text-blue-600">页面文案（自动同步）</p>',
+        '  <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">' + (page.title || "") + '</h1>',
+        '  <p class="mt-3 text-sm leading-relaxed text-slate-600">' + (page.description || "") + '</p>',
+        '  <div class="article-content mt-8">' + page.contentHtml + "</div>",
+        "</article>"
+      ].join("");
+
+      var staticNodes = document.querySelectorAll(staticSelector);
+      staticNodes.forEach(function (node) {
+        node.classList.add("hidden");
+      });
+
+      container.classList.remove("hidden");
+      initReveal(container);
+    });
+  }
+
   window.SiteCommon = {
     fetchWithFallback: fetchWithFallback,
     resolvePath: resolvePath,
@@ -220,6 +271,7 @@
     initReveal: initReveal,
     initQrModal: initQrModal,
     sortByDateDesc: sortByDateDesc,
-    uniqueByTitle: uniqueByTitle
+    uniqueByTitle: uniqueByTitle,
+    renderPageOverride: renderPageOverride
   };
 })();

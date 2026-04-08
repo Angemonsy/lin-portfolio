@@ -1,10 +1,17 @@
-# Feishu Folder Auto-Publish Skill (Stable Path)
+# Feishu Folder Auto-Publish Skill (Recursive + Multi-Section)
 
 ## Goal
-- Sync new/updated docs from Feishu folder to `content/inbox`
+- Recursively sync new/updated docs from Feishu root folder (including nested subfolders)
+- Auto-map folder paths to site content types (`article / knowledge / portfolio / page`)
 - Generate/update site content
 - Commit/push only when repo changed
 - Deploy to Vercel
+
+## Folder Routing (Feishu)
+- `articles/<category>/...` -> article
+- `knowledge/<category>/...` -> knowledge item
+- `portfolio/<platform>/...` -> portfolio item
+- `pages/<page-id>/...` -> page copy override (`index/blog/knowledge/portfolio/services/about`)
 
 ## Required Scopes
 - `drive:file:readonly`

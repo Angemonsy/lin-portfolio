@@ -52,11 +52,33 @@
   </header>
 
   <main class="pt-24 pb-16">
-    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 sm:px-6 lg:px-8"></section>
+    <section class="site-static mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="reveal rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-8 md:p-10">
         <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Knowledge Hub</p>
         <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">知识库</h1>
-        <p class="mt-3 text-base leading-relaxed text-slate-600">点击分类将新开标签页，进入对应专题页面继续深度阅读。</p>
+        <p class="mt-3 text-base leading-relaxed text-slate-600">文章偏故事、思考、案例；知识库偏结构、清单、SOP、模板、资源。这里是为了“直接拿走能用的东西”。</p>
+      </div>
+
+      <div class="reveal mt-8 flex flex-wrap gap-2" aria-label="知识库分类筛选">
+        <button class="filter-btn is-active" data-filter="全部" type="button">全部</button>
+        <button class="filter-btn" data-filter="大学经验" type="button">大学经验</button>
+        <button class="filter-btn" data-filter="AI使用技巧" type="button">AI使用技巧</button>
+        <button class="filter-btn" data-filter="商业通识" type="button">商业通识</button>
+        <button class="filter-btn" data-filter="日常生活感悟" type="button">日常生活感悟</button>
+        <button class="filter-btn" data-filter="方法论与清单" type="button">方法论与清单</button>
+      </div>
+
+      <div id="knowledge-tab-guide" class="reveal mt-5 rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-relaxed text-slate-600"></div>
+
+      <div class="reveal mt-5 flex flex-wrap items-center gap-3">
+        <button id="knowledge-search-toggle" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700" type="button" aria-expanded="false" aria-controls="knowledge-search-wrap">
+          搜索知识库
+        </button>
+        <div id="knowledge-search-wrap" class="hidden w-full max-w-md">
+          <label for="knowledge-search-input" class="sr-only">输入关键词搜索知识库板块</label>
+          <input id="knowledge-search-input" type="search" placeholder="输入关键词（板块名、简介、内容方向）" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
+        </div>
       </div>
 
       <div id="knowledge-category-grid" class="mt-8 grid gap-5 md:grid-cols-2"></div>
@@ -92,17 +114,89 @@
     (function () {
       SiteCommon.initNav({ currentKey: "knowledge" });
       SiteCommon.initQrModal({ assetPrefix: "" });
+      SiteCommon.renderPageOverride({
+        pageId: "knowledge",
+        containerId: "dynamic-page-content",
+        staticSelector: ".site-static",
+        dataPath: "data/site-pages.json",
+        fallbackKey: "sitePages"
+      });
 
       var grid = document.getElementById("knowledge-category-grid");
-      SiteCommon.fetchWithFallback("data/knowledge.json", "knowledge").then(function (categories) {
-        grid.innerHTML = categories.map(function (cat) {
+      var filters = document.querySelectorAll("[data-filter]");
+      var tabGuide = document.getElementById("knowledge-tab-guide");
+      var searchToggle = document.getElementById("knowledge-search-toggle");
+      var searchWrap = document.getElementById("knowledge-search-wrap");
+      var searchInput = document.getElementById("knowledge-search-input");
+      var allCategories = [];
+      var currentFilter = "全部";
+      var currentQuery = "";
+      var tabGuideMap = {
+        "全部": "你可以先按分类浏览，再点击卡片进入对应知识库分区，继续看具体条目。",
+        "大学经验": "我在大学里反复验证过的方法，聚焦学习、竞赛、论文与路径规划。",
+        "AI使用技巧": "只保留我真实用过并且跑通过的工具与工作流，强调可复用。",
+        "商业通识": "记录一个人从0到1搭建轻量商业系统的关键动作和SOP。",
+        "日常生活感悟": "把成长当项目跑，持续复盘健身、表达、社交与执行力。",
+        "方法论与清单": "底层原则 + 可执行清单，帮助你减少纠结、提高行动效率。"
+      };
+
+      function normalizeText(value) {
+        return String(value || "").toLowerCase();
+      }
+
+      function matchesSearch(category) {
+        if (!currentQuery) return true;
+        var directions = category.directions || [];
+        var items = category.items || [];
+        var itemTexts = items.map(function (item) {
+          return [item.title, item.description].join(" ");
+        }).join(" ");
+        var haystack = [
+          category.title,
+          category.description,
+          directions.join(" "),
+          itemTexts
+        ].join(" ");
+        return normalizeText(haystack).indexOf(currentQuery) > -1;
+      }
+
+      function renderTabGuide() {
+        tabGuide.textContent = tabGuideMap[currentFilter] || tabGuideMap["全部"];
+      }
+
+      function renderCategories() {
+        var filtered = allCategories.filter(function (category) {
+          var inCategory = currentFilter === "全部" || category.title === currentFilter;
+          return inCategory && matchesSearch(category);
+        });
+
+        if (!filtered.length) {
+          grid.innerHTML = [
+            '<div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">',
+            '  <p class="text-base font-semibold text-slate-800">没有找到匹配板块</p>',
+            '  <p class="mt-2 text-sm text-slate-500">试试更短的关键词，或者换个表达方式。</p>',
+            '</div>'
+          ].join("");
+          SiteCommon.initReveal(document);
+          return;
+        }
+
+        grid.innerHTML = filtered.map(function (cat) {
+          var directions = (cat.directions || []).map(function (direction) {
+            return '<li class="text-sm leading-relaxed text-slate-600">' + direction + "</li>";
+          }).join("");
+          var target = cat.page || ("knowledge/" + cat.id + ".html");
+          var itemCount = (cat.items || []).length;
+
           return [
-            '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(cat.page, "") + '" class="card-lift reveal rounded-2xl border border-slate-100 bg-white p-6">',
+            '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(target, "") + '" class="card-lift reveal rounded-2xl border border-slate-100 bg-white p-6">',
             '  <div class="flex items-start justify-between gap-3">',
             '    <div>',
             '      <h2 class="text-xl font-semibold text-slate-900">' + cat.icon + ' ' + cat.title + '</h2>',
             '      <p class="mt-2 text-sm text-slate-600">' + cat.description + '</p>',
-            '      <p class="mt-4 text-xs font-semibold text-blue-600">条目数：' + (cat.items || []).length + '</p>',
+            '      <p class="mt-4 text-xs font-semibold uppercase tracking-wide text-blue-600">初始内容方向</p>',
+            '      <ul class="mt-2 space-y-1">' + directions + "</ul>",
+            '      <p class="mt-4 text-xs text-slate-500">条目数：' + itemCount + ' · 点击进入该知识库</p>',
             '    </div>',
             '    <span class="text-xl text-blue-600">→</span>',
             '  </div>',
@@ -111,6 +205,47 @@
         }).join("");
 
         SiteCommon.initReveal(document);
+      }
+
+      filters.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          currentFilter = btn.getAttribute("data-filter");
+          filters.forEach(function (x) { x.classList.remove("is-active"); });
+          btn.classList.add("is-active");
+          renderTabGuide();
+          renderCategories();
+        });
+      });
+
+      searchToggle.addEventListener("click", function () {
+        var hidden = searchWrap.classList.contains("hidden");
+        searchWrap.classList.toggle("hidden");
+        searchToggle.setAttribute("aria-expanded", hidden ? "true" : "false");
+        if (hidden) searchInput.focus();
+        if (!hidden) {
+          searchInput.value = "";
+          currentQuery = "";
+          renderCategories();
+        }
+      });
+
+      searchInput.addEventListener("input", function () {
+        currentQuery = normalizeText(searchInput.value).trim();
+        renderCategories();
+      });
+
+      SiteCommon.fetchWithFallback("data/knowledge.json", "knowledge").then(function (categories) {
+        allCategories = categories || [];
+        var params = new URLSearchParams(window.location.search);
+        var initTab = params.get("tab");
+        if (initTab && tabGuideMap[initTab]) {
+          currentFilter = initTab;
+          filters.forEach(function (x) {
+            x.classList.toggle("is-active", x.getAttribute("data-filter") === initTab);
+          });
+        }
+        renderTabGuide();
+        renderCategories();
       });
 
       SiteCommon.initReveal(document);
@@ -118,4 +253,5 @@
   </script>
 </body>
 </html>
+
 

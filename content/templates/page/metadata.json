@@ -1,0 +1,9 @@
+{
+  "type": "page",
+  "pageId": "about",
+  "slug": "about-page",
+  "title": "页面标题",
+  "description": "页面摘要说明。",
+  "date": "2026-04-08",
+  "tags": ["页面文案"]
+}

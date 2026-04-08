@@ -1,0 +1,10 @@
+{
+  "type": "portfolio",
+  "slug": "my-case-slug",
+  "title": "案例标题",
+  "description": "一句话案例摘要。",
+  "date": "2026-04-08",
+  "platform": "合作项目",
+  "cover": "",
+  "tags": ["合作项目"]
+}

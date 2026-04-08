@@ -1,74 +1,83 @@
 [
   {
+    "id": "post-20260408-234547",
+    "title": "我最近越来越不敢只走保研这条路了",
+    "description": "我最近越来越不敢只走保研这条路了",
+    "date": "2026-04-08",
+    "category": "大学结果",
+    "tags": "大学结果",
+    "url": "articles/post-20260408-234547.html"
+  },
+  {
+    "id": "post-20260408-234533",
+    "title": "我曾以为保研是优绩生的唯一出路，直到一次“笨拙”的实践......",
+    "description": "我曾以为保研是优绩生的唯一出路，直到一次“笨拙”的实践......",
+    "date": "2026-04-08",
+    "category": "大学结果",
+    "tags": "大学结果",
+    "url": "articles/post-20260408-234533.html"
+  },
+  {
+    "id": "post-20260408-234532",
+    "title": "为什么我们越努力越焦虑？未来，能动性比学历更重要",
+    "description": "为什么我们越努力越焦虑？",
+    "date": "2026-04-08",
+    "category": "成长实验",
+    "tags": "成长实验",
+    "url": "articles/post-20260408-234532.html"
+  },
+  {
+    "id": "post-20260408-234530",
+    "title": "我为什么不认同“读书时就只管读书”",
+    "description": "我为什么不认同“读书时就只管读书”",
+    "date": "2026-04-08",
+    "category": "成长实验",
+    "tags": "成长实验",
+    "url": "articles/post-20260408-234530.html"
+  },
+  {
     "id": "ai-6",
     "title": "用AI的6个底层认知，我后悔没早点知道",
     "description": "用AI的6个底层认知，我后悔没早点知道",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
+    "date": "2026-04-08",
+    "category": "AI工具",
+    "tags": "AI工具",
     "url": "articles/ai-6.html"
-  },
-  {
-    "id": "post-20260407-012808",
-    "title": "我最近越来越不敢只走保研这条路了",
-    "description": "我最近越来越不敢只走保研这条路了",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
-    "url": "articles/post-20260407-012808.html"
-  },
-  {
-    "id": "post-20260407-012806",
-    "title": "我为什么不认同“读书时就只管读书”",
-    "description": "我为什么不认同“读书时就只管读书”",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
-    "url": "articles/post-20260407-012806.html"
   },
   {
     "id": "3",
     "title": "汇丰裁员敲醒我：大学阶段这 3 件事必须提前布局",
     "description": "汇丰裁员敲醒我：大学阶段这 3 件事必须提前布局",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
+    "date": "2026-04-08",
+    "category": "大学结果",
+    "tags": "大学结果",
     "url": "articles/3.html"
   },
   {
     "id": "2025",
     "title": "2025年终复盘：撕裂重组，我与那个“大学优等生”和解的一年",
     "description": "2025年终复盘：撕裂重组，我与那个“大学优等生”和解的一年",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
+    "date": "2026-04-08",
+    "category": "成长实验",
+    "tags": "成长实验",
     "url": "articles/2025.html"
   },
   {
     "id": "ai-ai",
     "title": "AI火了两年，为啥大多数人还是没赚到钱？分享一个适用小白的AI商业破局之道",
     "description": "AI火了两年，为啥大多数人还是没赚到钱？",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
+    "date": "2026-04-08",
+    "category": "一人公司",
+    "tags": "一人公司",
     "url": "articles/ai-ai.html"
-  },
-  {
-    "id": "post-20260407-012734",
-    "title": "我曾以为保研是优绩生的唯一出路，直到一次“笨拙”的实践......",
-    "description": "我曾以为保研是优绩生的唯一出路，直到一次“笨拙”的实践......",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
-    "url": "articles/post-20260407-012734.html"
   },
   {
     "id": "ai-3",
     "title": "别只用来写论文！大学生用悟空AI搞学习、做副业的3个高阶玩",
     "description": "别只用来写论文！大学生用悟空AI搞学习、做副业的3个高阶玩",
-    "date": "2026-04-07",
-    "category": "AI观点",
-    "tags": "AI观点",
+    "date": "2026-04-08",
+    "category": "AI工具",
+    "tags": "AI工具",
     "url": "articles/ai-3.html"
   },
   {
@@ -76,11 +85,8 @@
     "title": "从象牙塔到AI圈：我为什么做了这个选择",
     "description": "讲述我从传统经济学训练切换到 AI 应用实践的真实路径，以及背后的关键决策。",
     "date": "2026-03-26",
-    "category": "成长思考",
-    "tags": [
-      "成长思考",
-      "经济学×AI"
-    ],
+    "category": "成长实验",
+    "tags": "成长实验",
     "url": "articles/from-economics-to-ai.html"
   },
   {
@@ -88,10 +94,8 @@
     "title": "双非rank1的真实代价：我的大学三年",
     "description": "绩点、竞赛、论文背后不是鸡汤，而是时间预算与方法复利。",
     "date": "2026-03-19",
-    "category": "大学攻略",
-    "tags": [
-      "大学攻略"
-    ],
+    "category": "大学结果",
+    "tags": "大学结果",
     "url": "articles/rank1-cost.html"
   },
   {
@@ -99,10 +103,8 @@
     "title": "AI不会让你变强，但会让强的人更快",
     "description": "同一工具为什么带来完全不同的结果？关键在问题定义和流程设计。",
     "date": "2026-03-12",
-    "category": "AI观点",
-    "tags": [
-      "AI观点"
-    ],
+    "category": "AI工具",
+    "tags": "AI工具",
     "url": "articles/ai-accelerator.html"
   },
   {
@@ -110,10 +112,8 @@
     "title": "用经济学框架理解AI产品：从稀缺到注意力博弈",
     "description": "把机会成本、边际收益与信息不对称映射到 AI 产品决策中。",
     "date": "2026-03-07",
-    "category": "经济学×AI",
-    "tags": [
-      "经济学×AI"
-    ],
+    "category": "AI工具",
+    "tags": "AI工具",
     "url": "articles/econ-framework-for-ai.html"
   },
   {
@@ -121,10 +121,8 @@
     "title": "我如何把AI技能变成第一个稳定现金流",
     "description": "从内容服务到咨询交付，拆解第一轮稳定变现路径。",
     "date": "2026-02-28",
-    "category": "副业变现",
-    "tags": [
-      "副业变现"
-    ],
+    "category": "一人公司",
+    "tags": "一人公司",
     "url": "articles/first-cashflow.html"
   },
   {
@@ -132,10 +130,8 @@
     "title": "把自己点亮，世界才会靠近：一段低谷后的重建",
     "description": "如何在焦虑期保持输出并重建自我节奏。",
     "date": "2026-02-20",
-    "category": "成长思考",
-    "tags": [
-      "成长思考"
-    ],
+    "category": "成长实验",
+    "tags": "成长实验",
     "url": "articles/light-yourself.html"
   }
 ]

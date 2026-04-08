@@ -2,21 +2,39 @@
 window.FALLBACK_DATA = {
   articles: [
     {
-      id: "from-economics-to-ai",
-      title: "从象牙塔到AI圈：我为什么做了这个选择",
-      description: "讲述我从传统经济学训练切换到 AI 应用实践的真实路径，以及背后的关键决策。",
-      date: "2026-03-26",
-      category: "成长思考",
-      tags: ["成长思考", "经济学×AI"],
-      url: "articles/from-economics-to-ai.html"
+      id: "ai-6",
+      title: "用AI的6个底层认知，我后悔没早点知道",
+      description: "用AI的6个底层认知，我后悔没早点知道",
+      date: "2026-04-07",
+      category: "AI工具",
+      tags: ["AI工具"],
+      url: "articles/ai-6.html"
+    },
+    {
+      id: "post-20260407-012808",
+      title: "我最近越来越不敢只走保研这条路了",
+      description: "我最近越来越不敢只走保研这条路了",
+      date: "2026-04-07",
+      category: "大学结果",
+      tags: ["大学结果"],
+      url: "articles/post-20260407-012808.html"
+    },
+    {
+      id: "ai-ai",
+      title: "AI火了两年，为啥大多数人还是没赚到钱？分享一个适用小白的AI商业破局之道",
+      description: "AI火了两年，为啥大多数人还是没赚到钱？",
+      date: "2026-04-07",
+      category: "一人公司",
+      tags: ["一人公司"],
+      url: "articles/ai-ai.html"
     },
     {
       id: "rank1-cost",
       title: "双非rank1的真实代价：我的大学三年",
       description: "绩点、竞赛、论文背后不是鸡汤，而是时间预算与方法复利。",
       date: "2026-03-19",
-      category: "大学攻略",
-      tags: ["大学攻略"],
+      category: "大学结果",
+      tags: ["大学结果"],
       url: "articles/rank1-cost.html"
     },
     {
@@ -24,45 +42,28 @@ window.FALLBACK_DATA = {
       title: "AI不会让你变强，但会让强的人更快",
       description: "同一工具为什么带来完全不同的结果？关键在问题定义和流程设计。",
       date: "2026-03-12",
-      category: "AI观点",
-      tags: ["AI观点"],
+      category: "AI工具",
+      tags: ["AI工具"],
       url: "articles/ai-accelerator.html"
-    },
-    {
-      id: "econ-framework-for-ai",
-      title: "用经济学框架理解AI产品：从稀缺到注意力博弈",
-      description: "把机会成本、边际收益与信息不对称映射到 AI 产品决策中。",
-      date: "2026-03-07",
-      category: "经济学×AI",
-      tags: ["经济学×AI"],
-      url: "articles/econ-framework-for-ai.html"
-    },
-    {
-      id: "first-cashflow",
-      title: "我如何把AI技能变成第一个稳定现金流",
-      description: "从内容服务到咨询交付，拆解第一轮稳定变现路径。",
-      date: "2026-02-28",
-      category: "副业变现",
-      tags: ["副业变现"],
-      url: "articles/first-cashflow.html"
     },
     {
       id: "light-yourself",
       title: "把自己点亮，世界才会靠近：一段低谷后的重建",
       description: "如何在焦虑期保持输出并重建自我节奏。",
       date: "2026-02-20",
-      category: "成长思考",
-      tags: ["成长思考"],
+      category: "成长实验",
+      tags: ["成长实验"],
       url: "articles/light-yourself.html"
     }
   ],
   knowledge: [
     {
-      id: "university",
-      icon: "📚",
-      title: "大学攻略",
-      description: "绩点、保研、竞赛、论文的实操框架。",
-      page: "knowledge/university.html",
+      id: "university-results-library",
+      icon: "🎓",
+      title: "大学经验",
+      description: "我在大学里反复验证过的方法——从课程学习到论文竞赛，从保研材料到路径规划，都整理在这里。不一定适合所有人，但至少是一个经过实战的参考。",
+      page: "knowledge/university-results-library.html",
+      directions: ["课程学习SOP", "论文写作模板", "竞赛资料与经验框架", "保研材料结构", "大学路径规划清单"],
       items: [
         {
           title: "从 GPA 3.0 到 3.98 的课程拆解与复盘模板",
@@ -75,7 +76,7 @@ window.FALLBACK_DATA = {
           url: "knowledge-items/university-research-track.html"
         },
         {
-          title: "竞赛项目如何从\"想法\"变成\"可展示结果\"",
+          title: "竞赛项目如何从想法变成可展示结果",
           description: "选题筛选、团队协作、答辩准备的全流程拆解。",
           url: "knowledge-items/university-competition-result.html"
         },
@@ -87,11 +88,12 @@ window.FALLBACK_DATA = {
       ]
     },
     {
-      id: "ai-tools",
+      id: "ai-tools-library",
       icon: "🤖",
-      title: "AI工具指南",
-      description: "产品评测、使用 SOP 与效率工作流。",
-      page: "knowledge/ai-tools.html",
+      title: "AI使用技巧",
+      description: "我真实使用过的AI工具、部署方法和工作流。每一个都是我自己跑通过的，写清楚了怎么选、怎么用、用在哪。",
+      page: "knowledge/ai-tools-library.html",
+      directions: ["工具选型指南", "使用SOP", "Agent工具实践", "自动化工作流", "知识库搭建方法"],
       items: [
         {
           title: "ChatGPT / Claude / NotebookLM 场景对照表",
@@ -116,11 +118,12 @@ window.FALLBACK_DATA = {
       ]
     },
     {
-      id: "monetize",
-      icon: "💰",
-      title: "副业变现",
-      description: "自媒体、AI代充、IP运营实战记录。",
-      page: "knowledge/monetize.html",
+      id: "solo-company-library",
+      icon: "🧩",
+      title: "商业通识",
+      description: "一个普通人从零开始搭建轻量商业系统的全过程记录——网站怎么建、内容怎么做、私域怎么接、产品怎么卖。",
+      page: "knowledge/solo-company-library.html",
+      directions: ["网站搭建教程", "内容矩阵方法", "私域承接流程", "产品设计思路", "销售与成交SOP"],
       items: [
         {
           title: "AI 代充服务的用户沟通模板与风险边界",
@@ -128,7 +131,7 @@ window.FALLBACK_DATA = {
           url: "knowledge-items/monetize-ai-recharge-risk.html"
         },
         {
-          title: "从 0 到 1 搭建\"内容服务\"报价与交付流程",
+          title: "从 0 到 1 搭建内容服务报价与交付流程",
           description: "定价逻辑、交付标准、用户预期管理的完整SOP。",
           url: "knowledge-items/monetize-content-service.html"
         },
@@ -145,40 +148,12 @@ window.FALLBACK_DATA = {
       ]
     },
     {
-      id: "digital-economy",
-      icon: "📊",
-      title: "数字经济笔记",
-      description: "跨考学习笔记与论文阅读沉淀。",
-      page: "knowledge/digital-economy.html",
-      items: [
-        {
-          title: "经济学框架如何迁移到 AI 产品分析",
-          description: "用机会成本、边际收益等概念重新看AI生态。",
-          url: "knowledge-items/digital-economy-framework-migration.html"
-        },
-        {
-          title: "数字经济热点论文周读",
-          description: "每周一篇论文精读，提取概念、方法和结论。",
-          url: "knowledge-items/digital-economy-weekly-paper.html"
-        },
-        {
-          title: "从传统国贸到 AI 应用：知识迁移地图",
-          description: "哪些经济学训练可以直接复用到AI领域。",
-          url: "knowledge-items/digital-economy-knowledge-map.html"
-        },
-        {
-          title: "研究选题池：校园场景下的 AI 需求观察",
-          description: "身边可做的研究课题收集与初步分析框架。",
-          url: "knowledge-items/digital-economy-topic-pool.html"
-        }
-      ]
-    },
-    {
-      id: "alpha",
-      icon: "🏋️",
-      title: "Alpha支线",
-      description: "健身、社交、自我突破的长期实验。",
-      page: "knowledge/alpha.html",
+      id: "growth-lab-library",
+      icon: "🏃",
+      title: "日常生活感悟",
+      description: "把个人成长当项目管理来做。这里是我在健身、表达、社交、自律这些事上的实验数据和阶段复盘。",
+      page: "knowledge/growth-lab-library.html",
+      directions: ["健身方案与记录", "表达训练方法", "社交复盘", "执行力系统", "长期实验框架"],
       items: [
         {
           title: "100 天健身挑战记录",
@@ -204,6 +179,36 @@ window.FALLBACK_DATA = {
           title: "每周自我审计模板",
           description: "目标、偏差、下一步的结构化复盘框架。",
           url: "knowledge-items/alpha-weekly-audit.html"
+        }
+      ]
+    },
+    {
+      id: "methods-and-checklists",
+      icon: "🧠",
+      title: "方法论与清单",
+      description: "我反复使用的一些底层原则和执行框架。不是什么宏大理论，就是那些帮我在具体事情上少纠结、快决策、稳执行的东西。",
+      page: "knowledge/methods-and-checklists.html",
+      directions: ["结构化思维框架", "以终为始方法论", "第一性原理应用", "行动清单与checklist模板"],
+      items: [
+        {
+          title: "经济学框架如何迁移到 AI 产品分析",
+          description: "用机会成本、边际收益等概念重新看AI生态。",
+          url: "knowledge-items/digital-economy-framework-migration.html"
+        },
+        {
+          title: "数字经济热点论文周读",
+          description: "每周一篇论文精读，提取概念、方法和结论。",
+          url: "knowledge-items/digital-economy-weekly-paper.html"
+        },
+        {
+          title: "从传统国贸到 AI 应用：知识迁移地图",
+          description: "哪些经济学训练可以直接复用到AI领域。",
+          url: "knowledge-items/digital-economy-knowledge-map.html"
+        },
+        {
+          title: "研究选题池：校园场景下的 AI 需求观察",
+          description: "身边可做的研究课题收集与初步分析框架。",
+          url: "knowledge-items/digital-economy-topic-pool.html"
         }
       ]
     }
@@ -258,6 +263,7 @@ window.FALLBACK_DATA = {
       url: "portfolio-items/shipinhao-weekly-experiment.html"
     }
   ],
+  sitePages: {},
   qrMap: {
     wechat: {
       name: "微信：Alphakk999",
@@ -297,4 +303,5 @@ window.FALLBACK_DATA = {
     }
   }
 };
+
 

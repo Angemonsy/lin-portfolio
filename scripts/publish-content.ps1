@@ -44,6 +44,31 @@ function Save-JsonFile {
   Set-Content -LiteralPath $Path -Value $json -Encoding utf8
 }
 
+function Read-JsonMapFile {
+  param([string]$Path)
+
+  if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+    return @{}
+  }
+
+  $obj = Read-JsonFile $Path
+  $map = @{}
+  if ($obj -is [System.Collections.IDictionary]) {
+    foreach ($entry in $obj.GetEnumerator()) {
+      $map["$($entry.Key)"] = $entry.Value
+    }
+    return $map
+  }
+
+  if ($obj) {
+    foreach ($p in $obj.PSObject.Properties) {
+      $map[$p.Name] = $p.Value
+    }
+  }
+
+  return $map
+}
+
 function Normalize-Slug {
   param([string]$Raw)
   $slug = ($Raw ?? "").Trim().ToLowerInvariant()
@@ -546,8 +571,8 @@ if (-not (Test-Path -LiteralPath $contentPath -PathType Leaf)) {
 $meta = Read-JsonFile $metadataPath
 $type = Ensure-StringField -Object $meta -FieldName "type"
 $type = $type.ToLowerInvariant()
-if ($type -notin @("article", "knowledge")) {
-  throw "metadata.type 仅支持 article / knowledge，当前为：$type"
+if ($type -notin @("article", "knowledge", "portfolio", "page")) {
+  throw "metadata.type 仅支持 article / knowledge / portfolio / page，当前为：$type"
 }
 
 $title = Ensure-StringField -Object $meta -FieldName "title"
@@ -592,6 +617,11 @@ if ($type -eq "article") {
 
   $articlesPath = Join-Path $projectRoot "data/articles.json"
   $articles = @((Read-JsonFile $articlesPath))
+  foreach ($articleItem in $articles) {
+    if ($articleItem.PSObject.Properties["tags"]) {
+      $articleItem.tags = Normalize-Tags $articleItem.tags
+    }
+  }
   $record = [PSCustomObject]@{
     id = $slug
     title = $title
@@ -697,6 +727,87 @@ if ($type -eq "knowledge") {
     Write-Done "知识条目已发布：$detailUrl"
   } else {
     Write-Info "DryRun：将写入知识条目页 $detailUrl"
+  }
+}
+
+if ($type -eq "portfolio") {
+  $platform = Ensure-StringField -Object $meta -FieldName "platform"
+  $cover = if ($meta.PSObject.Properties["cover"]) { "$($meta.cover)".Trim() } else { "" }
+  $detailUrl = "portfolio-items/$slug.html"
+  $detailPath = Join-Path $projectRoot $detailUrl
+
+  $portfolioPath = Join-Path $projectRoot "data/portfolio.json"
+  $portfolioItems = @((Read-JsonFile $portfolioPath))
+  $record = [PSCustomObject]@{
+    id = $slug
+    platform = $platform
+    title = $title
+    description = $description
+    cover = $cover
+    url = $detailUrl
+  }
+
+  $existingIndex = -1
+  for ($i = 0; $i -lt $portfolioItems.Count; $i++) {
+    if ($portfolioItems[$i].id -eq $slug) {
+      $existingIndex = $i
+      break
+    }
+  }
+
+  if ($existingIndex -ge 0) {
+    $portfolioItems[$existingIndex] = $record
+    Write-Info "已更新作品记录：$slug"
+  } else {
+    $portfolioItems = @($record) + @($portfolioItems)
+    Write-Info "已新增作品记录：$slug"
+  }
+
+  $pageHtml = Build-DetailPageHtml `
+    -PageTitle $title `
+    -CategoryLine ("作品详情 · " + $platform) `
+    -PublishDate $publishDate `
+    -Tags $tags `
+    -ContentHtml $contentHtml `
+    -BackHref "../portfolio.html" `
+    -BackText "返回作品集" `
+    -CurrentKey "portfolio"
+
+  if (-not $DryRun) {
+    Set-Content -LiteralPath $detailPath -Value $pageHtml -Encoding utf8
+    Save-JsonFile -Path $portfolioPath -Data $portfolioItems
+    Write-Done "作品条目已发布：$detailUrl"
+  } else {
+    Write-Info "DryRun：将写入作品条目页 $detailUrl"
+  }
+}
+
+if ($type -eq "page") {
+  $pageId = Ensure-StringField -Object $meta -FieldName "pageId"
+  $pageId = $pageId.ToLowerInvariant()
+  $supportedPageIds = @("index", "blog", "knowledge", "portfolio", "services", "about")
+  if ($pageId -notin $supportedPageIds) {
+    throw "metadata.pageId 不受支持：$pageId。可选值：$($supportedPageIds -join ', ')"
+  }
+
+  $sitePagesPath = Join-Path $projectRoot "data/site-pages.json"
+  $sitePages = Read-JsonMapFile -Path $sitePagesPath
+  $sitePages[$pageId] = [ordered]@{
+    id = $pageId
+    title = $title
+    description = $description
+    date = $publishDate
+    tags = $tags
+    slug = $slug
+    updatedAt = (Get-Date -Format "yyyy-MM-ddTHH:mm:sszzz")
+    contentHtml = $contentHtml
+  }
+
+  if (-not $DryRun) {
+    Save-JsonFile -Path $sitePagesPath -Data $sitePages
+    Write-Done "页面文案已发布：$pageId（data/site-pages.json）"
+  } else {
+    Write-Info "DryRun：将更新页面文案 $pageId"
   }
 }
 
