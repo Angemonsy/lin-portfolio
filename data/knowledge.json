@@ -14,6 +14,26 @@
     ],
     "items": [
       {
+        "title": "学习：精细化运营，别蛮干",
+        "description": "学习：精细化运营，别蛮干",
+        "url": "knowledge-items/post-20260412-150247.html"
+      },
+      {
+        "title": "专业选择：不是一锤定音，是动态校准",
+        "description": "专业选择：不是一锤定音，是动态校准",
+        "url": "knowledge-items/post-20260412-150246.html"
+      },
+      {
+        "title": "资源整合：大学给了你很多，但大多数人没用上",
+        "description": "资源整合：大学给了你很多，但大多数人没用上",
+        "url": "knowledge-items/post-20260412-150245.html"
+      },
+      {
+        "title": "社团与人脉：精准投入，拒绝穷忙",
+        "description": "社团与人脉：精准投入，拒绝穷忙",
+        "url": "knowledge-items/post-20260412-150244.html"
+      },
+      {
         "title": "从 GPA 3.0 到 3.98 的课程拆解与复盘模板",
         "description": "按学期拆解核心课程提分策略，附带我实际使用的复盘表格模板。",
         "url": "knowledge-items/university-gpa-review.html"
@@ -50,8 +70,13 @@
     ],
     "items": [
       {
-        "title": "核心原则：你是导演，AI是执行者",
-        "description": "核心原则：你是导演，AI是执行者",
+        "title": "给新手的启动路径",
+        "description": "给新手的启动路径 如果你刚开始用AI，别焦虑，也别贪多。",
+        "url": "knowledge-items/post-20260412-150255.html"
+      },
+      {
+        "title": "实战场景：我实际在用AI做什么",
+        "description": "实战场景：我实际在用AI做什么",
         "url": "knowledge-items/ai.html"
       },
       {
@@ -90,6 +115,31 @@
       "销售与成交SOP"
     ],
     "items": [
+      {
+        "title": "用户洞察：从数据到共情",
+        "description": "用户洞察：从数据到共情",
+        "url": "knowledge-items/post-20260412-150252.html"
+      },
+      {
+        "title": "底层逻辑：商业就是三件事",
+        "description": "底层逻辑：商业就是三件事",
+        "url": "knowledge-items/post-20260412-150251.html"
+      },
+      {
+        "title": "营销与品牌：差异化的核心是观点",
+        "description": "营销与品牌：差异化的核心是观点",
+        "url": "knowledge-items/post-20260412-150250.html"
+      },
+      {
+        "title": "产品与商业模式：先跑通，再优化",
+        "description": "产品与商业模式：先跑通，再优化",
+        "url": "knowledge-items/post-20260412-150249.html"
+      },
+      {
+        "title": "创业实践：一个人也能跑通的闭环",
+        "description": "创业实践：一个人也能跑通的闭环",
+        "url": "knowledge-items/post-20260412-150248.html"
+      },
       {
         "title": "AI 代充服务的用户沟通模板与风险边界",
         "description": "标准话术、售后流程与常见问题应对。",

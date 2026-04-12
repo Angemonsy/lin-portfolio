@@ -1,0 +1,12 @@
+{
+  "type": "knowledge",
+  "slug": "ai",
+  "title": "实战场景：我实际在用AI做什么",
+  "description": "实战场景：我实际在用AI做什么",
+  "date": "2026-04-12",
+  "tags": [
+    "ai-tools-library"
+  ],
+  "autoRouting": true,
+  "categoryId": "ai-tools-library"
+}

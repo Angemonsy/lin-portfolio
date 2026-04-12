@@ -1,0 +1,12 @@
+{
+  "type": "knowledge",
+  "slug": "ai",
+  "title": "工作流设计：把AI嵌入你的日常系统",
+  "description": "工作流设计：把AI嵌入你的日常系统",
+  "date": "2026-04-12",
+  "tags": [
+    "ai-tools-library"
+  ],
+  "autoRouting": true,
+  "categoryId": "ai-tools-library"
+}
