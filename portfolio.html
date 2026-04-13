@@ -61,6 +61,7 @@
       </div>
 
       <div id="portfolio-grid" class="mt-8 grid gap-6 md:grid-cols-2"></div>
+      <div id="portfolio-dev-entry" class="mt-5 flex items-center justify-center"></div>
     </section>
   </main>
 
@@ -144,22 +145,58 @@
         ].join("");
       }
 
+      function renderCard(item, extraClass) {
+        var tagCls = tagColor[item.platform] || "bg-slate-100 text-slate-700";
+        var previewUrl = item.previewUrl || previewFallbackMap[item.id] || "";
+        var coverUrl = item.cover || "";
+        return [
+          '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(item.url, "") + '" class="card-lift reveal rounded-2xl border border-slate-100 bg-white p-5 ' + (extraClass || "") + '">',
+          "  " + renderCardPreview(previewUrl, coverUrl, item.title),
+          '  <div class="mt-4">',
+          '    <span class="tag-pill ' + tagCls + '">' + item.platform + '</span>',
+          '    <h2 class="mt-3 text-lg font-semibold text-slate-900">' + item.title + '</h2>',
+          '    <p class="mt-2 text-sm leading-relaxed text-slate-600">' + item.description + '</p>',
+          '  </div>',
+          '</a>'
+        ].join("");
+      }
+
       SiteCommon.fetchWithFallback("data/portfolio.json", "portfolio").then(function (items) {
-        grid.innerHTML = items.map(function (item) {
-          var tagCls = tagColor[item.platform] || "bg-slate-100 text-slate-700";
-          var previewUrl = item.previewUrl || previewFallbackMap[item.id] || "";
-          var coverUrl = item.cover || "";
-          return [
-            '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(item.url, "") + '" class="card-lift reveal rounded-2xl border border-slate-100 bg-white p-5">',
-            "  " + renderCardPreview(previewUrl, coverUrl, item.title),
-            '  <div class="mt-4">',
-            '    <span class="tag-pill ' + tagCls + '">' + item.platform + '</span>',
-            '    <h2 class="mt-3 text-lg font-semibold text-slate-900">' + item.title + '</h2>',
-            '    <p class="mt-2 text-sm leading-relaxed text-slate-600">' + item.description + '</p>',
-            '  </div>',
-            '</a>'
-          ].join("");
+        var visibleItems = (items || []).filter(function (item) { return !item.devOnly; });
+        var hiddenItems = (items || []).filter(function (item) { return !!item.devOnly; });
+
+        grid.innerHTML = visibleItems.map(function (item) {
+          return renderCard(item, "");
         }).join("");
+
+        if (hiddenItems.length) {
+          var hiddenHtml = hiddenItems.map(function (item) {
+            return renderCard(item, "portfolio-dev-item hidden");
+          }).join("");
+          grid.insertAdjacentHTML("beforeend", hiddenHtml);
+
+          var devEntry = document.getElementById("portfolio-dev-entry");
+          devEntry.innerHTML = [
+            '<div class="flex items-center gap-2 text-xs text-slate-400">',
+            '  <span>更多项目开发中</span>',
+            '  <button id="portfolio-dev-toggle" type="button" class="rounded-full border border-slate-200 px-2 py-0.5 font-semibold text-slate-400 transition hover:border-slate-300 hover:text-slate-600" aria-expanded="false" aria-label="显示开发中的项目">...</button>',
+            '</div>'
+          ].join("");
+
+          var toggle = document.getElementById("portfolio-dev-toggle");
+          toggle.addEventListener("click", function () {
+            var collapsed = toggle.getAttribute("aria-expanded") !== "true";
+            var hiddenNodes = grid.querySelectorAll(".portfolio-dev-item");
+            hiddenNodes.forEach(function (node) {
+              node.classList.toggle("hidden", !collapsed);
+            });
+            toggle.setAttribute("aria-expanded", collapsed ? "true" : "false");
+            toggle.textContent = collapsed ? "收起" : "...";
+          });
+        } else {
+          var devEntry = document.getElementById("portfolio-dev-entry");
+          if (devEntry) devEntry.innerHTML = "";
+        }
 
         SiteCommon.initReveal(document);
       });

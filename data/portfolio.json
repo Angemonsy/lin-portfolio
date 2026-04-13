@@ -22,6 +22,7 @@
     "platform": "视频号",
     "title": "AI工具实战：论文提纲 20 分钟重构",
     "description": "白板讲解 + 录屏实操，演示课程论文从题目到结构的快速拆解流程。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/shipinhao-thesis-workflow.html"
   },
@@ -30,6 +31,7 @@
     "platform": "视频号",
     "title": "系列栏目：AI+学业效率周更实验",
     "description": "连续更新校园场景实操内容，沉淀可迁移的知识资产与案例库。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/shipinhao-weekly-experiment.html"
   },
@@ -38,6 +40,7 @@
     "platform": "合作项目",
     "title": "腾讯 ima 校园知识库增长合作",
     "description": "从知识组织到校园传播，搭建可持续增长的内容闭环。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/tencent-ima-campus.html"
   },
@@ -46,6 +49,7 @@
     "platform": "合作项目",
     "title": "虚实传媒 AI MCN：账号共创与商业化试验",
     "description": "在选题、内容节奏、转化路径上持续迭代，验证校园场景商业模型。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/xushi-mcn-creator.html"
   },
@@ -54,6 +58,7 @@
     "platform": "产品方向",
     "title": "AI内容再利用工作流（1条内容拆成10条）",
     "description": "把长文自动拆解为小红书、公众号、视频号多平台素材，做成可订阅服务。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/ai-content-repurpose-studio.html"
   },
@@ -62,6 +67,7 @@
     "platform": "产品方向",
     "title": "大学生AI成长诊断 + 7天执行陪跑",
     "description": "面向大学生的轻咨询产品，聚焦执行落地与结果产出，适合快速商业化验证。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/student-ai-growth-engine.html"
   },
@@ -70,6 +76,7 @@
     "platform": "产品方向",
     "title": "私域咨询自动转化页（作品集 -> 微信 -> 成交）",
     "description": "把作品集升级为承接页面，沉淀咨询线索并形成标准化成交漏斗。",
+    "devOnly": true,
     "cover": "",
     "url": "portfolio-items/private-domain-conversion-funnel.html"
   }
