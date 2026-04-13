@@ -220,6 +220,7 @@ window.FALLBACK_DATA = {
       title: "小红书卡片生成器（AI排版）",
       description: "输入内容后自动生成小红书尺寸卡片，支持多页排版与一键导图。",
       cover: "",
+      previewUrl: "portfolio-items/demos/xiaohongshu-card-generator-source.html",
       url: "portfolio-items/xiaohongshu-learning-system.html"
     },
     {
@@ -228,6 +229,7 @@ window.FALLBACK_DATA = {
       title: "公众号长文自动排版模板",
       description: "把深度长文快速排成高可读版式，适配知识型内容发布与复用。",
       cover: "",
+      previewUrl: "portfolio-items/demos/gongzhonghao-layout-source.html",
       url: "portfolio-items/gongzhonghao-ai-structure.html"
     },
     {

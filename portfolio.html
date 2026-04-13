@@ -107,12 +107,32 @@
         "产品方向": "bg-amber-50 text-amber-700"
       };
 
+      function renderCardPreview(item) {
+        if (item.previewUrl) {
+          return [
+            '<div class="portfolio-preview aspect-video overflow-hidden rounded-xl border border-slate-200 bg-slate-50">',
+            '  <iframe class="portfolio-preview-frame" src="' + SiteCommon.resolvePath(item.previewUrl, "") + '" title="' + item.title + ' 预览"></iframe>',
+            "</div>"
+          ].join("");
+        }
+
+        if (item.cover) {
+          return [
+            '<div class="portfolio-preview aspect-video overflow-hidden rounded-xl border border-slate-200 bg-slate-50">',
+            '  <img class="h-full w-full object-cover" src="' + SiteCommon.resolvePath(item.cover, "") + '" alt="' + item.title + ' 封面">',
+            "</div>"
+          ].join("");
+        }
+
+        return '<div class="portfolio-preview aspect-video rounded-xl border border-dashed border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50"></div>';
+      }
+
       SiteCommon.fetchWithFallback("data/portfolio.json", "portfolio").then(function (items) {
         grid.innerHTML = items.map(function (item) {
           var tagCls = tagColor[item.platform] || "bg-slate-100 text-slate-700";
           return [
             '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(item.url, "") + '" class="card-lift reveal rounded-2xl border border-slate-100 bg-white p-5">',
-            '  <div class="aspect-video rounded-xl border border-dashed border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50"></div>',
+            "  " + renderCardPreview(item),
             '  <div class="mt-4">',
             '    <span class="tag-pill ' + tagCls + '">' + item.platform + '</span>',
             '    <h2 class="mt-3 text-lg font-semibold text-slate-900">' + item.title + '</h2>',
