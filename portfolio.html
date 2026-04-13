@@ -110,12 +110,19 @@
         "xiaohongshu-learning-system": "portfolio-items/demos/xiaohongshu-card-generator-source.html",
         "gongzhonghao-ai-structure": "portfolio-items/demos/gongzhonghao-layout-source.html"
       };
+      var previewVersion = String(Date.now());
+
+      function withCacheBuster(rawUrl) {
+        if (!rawUrl) return "";
+        var sep = rawUrl.indexOf("?") === -1 ? "?" : "&";
+        return rawUrl + sep + "v=" + encodeURIComponent(previewVersion);
+      }
 
       function renderCardPreview(previewUrl, coverUrl, title) {
         if (previewUrl) {
           return [
             '<div class="portfolio-preview aspect-video overflow-hidden rounded-xl border border-slate-200 bg-slate-50">',
-            '  <iframe class="portfolio-preview-frame" src="' + SiteCommon.resolvePath(previewUrl, "") + '" title="' + title + ' 预览" loading="lazy" sandbox="allow-same-origin allow-scripts"></iframe>',
+            '  <iframe class="portfolio-preview-frame" src="' + SiteCommon.resolvePath(withCacheBuster(previewUrl), "") + '" title="' + title + ' 预览" loading="lazy" sandbox="allow-same-origin allow-scripts"></iframe>',
             "</div>"
           ].join("");
         }
@@ -123,7 +130,7 @@
         if (coverUrl) {
           return [
             '<div class="portfolio-preview aspect-video overflow-hidden rounded-xl border border-slate-200 bg-slate-50">',
-            '  <img class="h-full w-full object-cover" src="' + SiteCommon.resolvePath(coverUrl, "") + '" alt="' + title + ' 封面">',
+            '  <img class="h-full w-full object-cover" src="' + SiteCommon.resolvePath(withCacheBuster(coverUrl), "") + '" alt="' + title + ' 封面">',
             "</div>"
           ].join("");
         }

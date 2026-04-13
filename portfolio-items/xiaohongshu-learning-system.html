@@ -76,7 +76,7 @@
           <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">仅展示版（源文件请联系获取）</span>
         </div>
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <iframe title="小红书卡片生成器预览" src="demos/xiaohongshu-card-generator-source.html" class="h-[80vh] w-full" loading="lazy"></iframe>
+          <iframe id="preview-frame-xhs" title="小红书卡片生成器预览" data-preview-src="demos/xiaohongshu-card-generator-source.html" class="h-[80vh] w-full" loading="lazy"></iframe>
         </div>
       </section>
 
@@ -112,6 +112,12 @@
     (function () {
       SiteCommon.initNav({ currentKey: "portfolio" });
       SiteCommon.initQrModal({ assetPrefix: "../" });
+      var frame = document.getElementById("preview-frame-xhs");
+      if (frame) {
+        var base = frame.getAttribute("data-preview-src");
+        var sep = base.indexOf("?") === -1 ? "?" : "&";
+        frame.src = base + sep + "v=" + Date.now();
+      }
       SiteCommon.initReveal(document);
     })();
   </script>
