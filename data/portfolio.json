@@ -1,5 +1,21 @@
 [
   {
+    "id": "xiaohongshu-learning-system",
+    "platform": "小红书",
+    "title": "小红书卡片生成器（AI排版）",
+    "description": "输入内容后自动生成小红书尺寸卡片，支持多页排版与一键导图。",
+    "cover": "",
+    "url": "portfolio-items/xiaohongshu-learning-system.html"
+  },
+  {
+    "id": "gongzhonghao-ai-structure",
+    "platform": "公众号",
+    "title": "公众号长文自动排版模板",
+    "description": "把深度长文快速排成高可读版式，适配知识型内容发布与复用。",
+    "cover": "",
+    "url": "portfolio-items/gongzhonghao-ai-structure.html"
+  },
+  {
     "id": "shipinhao-thesis-workflow",
     "platform": "视频号",
     "title": "AI工具实战：论文提纲 20 分钟重构",
@@ -8,20 +24,12 @@
     "url": "portfolio-items/shipinhao-thesis-workflow.html"
   },
   {
-    "id": "xiaohongshu-learning-system",
-    "platform": "小红书",
-    "title": "爆款笔记：双非大学生如何搭建AI学习体系",
-    "description": "把工具清单升级成场景清单，展示普通人可复制的执行框架。",
+    "id": "shipinhao-weekly-experiment",
+    "platform": "视频号",
+    "title": "系列栏目：AI+学业效率周更实验",
+    "description": "连续更新校园场景实操内容，沉淀可迁移的知识资产与案例库。",
     "cover": "",
-    "url": "portfolio-items/xiaohongshu-learning-system.html"
-  },
-  {
-    "id": "gongzhonghao-ai-structure",
-    "platform": "公众号",
-    "title": "深度长文：AI不会替代你，但会放大你的策略",
-    "description": "用能力、流程、杠杆三层框架解释 AI 应用的长期价值。",
-    "cover": "",
-    "url": "portfolio-items/gongzhonghao-ai-structure.html"
+    "url": "portfolio-items/shipinhao-weekly-experiment.html"
   },
   {
     "id": "tencent-ima-campus",
@@ -40,11 +48,27 @@
     "url": "portfolio-items/xushi-mcn-creator.html"
   },
   {
-    "id": "shipinhao-weekly-experiment",
-    "platform": "视频号",
-    "title": "系列栏目：AI+学业效率周更实验",
-    "description": "连续更新校园场景实操内容，沉淀可迁移的知识资产与案例库。",
+    "id": "ai-content-repurpose-studio",
+    "platform": "产品方向",
+    "title": "AI内容再利用工作流（1条内容拆成10条）",
+    "description": "把长文自动拆解为小红书、公众号、视频号多平台素材，做成可订阅服务。",
     "cover": "",
-    "url": "portfolio-items/shipinhao-weekly-experiment.html"
+    "url": "portfolio-items/ai-content-repurpose-studio.html"
+  },
+  {
+    "id": "student-ai-growth-engine",
+    "platform": "产品方向",
+    "title": "大学生AI成长诊断 + 7天执行陪跑",
+    "description": "面向大学生的轻咨询产品，聚焦执行落地与结果产出，适合快速商业化验证。",
+    "cover": "",
+    "url": "portfolio-items/student-ai-growth-engine.html"
+  },
+  {
+    "id": "private-domain-conversion-funnel",
+    "platform": "产品方向",
+    "title": "私域咨询自动转化页（作品集 -> 微信 -> 成交）",
+    "description": "把作品集升级为承接页面，沉淀咨询线索并形成标准化成交漏斗。",
+    "cover": "",
+    "url": "portfolio-items/private-domain-conversion-funnel.html"
   }
 ]

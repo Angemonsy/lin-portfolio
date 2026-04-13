@@ -57,7 +57,7 @@
       <div class="reveal rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-8 md:p-10">
         <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Portfolio</p>
         <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">作品集</h1>
-        <p class="mt-3 text-base leading-relaxed text-slate-600">每张作品卡片会在新标签页打开，方便并行查看内容案例。</p>
+        <p class="mt-3 text-base leading-relaxed text-slate-600">点击卡片可直接查看在线案例预览；部分项目源文件需通过微信沟通后提供。</p>
       </div>
 
       <div id="portfolio-grid" class="mt-8 grid gap-6 md:grid-cols-2"></div>
@@ -103,7 +103,8 @@
         "视频号": "bg-blue-50 text-blue-700",
         "小红书": "bg-rose-50 text-rose-700",
         "公众号": "bg-emerald-50 text-emerald-700",
-        "合作项目": "bg-indigo-50 text-indigo-700"
+        "合作项目": "bg-indigo-50 text-indigo-700",
+        "产品方向": "bg-amber-50 text-amber-700"
       };
 
       SiteCommon.fetchWithFallback("data/portfolio.json", "portfolio").then(function (items) {
