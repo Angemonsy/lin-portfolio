@@ -64,6 +64,22 @@
     window.addEventListener("scroll", onScroll);
   }
 
+  function ensureIcpRecord() {
+    var footer = document.querySelector("footer");
+    if (!footer) return;
+    if (footer.querySelector("[data-icp-record]")) return;
+
+    var icpWrap = document.createElement("div");
+    icpWrap.className = "border-t border-slate-200/80";
+    icpWrap.innerHTML = [
+      '<div class="mx-auto w-full max-w-6xl px-4 py-3 text-center text-xs text-slate-500 sm:px-6 lg:px-8">',
+      '  <a data-icp-record href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="transition hover:text-blue-600 hover:underline">工信部备案号：粤ICP备2026039646号</a>',
+      "</div>"
+    ].join("");
+
+    footer.appendChild(icpWrap);
+  }
+
   function initReveal(root) {
     var container = root || document;
     var revealNodes = container.querySelectorAll(".reveal");
@@ -274,4 +290,10 @@
     uniqueByTitle: uniqueByTitle,
     renderPageOverride: renderPageOverride
   };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", ensureIcpRecord);
+  } else {
+    ensureIcpRecord();
+  }
 })();
