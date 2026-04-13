@@ -1,8 +1,7 @@
 param(
   [string]$InboxPath = ".\content\inbox",
   [string]$FeishuFolderUrl = "https://gqkkndrhn25.feishu.cn/drive/folder/IUWIfp3eKlEQk9dfzsNcphzknJi",
-  [switch]$SkipFeishuFolderSync,
-  [switch]$SkipDeploy
+  [switch]$SkipFeishuFolderSync
 )
 
 Set-StrictMode -Version Latest
@@ -914,23 +913,12 @@ if ([string]::IsNullOrWhiteSpace("$statusAfterAdd")) {
 
 $msg = "content: publish " + ((Get-Date).ToString("yyyy-MM-dd HH:mm")) + " (" + (($pending | ForEach-Object { $_.Name }) -join ", ") + ")"
 Invoke-GitWithRetry -GitArgs @("commit", "-m", $msg)
-Invoke-GitWithRetry -GitArgs @("push", "origin", "main")
-
-$deployUrl = ""
-if (-not $SkipDeploy) {
-  $deployOutput = & vercel --prod --yes 2>&1
-  if ($LASTEXITCODE -eq 0) {
-    $deployText = "$deployOutput"
-    $m = [regex]::Match($deployText, 'Aliased:\s+(https://\S+)')
-    if ($m.Success) { $deployUrl = $m.Groups[1].Value }
-    Write-Done "Vercel 生产部署成功。$deployUrl"
-  } else {
-    Write-Warn "Vercel 部署失败，但 Git 已推送。错误：$deployOutput"
-  }
-}
+Invoke-GitWithRetry -GitArgs @("fetch", "origin", "main")
+Invoke-GitWithRetry -GitArgs @("rebase", "origin/main")
+Invoke-GitWithRetry -GitArgs @("push", "origin", "HEAD:main")
 
 foreach ($item in $pending) {
   Set-Content -LiteralPath $item.StampPath -Value $item.Signature -Encoding utf8
 }
 
-Write-Done "自动发布完成。"
+Write-Done "自动发布完成，已推送到 GitHub。"

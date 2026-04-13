@@ -5,7 +5,7 @@
 - Auto-map folder paths to site content types (`article / knowledge / portfolio / page`)
 - Generate/update site content
 - Commit/push only when repo changed
-- Deploy to Vercel
+- Push to GitHub; the bound domain updates from the GitHub repository
 
 ## Folder Routing (Feishu)
 - `articles/<category>/...` -> article
@@ -31,7 +31,7 @@ pwsh ./scripts/auto-publish.ps1
 ```
 
 ## Guardrails
-- Always clear proxy env before Lark/Git/Vercel calls.
+- Always clear proxy env before Lark/Git calls.
 - `auto-publish.ps1` already sets `LARK_CLI_NO_PROXY=1`.
 - Folder item type `shortcut` is supported and resolved to target doc URL.
 - If Feishu folder scopes are missing, folder sync is skipped safely and publishing pipeline continues.

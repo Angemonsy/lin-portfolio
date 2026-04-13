@@ -1,7 +1,7 @@
 # 内容同步工作流（飞书文件夹 -> 网站）
 
 你以后只负责在飞书里写内容。
-Codex 自动完成：抓取内容 -> 生成页面 -> 更新数据 -> Git 推送 -> 网站部署。
+Codex 自动完成：抓取内容 -> 生成页面 -> 更新数据 -> Git 推送。
 
 ---
 
@@ -82,7 +82,7 @@ pwsh .\scripts\auto-publish.ps1
 2. 仅同步新增/更新文档（增量）
 3. 生成/更新站点内容
 4. `git add/commit/push`
-5. 触发 Vercel 生产部署
+5. 由绑定 GitHub 仓库的域名/站点自动更新线上内容
 
 ---
 
@@ -101,5 +101,5 @@ pwsh .\scripts\publish-content.ps1 -InputFolder ".\content\inbox\your-folder"
 ## 6) 最推荐协作方式
 
 1. 你只在飞书目录中写内容和组织目录。
-2. Codex 负责同步、映射、渲染、发布与部署。
+2. Codex 负责同步、映射、渲染，并推送到 GitHub。
 3. 出现异常时只需告诉我“哪篇文档没同步对”。
