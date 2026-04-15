@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Content fallback">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ecf5ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect x="260" y="220" width="680" height="420" rx="26" fill="#ffffff" opacity="0.86"/>
+  <rect x="340" y="300" width="360" height="220" rx="18" fill="#93c5fd"/>
+  <polygon points="460,350 460,470 560,410" fill="#1d4ed8"/>
+  <rect x="740" y="320" width="140" height="20" rx="10" fill="#60a5fa"/>
+  <rect x="740" y="370" width="110" height="20" rx="10" fill="#60a5fa"/>
+  <rect x="740" y="420" width="130" height="20" rx="10" fill="#60a5fa"/>
+  <text x="600" y="740" font-size="56" text-anchor="middle" fill="#1e3a8a" font-family="Arial, sans-serif">Content Creation</text>
+</svg>

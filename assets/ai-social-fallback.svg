@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Social fallback">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ecfdf3"/>
+      <stop offset="100%" stop-color="#dcfce7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <circle cx="360" cy="360" r="90" fill="#86efac"/>
+  <circle cx="600" cy="300" r="90" fill="#4ade80"/>
+  <circle cx="840" cy="360" r="90" fill="#22c55e"/>
+  <line x1="360" y1="360" x2="600" y2="300" stroke="#15803d" stroke-width="12"/>
+  <line x1="600" y1="300" x2="840" y2="360" stroke="#15803d" stroke-width="12"/>
+  <rect x="300" y="510" width="600" height="140" rx="24" fill="#ffffff" opacity="0.78"/>
+  <text x="600" y="600" font-size="56" text-anchor="middle" fill="#166534" font-family="Arial, sans-serif">Social Communication</text>
+</svg>

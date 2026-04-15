@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Fitness fallback">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#eaf4ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <circle cx="420" cy="300" r="120" fill="#bfdbfe"/>
+  <rect x="350" y="420" width="500" height="60" rx="30" fill="#1d4ed8"/>
+  <rect x="290" y="390" width="70" height="120" rx="18" fill="#2563eb"/>
+  <rect x="840" y="390" width="70" height="120" rx="18" fill="#2563eb"/>
+  <text x="600" y="720" font-size="58" text-anchor="middle" fill="#1e3a8a" font-family="Arial, sans-serif">Fitness Training</text>
+</svg>
