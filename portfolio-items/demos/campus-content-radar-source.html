@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生自媒体选题雷达 Demo</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e2ef;
+      --blue: #2563eb;
+      --green: #087f5b;
+      --yellow: #b7791f;
+      --red: #c2410c;
+      --surface: rgba(255,255,255,.92);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(37,99,235,.08), transparent 34%),
+        linear-gradient(180deg, #f6f9ff 0%, #edf6f2 100%);
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1160px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0; }
+    .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; align-items: stretch; }
+    .hero-copy { padding: 28px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .eyebrow { margin: 0; color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+    h1 { margin: 10px 0 0; font-size: clamp(30px, 4vw, 52px); line-height: 1.08; letter-spacing: 0; }
+    .lead { max-width: 700px; margin: 16px 0 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
+    .radar { position: relative; min-height: 300px; border: 1px solid #bfd0e8; border-radius: 8px; overflow: hidden; background: #0f1d35; color: #fff; }
+    .radar canvas { width: 100%; height: 100%; display: block; }
+    .radar-label { position: absolute; left: 18px; bottom: 18px; right: 18px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.78); }
+    .workspace { margin-top: 18px; display: grid; grid-template-columns: 330px 1fr; gap: 18px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .panel-pad { padding: 18px; }
+    .field { display: grid; gap: 7px; margin-top: 14px; }
+    .field span { color: #344054; font-size: 13px; font-weight: 700; }
+    select, input, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: var(--ink); padding: 10px 11px; outline: none; }
+    textarea { min-height: 82px; resize: vertical; line-height: 1.6; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .btn { border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #334155; padding: 10px 13px; font-weight: 800; }
+    .btn.primary { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .score-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .score { border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 13px; min-height: 86px; }
+    .score p { margin: 0; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .score strong { display: block; margin-top: 8px; font-size: 26px; }
+    .ideas { margin-top: 12px; display: grid; gap: 10px; }
+    .idea { border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 14px; display: grid; gap: 10px; transition: transform .2s ease, border-color .2s ease; }
+    .idea:hover { transform: translateY(-2px); border-color: #93c5fd; }
+    .idea-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .idea h2 { margin: 0; font-size: 17px; line-height: 1.35; }
+    .pill { display: inline-flex; white-space: nowrap; border-radius: 999px; background: #eaf2ff; color: #1d4ed8; padding: 4px 9px; font-size: 12px; font-weight: 800; }
+    .idea p { margin: 0; color: var(--muted); line-height: 1.65; font-size: 14px; }
+    .script { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .script div { border: 1px dashed #cbd5e1; border-radius: 8px; padding: 9px; color: #475569; font-size: 13px; line-height: 1.5; }
+    .calendar { margin-top: 12px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day { min-height: 108px; border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 10px; }
+    .day strong { display: block; color: var(--blue); font-size: 13px; }
+    .day span { display: block; margin-top: 8px; color: #475569; font-size: 12px; line-height: 1.45; }
+    .saved { margin-top: 18px; }
+    .saved-list { display: grid; gap: 8px; margin-top: 10px; }
+    .saved-item { display: flex; justify-content: space-between; gap: 10px; border: 1px solid #dbeafe; border-radius: 8px; background: #f8fbff; padding: 9px 10px; color: #334155; font-size: 13px; }
+    body[data-mode="preview"] .full-only { display: none !important; }
+    body[data-mode="preview"] .workspace { grid-template-columns: 1fr; }
+    body[data-mode="preview"] .hero { grid-template-columns: 1fr; }
+    body[data-mode="preview"] .radar { min-height: 220px; }
+    @media (max-width: 900px) {
+      .hero, .workspace { grid-template-columns: 1fr; }
+      .score-row, .script, .calendar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">CAMPUS CONTENT RADAR</p>
+        <h1>大学生自媒体选题雷达</h1>
+        <p class="lead">把账号定位、校园素材、平台表达和本周时间预算合在一起，生成能马上开拍的选题、标题钩子、脚本骨架和7天发布排期。</p>
+        <div class="actions full-only">
+          <button id="generateBtn" class="btn primary" type="button">刷新选题</button>
+          <button id="copyBtn" class="btn" type="button">复制执行提示词</button>
+        </div>
+      </div>
+      <div class="radar" aria-label="内容热度雷达动画">
+        <canvas id="radarCanvas" width="720" height="420"></canvas>
+        <div class="radar-label">雷达点代表校园素材、平台趋势、个人经历和可执行度的匹配强度。</div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel panel-pad full-only">
+        <p class="eyebrow">INPUT</p>
+        <label class="field"><span>目标平台</span><select id="platform"><option>小红书</option><option>视频号</option><option>公众号</option><option>抖音</option></select></label>
+        <label class="field"><span>账号身份</span><select id="persona"><option>普通大学生</option><option>保研/绩点选手</option><option>AI工具实践者</option><option>校园副业探索者</option></select></label>
+        <label class="field"><span>内容目标</span><select id="goal"><option>涨粉</option><option>私域转化</option><option>作品集展示</option><option>课程/咨询成交</option></select></label>
+        <label class="field"><span>本周可投入小时</span><input id="hours" type="number" min="2" max="40" value="8"></label>
+        <label class="field"><span>已有素材</span><textarea id="materials">绩点复盘、AI工具使用、校园社交、求职准备</textarea></label>
+      </aside>
+
+      <section>
+        <div class="score-row">
+          <article class="score"><p>选题稳定度</p><strong id="scoreStable">82</strong></article>
+          <article class="score"><p>执行压力</p><strong id="scorePressure">中</strong></article>
+          <article class="score"><p>建议周更</p><strong id="scorePosts">4</strong></article>
+          <article class="score"><p>优先平台</p><strong id="scorePlatform">小红书</strong></article>
+        </div>
+        <div id="ideas" class="ideas"></div>
+        <div id="calendar" class="calendar full-only"></div>
+      </section>
+    </section>
+
+    <section class="panel panel-pad saved full-only">
+      <div class="idea-head">
+        <div>
+          <p class="eyebrow">LOCAL CONTENT POOL</p>
+          <h2 style="margin:8px 0 0;font-size:20px;">已保存选题</h2>
+        </div>
+        <button id="clearBtn" class="btn" type="button">清空</button>
+      </div>
+      <div id="savedList" class="saved-list"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var bank = {
+        "普通大学生": ["普通文科生如何把一天切成3个高效块", "我在大学最该早点知道的5个现实规则", "低成本提升表达力的校园训练法"],
+        "保研/绩点选手": ["绩点排名靠前不是靠熬夜，而是靠这张优先级表", "课程论文从题目到提纲的20分钟流程", "普通学生准备保研材料的避坑清单"],
+        "AI工具实践者": ["用AI把一篇长文拆成7条短内容", "我每天固定使用的3个AI工作流", "AI不是替你努力，是帮你减少无效劳动"],
+        "校园副业探索者": ["大学生第一单咨询服务怎么设计", "从作品集到微信成交的最短路径", "一个人做内容时如何避免产能崩盘"]
+      };
+      var platformAngles = {
+        "小红书": ["反差标题", "清单封面", "评论区提问"],
+        "视频号": ["开场冲突", "口播故事", "结尾行动"],
+        "公众号": ["结构长文", "案例拆解", "方法沉淀"],
+        "抖音": ["前三秒钩子", "强节奏字幕", "单点记忆"]
+      };
+
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        platform: $("platform"), persona: $("persona"), goal: $("goal"), hours: $("hours"), materials: $("materials"),
+        stable: $("scoreStable"), pressure: $("scorePressure"), posts: $("scorePosts"), scorePlatform: $("scorePlatform"),
+        ideas: $("ideas"), calendar: $("calendar"), saved: $("savedList")
+      };
+      var storageKey = "campus_content_radar_pool_v1";
+
+      function profile() {
+        return {
+          platform: els.platform ? els.platform.value : "小红书",
+          persona: els.persona ? els.persona.value : "AI工具实践者",
+          goal: els.goal ? els.goal.value : "涨粉",
+          hours: Math.max(2, Math.min(40, Number(els.hours ? els.hours.value : 8) || 8)),
+          materials: ((els.materials && els.materials.value) || "绩点复盘、AI工具使用、校园社交").split(/[、,，\n]/).map(function (x) { return x.trim(); }).filter(Boolean)
+        };
+      }
+      function makeIdeas(p) {
+        var base = bank[p.persona] || bank["普通大学生"];
+        var angles = platformAngles[p.platform] || platformAngles["小红书"];
+        return base.map(function (title, index) {
+          var material = p.materials[index % p.materials.length] || "真实经历";
+          var angle = angles[index % angles.length];
+          var effort = Math.max(35, 90 - p.hours * 3 + index * 5);
+          return {
+            title: title,
+            tag: angle,
+            score: Math.min(96, Math.round((p.hours * 5 + 58 - index * 4))),
+            body: "素材从「" + material + "」切入，目标是" + p.goal + "，适合做成" + p.platform + "内容。",
+            script: ["开头：用一句真实痛点制造代入", "中段：给出3步方法或1个案例", "结尾：引导收藏或私信关键词"],
+            effort: effort
+          };
+        });
+      }
+      function readPool() { try { var data = JSON.parse(localStorage.getItem(storageKey) || "[]"); return Array.isArray(data) ? data : []; } catch (e) { return []; } }
+      function writePool(data) { try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (e) {} }
+      function renderPool() {
+        var data = readPool();
+        els.saved.innerHTML = data.length ? data.map(function (item, index) {
+          return '<div class="saved-item"><span>' + item.title + '</span><button class="btn" data-del="' + index + '" type="button">删除</button></div>';
+        }).join("") : '<p style="margin:0;color:#667085;font-size:14px;">还没有保存选题。</p>';
+      }
+      function render() {
+        var p = profile();
+        var ideas = makeIdeas(p);
+        els.stable.textContent = String(Math.min(96, 62 + p.hours * 3));
+        els.pressure.textContent = p.hours >= 10 ? "低" : p.hours >= 6 ? "中" : "高";
+        els.posts.textContent = String(Math.max(2, Math.min(7, Math.round(p.hours / 2))));
+        els.scorePlatform.textContent = p.platform;
+        els.ideas.innerHTML = ideas.map(function (idea, index) {
+          return '<article class="idea"><div class="idea-head"><h2>' + idea.title + '</h2><span class="pill">' + idea.tag + " " + idea.score + '</span></div><p>' + idea.body + '</p><div class="script">' + idea.script.map(function (line) { return "<div>" + line + "</div>"; }).join("") + '</div><div class="actions full-only"><button class="btn primary" data-save="' + index + '" type="button">保存到内容池</button></div></article>';
+        }).join("");
+        els.calendar.innerHTML = ["定位", "脚本", "拍摄", "剪辑", "发布", "复盘", "复用"].map(function (day, index) {
+          var idea = ideas[index % ideas.length];
+          return '<div class="day"><strong>Day ' + (index + 1) + " " + day + '</strong><span>' + idea.title + '</span></div>';
+        }).join("");
+      }
+      function promptText() {
+        var p = profile();
+        return ["你是我的大学生自媒体选题教练。", "平台：" + p.platform, "身份：" + p.persona, "目标：" + p.goal, "本周时间：" + p.hours + "小时", "已有素材：" + p.materials.join("、"), "请输出：5个选题、标题钩子、60秒脚本、拍摄清单、7天发布排期。"].join("\n");
+      }
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target.id === "generateBtn") render();
+        if (target.id === "copyBtn" && navigator.clipboard) navigator.clipboard.writeText(promptText());
+        if (target.id === "clearBtn") { writePool([]); renderPool(); }
+        if (target.hasAttribute("data-save")) {
+          var idea = makeIdeas(profile())[Number(target.getAttribute("data-save"))];
+          var pool = readPool();
+          pool.unshift({ title: idea.title, createdAt: new Date().toLocaleString("zh-CN") });
+          writePool(pool.slice(0, 12));
+          renderPool();
+        }
+        if (target.hasAttribute("data-del")) {
+          var data = readPool();
+          data.splice(Number(target.getAttribute("data-del")), 1);
+          writePool(data);
+          renderPool();
+        }
+      });
+
+      var canvas = $("radarCanvas");
+      var ctx = canvas.getContext("2d");
+      var tick = 0;
+      function drawRadar() {
+        var w = canvas.width, h = canvas.height, cx = w / 2, cy = h / 2, r = Math.min(w, h) * .36;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#0f1d35";
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(147,197,253,.22)";
+        for (var ring = 1; ring <= 4; ring++) {
+          ctx.beginPath(); ctx.arc(cx, cy, r * ring / 4, 0, Math.PI * 2); ctx.stroke();
+        }
+        for (var a = 0; a < 8; a++) {
+          var angle = a * Math.PI / 4;
+          ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r); ctx.stroke();
+        }
+        var sweep = tick * .03;
+        var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        grad.addColorStop(0, "rgba(37,99,235,.5)");
+        grad.addColorStop(1, "rgba(37,99,235,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, sweep, sweep + .65); ctx.closePath(); ctx.fill();
+        [["校园素材", .74, .1], ["平台趋势", .58, 2.1], ["个人经历", .82, 3.7], ["执行成本", .46, 5.3]].forEach(function (p, i) {
+          var pulse = Math.sin(tick * .05 + i) * 8;
+          var x = cx + Math.cos(p[2]) * (r * p[1] + pulse);
+          var y = cy + Math.sin(p[2]) * (r * p[1] + pulse);
+          ctx.fillStyle = i % 2 ? "#69db7c" : "#93c5fd";
+          ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "rgba(255,255,255,.82)";
+          ctx.font = "14px sans-serif";
+          ctx.fillText(p[0], x + 10, y + 4);
+        });
+        tick++;
+        requestAnimationFrame(drawRadar);
+      }
+
+      render();
+      if (mode !== "preview") renderPool();
+      drawRadar();
+    })();
+  </script>
+</body>
+</html>

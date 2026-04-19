@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>应届生求职冲刺看板（AI版）Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(900px 360px at 95% 0%, rgba(99, 102, 241, 0.18), transparent 60%),
+        radial-gradient(800px 300px at 0% 8%, rgba(59, 130, 246, 0.15), transparent 60%),
+        linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      color: #0f172a;
+    }
+    .panel {
+      border: 1px solid #dbeafe;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+      backdrop-filter: blur(4px);
+    }
+    .tab-btn[data-active="true"] {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(130deg, #2563eb, #4f46e5);
+    }
+    body[data-mode="preview"] .full-only { display: none !important; }
+    body[data-mode="full"] .preview-only { display: none !important; }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="mx-auto w-full max-w-6xl p-4 md:p-7">
+    <section class="panel rounded-3xl p-5 md:p-7">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold tracking-wide text-blue-700">大学生就业场景 · AI执行系统</p>
+          <h1 class="mt-1 text-2xl font-extrabold text-slate-900 md:text-3xl">应届生求职冲刺看板</h1>
+          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">把“该找工作但不知道怎么推进”拆成可执行系统：路线、题库、简历优化、投递漏斗四件套。</p>
+        </div>
+      </div>
+
+      <div class="preview-only mt-5 grid gap-3 md:grid-cols-3">
+        <article class="rounded-2xl border border-blue-200 bg-blue-50 p-4">
+          <p class="text-xs font-semibold text-slate-500">准备度指数</p>
+          <p class="mt-2 text-2xl font-extrabold text-blue-700">68</p>
+        </article>
+        <article class="rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
+          <p class="text-xs font-semibold text-slate-500">建议周投递量</p>
+          <p class="mt-2 text-2xl font-extrabold text-indigo-700">18</p>
+        </article>
+        <article class="rounded-2xl border border-rose-200 bg-rose-50 p-4">
+          <p class="text-xs font-semibold text-slate-500">短板优先项</p>
+          <p class="mt-2 text-xl font-extrabold text-rose-700">项目案例</p>
+        </article>
+      </div>
+
+      <div class="full-only mt-6 grid gap-5 lg:grid-cols-12">
+        <section class="rounded-2xl border border-blue-100 bg-blue-50/70 p-4 lg:col-span-5">
+          <h2 class="text-base font-bold text-slate-900">求职画像</h2>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-xs font-semibold text-slate-600">目标岗位</span>
+              <select id="role" class="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+                <option>产品运营</option><option>新媒体运营</option><option>数据分析</option><option>市场营销</option><option>AI应用实习</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-slate-600">目标类型</span>
+              <select id="targetType" class="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+                <option>实习</option><option>校招</option><option>实习转正</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-slate-600">每周可投入（小时）</span>
+              <input id="hours" type="number" min="4" max="60" value="16" class="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+            </label>
+            <label class="block">
+              <span class="text-xs font-semibold text-slate-600">距离投递日（天）</span>
+              <input id="days" type="number" min="7" max="180" value="35" class="mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+            </label>
+          </div>
+          <div class="mt-4 grid gap-2">
+            <label class="text-xs font-semibold text-slate-600">简历准备度（1-5）<input id="resume" type="range" min="1" max="5" value="2" class="mt-1 w-full"></label>
+            <label class="text-xs font-semibold text-slate-600">项目准备度（1-5）<input id="project" type="range" min="1" max="5" value="2" class="mt-1 w-full"></label>
+            <label class="text-xs font-semibold text-slate-600">面试准备度（1-5）<input id="interview" type="range" min="1" max="5" value="2" class="mt-1 w-full"></label>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button id="genBtn" type="button" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white">生成策略</button>
+            <button id="copyBtn" type="button" class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">复制提示词</button>
+          </div>
+        </section>
+
+        <section class="lg:col-span-7">
+          <div class="grid gap-3 sm:grid-cols-3">
+            <article class="rounded-2xl border border-blue-200 bg-blue-50 p-4"><p class="text-xs text-slate-500">准备度指数</p><p id="mReady" class="mt-2 text-2xl font-extrabold text-blue-700">0</p></article>
+            <article class="rounded-2xl border border-indigo-200 bg-indigo-50 p-4"><p class="text-xs text-slate-500">建议周投递</p><p id="mApply" class="mt-2 text-2xl font-extrabold text-indigo-700">0</p></article>
+            <article class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4"><p class="text-xs text-slate-500">面试率目标</p><p id="mInterview" class="mt-2 text-2xl font-extrabold text-emerald-700">0%</p></article>
+          </div>
+          <div id="roadmap" class="mt-4 grid gap-3 md:grid-cols-2"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="full-only panel mt-6 rounded-3xl p-4 md:p-6">
+      <div class="flex flex-wrap gap-2">
+        <button class="tab-btn rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700" data-tab="qa" data-active="true" type="button">面试题库</button>
+        <button class="tab-btn rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700" data-tab="resume" type="button">STAR优化</button>
+        <button class="tab-btn rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700" data-tab="tracker" type="button">投递追踪</button>
+      </div>
+
+      <div id="panel-qa" class="tab-panel mt-4 space-y-3"></div>
+      <div id="panel-resume" class="tab-panel mt-4 hidden">
+        <textarea id="resumeRaw" class="h-44 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" placeholder="每行一条原始经历"></textarea>
+        <button id="resumeBtn" type="button" class="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">生成STAR子弹点</button>
+        <div id="resumeOut" class="mt-3 rounded-xl border border-dashed border-blue-200 bg-blue-50/50 p-3 text-sm text-slate-700"></div>
+      </div>
+      <div id="panel-tracker" class="tab-panel mt-4 hidden">
+        <div class="grid gap-4 lg:grid-cols-12">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 lg:col-span-4">
+            <input id="tkCompany" type="text" placeholder="公司" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+            <input id="tkJob" type="text" placeholder="岗位" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+            <select id="tkStage" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm"><option>已投递</option><option>笔试</option><option>一面</option><option>二面</option><option>HR面</option><option>Offer</option><option>拒绝</option></select>
+            <button id="tkAdd" type="button" class="mt-2 w-full rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white">保存记录</button>
+          </div>
+          <div class="lg:col-span-8 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+            <table class="min-w-full text-sm"><thead class="bg-slate-50 text-left text-xs text-slate-600"><tr><th class="px-3 py-2">公司</th><th class="px-3 py-2">岗位</th><th class="px-3 py-2">阶段</th><th class="px-3 py-2">时间</th><th class="px-3 py-2">操作</th></tr></thead><tbody id="tkRows"></tbody></table>
+          </div>
+        </div>
+      </div>
+      <pre id="prompt" class="mt-5 max-h-64 overflow-auto whitespace-pre-wrap rounded-xl bg-slate-900 p-3 text-xs leading-relaxed text-slate-100"></pre>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(window.location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+      if (mode === "preview") return;
+
+      var trackerKey = "campus_offer_tracker_v1";
+      var roleEl = document.getElementById("role");
+      var targetTypeEl = document.getElementById("targetType");
+      var hoursEl = document.getElementById("hours");
+      var daysEl = document.getElementById("days");
+      var resumeEl = document.getElementById("resume");
+      var projectEl = document.getElementById("project");
+      var interviewEl = document.getElementById("interview");
+      var genBtn = document.getElementById("genBtn");
+      var copyBtn = document.getElementById("copyBtn");
+      var mReadyEl = document.getElementById("mReady");
+      var mApplyEl = document.getElementById("mApply");
+      var mInterviewEl = document.getElementById("mInterview");
+      var roadmapEl = document.getElementById("roadmap");
+      var panelQaEl = document.getElementById("panel-qa");
+      var promptEl = document.getElementById("prompt");
+      var resumeRawEl = document.getElementById("resumeRaw");
+      var resumeBtn = document.getElementById("resumeBtn");
+      var resumeOutEl = document.getElementById("resumeOut");
+      var tkCompanyEl = document.getElementById("tkCompany");
+      var tkJobEl = document.getElementById("tkJob");
+      var tkStageEl = document.getElementById("tkStage");
+      var tkAddBtn = document.getElementById("tkAdd");
+      var tkRowsEl = document.getElementById("tkRows");
+
+      function clamp(v, min, max, def) { var n = Number(v); if (!Number.isFinite(n)) return def; return Math.max(min, Math.min(max, n)); }
+      function profile() { return { role: roleEl.value, type: targetTypeEl.value, hours: clamp(hoursEl.value,4,60,16), days: clamp(daysEl.value,7,180,35), resume: clamp(resumeEl.value,1,5,2), project: clamp(projectEl.value,1,5,2), interview: clamp(interviewEl.value,1,5,2) }; }
+      function metric(p) { var ready = Math.round((p.resume * 0.3 + p.project * 0.4 + p.interview * 0.3) * 20); var apply = Math.max(8, Math.min(30, Math.round(8 + (100 - ready) / 7))); var interviewGoal = Math.max(8, Math.min(45, Math.round(ready * 0.38))); return { ready: ready, apply: apply, interviewGoal: interviewGoal }; }
+      function tasks(week, p) { if (week === 1) return ["明确岗位关键能力词并映射到经历", "建立投递台账", "完成简历主版本改写"]; if (week === 2) return ["每周投递 " + p.apply + " 个岗位", "针对无反馈岗位改自我介绍", "补1个岗位相关小项目"]; if (week === 3) return ["完成12题面试训练", "整理3个量化项目成果", "复盘拒绝原因并修正"]; return ["推进面试与谈薪准备", "形成最终材料包", "复盘转化率和下轮策略"]; }
+      function render() {
+        var p = profile(); var m = metric(p); p.apply = m.apply;
+        mReadyEl.textContent = String(m.ready); mApplyEl.textContent = String(m.apply); mInterviewEl.textContent = String(m.interviewGoal) + "%";
+        roadmapEl.innerHTML = [1,2,3,4].map(function (w) { return '<article class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><p class="text-xs font-semibold text-blue-600">第' + w + '周</p><ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-700">' + tasks(w, p).map(function (t) { return "<li>" + t + "</li>"; }).join("") + "</ul></article>"; }).join("");
+        panelQaEl.innerHTML = ["请讲一个你做出结果的案例", "为什么选择" + p.role + "方向", "一周没邀约你会怎么调整", "60秒讲清最近项目"].map(function (q, i) { return '<article class="rounded-xl border border-slate-200 bg-white p-4"><p class="text-xs font-semibold text-indigo-600">题目' + (i + 1) + '</p><h3 class="mt-1 text-sm font-bold text-slate-900">' + q + '</h3><p class="mt-1 text-xs text-slate-500">评分维度：结果量化 / 结构清晰 / 复盘能力</p></article>'; }).join("");
+        promptEl.textContent = ["你是我的求职教练，请生成7天执行计划。", "【岗位】" + p.role + "（" + p.type + "）", "【剩余时间】" + p.days + "天", "【每周投入】" + p.hours + "小时", "【准备度】简历" + p.resume + "/5 项目" + p.project + "/5 面试" + p.interview + "/5", "【目标周投递】" + m.apply, "要求：每天3条任务+完成标准+3个复盘问题，表格输出。"].join("\n");
+      }
+      function readRecords() { try { var raw = localStorage.getItem(trackerKey); var arr = raw ? JSON.parse(raw) : []; return Array.isArray(arr) ? arr : []; } catch (e) { return []; } }
+      function writeRecords(arr) { try { localStorage.setItem(trackerKey, JSON.stringify(arr)); } catch (e) {} }
+      function renderRecords() {
+        var arr = readRecords();
+        tkRowsEl.innerHTML = arr.length ? arr.map(function (r, i) { return '<tr class="border-t border-slate-100"><td class="px-3 py-2">' + r.company + '</td><td class="px-3 py-2">' + r.job + '</td><td class="px-3 py-2">' + r.stage + '</td><td class="px-3 py-2 text-xs text-slate-500">' + r.date + '</td><td class="px-3 py-2"><button data-del="' + i + '" class="rounded border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-700">删除</button></td></tr>'; }).join("") : '<tr><td colspan="5" class="px-3 py-5 text-center text-xs text-slate-500">暂无记录，先添加一条。</td></tr>';
+      }
+
+      genBtn.addEventListener("click", render);
+      copyBtn.addEventListener("click", function () { navigator.clipboard.writeText(promptEl.textContent || ""); });
+      resumeBtn.addEventListener("click", function () {
+        var lines = (resumeRawEl.value || "").split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
+        if (!lines.length) { resumeOutEl.innerHTML = '<p class="text-slate-500">请输入至少1条经历。</p>'; return; }
+        resumeOutEl.innerHTML = '<ol class="list-decimal space-y-2 pl-5">' + lines.map(function (line, i) { return "<li><strong>" + (i + 1) + ".</strong> 在【" + line + "】场景下，围绕岗位目标拆解动作并推进，最终产出可量化结果（补充具体数字）。</li>"; }).join("") + "</ol>";
+      });
+      tkAddBtn.addEventListener("click", function () {
+        var company = (tkCompanyEl.value || "").trim(); var job = (tkJobEl.value || "").trim();
+        if (!company || !job) return;
+        var arr = readRecords(); arr.unshift({ company: company, job: job, stage: tkStageEl.value, date: new Date().toLocaleDateString("zh-CN") });
+        writeRecords(arr); tkCompanyEl.value = ""; tkJobEl.value = ""; renderRecords();
+      });
+      document.addEventListener("click", function (e) {
+        var t = e.target;
+        if (t && t.classList.contains("tab-btn")) {
+          var tab = t.getAttribute("data-tab");
+          document.querySelectorAll(".tab-btn").forEach(function (b) { b.setAttribute("data-active", b.getAttribute("data-tab") === tab ? "true" : "false"); });
+          document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.toggle("hidden", p.id !== "panel-" + tab); });
+        }
+        if (t && t.hasAttribute("data-del")) {
+          var idx = Number(t.getAttribute("data-del")); var arr = readRecords(); arr.splice(idx, 1); writeRecords(arr); renderRecords();
+        }
+      });
+      render();
+      renderRecords();
+      resumeOutEl.innerHTML = '<p class="text-slate-500">输入经历后点击“生成STAR子弹点”。</p>';
+    })();
+  </script>
+</body>
+</html>

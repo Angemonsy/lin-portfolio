@@ -1,9 +1,22 @@
 [
   {
+    "id": "campus-content-radar",
+    "platform": "产品方向",
+    "title": "大学生自媒体选题雷达",
+    "description": "按平台、身份和时间预算生成可拍选题、标题钩子、脚本骨架与7天发布排期，适合校园内容账号快速起号。",
+    "storyLine": "很多同学想做自媒体，但卡在“今天到底拍什么”。这个工具把定位、素材和执行拆成当天能完成的动作。",
+    "result": "把选题从灵感依赖变成结构化生成，并能把已选题保存为本地内容池。",
+    "cover": "",
+    "previewUrl": "portfolio-items/demos/campus-content-radar-source.html?mode=preview",
+    "url": "portfolio-items/campus-content-radar.html"
+  },
+  {
     "id": "xiaohongshu-learning-system",
     "platform": "小红书",
     "title": "小红书卡片生成器（AI排版）",
     "description": "输入内容后自动生成小红书尺寸卡片，支持多页排版与一键导图。",
+    "storyLine": "最早是为了我自己做内容时别再反复调样式，后来慢慢变成能复用的创作工具。",
+    "result": "把单条内容排版时间从 40 分钟压到 8-12 分钟，稳定输出不再靠硬熬。",
     "cover": "",
     "previewUrl": "portfolio-items/demos/xiaohongshu-card-generator-source.html",
     "url": "portfolio-items/xiaohongshu-learning-system.html"
@@ -13,15 +26,30 @@
     "platform": "公众号",
     "title": "公众号长文自动排版模板",
     "description": "把深度长文快速排成高可读版式，适配知识型内容发布与复用。",
+    "storyLine": "做知识长文时最怕读者看两段就跳出，所以先解决“读得下去”这个基本盘。",
+    "result": "同样内容在移动端阅读体验更稳定，二次编辑时间显著减少。",
     "cover": "",
     "previewUrl": "portfolio-items/demos/gongzhonghao-layout-source.html",
     "url": "portfolio-items/gongzhonghao-ai-structure.html"
+  },
+  {
+    "id": "campus-offer-sprint-planner",
+    "platform": "产品方向",
+    "title": "应届生求职冲刺看板（AI版）",
+    "description": "输入目标岗位与时间预算，自动生成冲刺路线、面试训练题、STAR简历优化建议与投递追踪面板。",
+    "storyLine": "这个项目来自同学们最常见的痛点：知道要找实习和校招，但每天不知道该做哪一步。",
+    "result": "把“焦虑”拆成可执行动作，让准备过程可追踪、可复盘、可迭代。",
+    "cover": "",
+    "previewUrl": "portfolio-items/demos/campus-offer-sprint-planner-source.html?mode=preview",
+    "url": "portfolio-items/campus-offer-sprint-planner.html"
   },
   {
     "id": "shipinhao-thesis-workflow",
     "platform": "视频号",
     "title": "AI工具实战：论文提纲 20 分钟重构",
     "description": "白板讲解 + 录屏实操，演示课程论文从题目到结构的快速拆解流程。",
+    "storyLine": "这个选题来自很多同学同一句话：知道 AI 很强，但第一步永远迈不出去。",
+    "result": "把“不会起步”的模糊焦虑，拆成可执行的 20 分钟流程。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/shipinhao-thesis-workflow.html"
@@ -31,6 +59,8 @@
     "platform": "视频号",
     "title": "系列栏目：AI+学业效率周更实验",
     "description": "连续更新校园场景实操内容，沉淀可迁移的知识资产与案例库。",
+    "storyLine": "我把自己的周更当实验，不追一次爆发，先把“可持续”跑通。",
+    "result": "每周形成可复盘素材，逐步沉淀成模板与案例资产。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/shipinhao-weekly-experiment.html"
@@ -40,6 +70,8 @@
     "platform": "合作项目",
     "title": "腾讯 ima 校园知识库增长合作",
     "description": "从知识组织到校园传播，搭建可持续增长的内容闭环。",
+    "storyLine": "和平台合作时，我更在意的是“学生是否真的用起来”，而不只是曝光数字。",
+    "result": "形成从内容生产到校园传播的闭环方法，可复制到更多场景。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/tencent-ima-campus.html"
@@ -49,6 +81,8 @@
     "platform": "合作项目",
     "title": "虚实传媒 AI MCN：账号共创与商业化试验",
     "description": "在选题、内容节奏、转化路径上持续迭代，验证校园场景商业模型。",
+    "storyLine": "这类项目最难的是平衡内容表达和商业目标，我在里面做的是两边对齐。",
+    "result": "沉淀了更清晰的账号节奏与转化路径，减少盲目试错。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/xushi-mcn-creator.html"
@@ -58,6 +92,8 @@
     "platform": "产品方向",
     "title": "AI内容再利用工作流（1条内容拆成10条）",
     "description": "把长文自动拆解为小红书、公众号、视频号多平台素材，做成可订阅服务。",
+    "storyLine": "一个人做内容最痛的是“产能不够”，所以我先解决复用率，而不是硬拉时长。",
+    "result": "让同一条母内容在多平台可复用，显著提升内容投入产出比。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/ai-content-repurpose-studio.html"
@@ -67,6 +103,8 @@
     "platform": "产品方向",
     "title": "大学生AI成长诊断 + 7天执行陪跑",
     "description": "面向大学生的轻咨询产品，聚焦执行落地与结果产出，适合快速商业化验证。",
+    "storyLine": "很多同学不是不知道道理，而是每天不知道先做哪一步。",
+    "result": "通过诊断+陪跑，把计划变成可交付动作，缩短从想法到结果的距离。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/student-ai-growth-engine.html"
@@ -76,8 +114,32 @@
     "platform": "产品方向",
     "title": "私域咨询自动转化页（作品集 -> 微信 -> 成交）",
     "description": "把作品集升级为承接页面，沉淀咨询线索并形成标准化成交漏斗。",
+    "storyLine": "我不想让“有人感兴趣”停留在点赞，所以把承接路径做得更明确。",
+    "result": "把浏览流量更自然地引导到私域沟通，减少无效流失。",
     "devOnly": true,
     "cover": "",
     "url": "portfolio-items/private-domain-conversion-funnel.html"
+  },
+  {
+    "id": "autonomous-ai-lab",
+    "platform": "产品方向",
+    "title": "自主AI自主测试（自动执行实验室）",
+    "description": "一个独立容器：所有 AI 自动跑、自动更新、自动沉淀的项目都挂在这里，包括站点健康检查、GitHub 学习探索和内容实验。",
+    "storyLine": "为了保证主站稳定，我把会持续自动执行的项目收敛到一个隔离区里，先跑通再迁移。",
+    "result": "AI 负责自动学习和自动尝试，我负责看结果、定方向、决定哪些东西值得扩展。",
+    "devOnly": true,
+    "cover": "",
+    "url": "portfolio-items/autonomous-ai-lab.html"
+  },
+  {
+    "id": "autonomous-ai-lab-business-summary",
+    "platform": "产品方向",
+    "title": "自主AI实验室 · 项目说明与探索入口",
+    "description": "把自动执行实验室讲清楚：它承载哪些 AI 项目、为什么独立、能持续长出什么新内容。",
+    "storyLine": "这不是一篇普通案例页，而是给 AI 开放的实验说明书，让外部用户看懂这块区域的用途。",
+    "result": "把“这个区域是干嘛的”说清楚，再把学习、试错和项目扩展串起来。",
+    "cover": "",
+    "previewUrl": "portfolio-items/autonomous-ai-lab-business.html",
+    "url": "portfolio-items/autonomous-ai-lab-business.html"
   }
 ]

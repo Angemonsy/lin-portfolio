@@ -215,6 +215,17 @@ window.FALLBACK_DATA = {
   ],
   portfolio: [
     {
+      id: "campus-content-radar",
+      platform: "产品方向",
+      title: "大学生自媒体选题雷达",
+      description: "按平台、身份和时间预算生成可拍选题、标题钩子、脚本骨架与7天发布排期，适合校园内容账号快速起号。",
+      storyLine: "很多同学想做自媒体，但卡在“今天到底拍什么”。这个工具把定位、素材和执行拆成当天能完成的动作。",
+      result: "把选题从灵感依赖变成结构化生成，并能把已选题保存为本地内容池。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-content-radar-source.html?mode=preview",
+      url: "portfolio-items/campus-content-radar.html"
+    },
+    {
       id: "xiaohongshu-learning-system",
       platform: "小红书",
       title: "小红书卡片生成器（AI排版）",
@@ -231,6 +242,17 @@ window.FALLBACK_DATA = {
       cover: "",
       previewUrl: "portfolio-items/demos/gongzhonghao-layout-source.html",
       url: "portfolio-items/gongzhonghao-ai-structure.html"
+    },
+    {
+      id: "campus-offer-sprint-planner",
+      platform: "产品方向",
+      title: "应届生求职冲刺看板（AI版）",
+      description: "输入目标岗位与时间预算，自动生成冲刺路线、面试训练题、STAR简历优化建议与投递追踪面板。",
+      storyLine: "这个项目来自同学们最常见的痛点：知道要找实习和校招，但每天不知道该做哪一步。",
+      result: "把“焦虑”拆成可执行动作，让准备过程可追踪、可复盘、可迭代。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-offer-sprint-planner-source.html?mode=preview",
+      url: "portfolio-items/campus-offer-sprint-planner.html"
     },
     {
       id: "shipinhao-thesis-workflow",
@@ -294,6 +316,17 @@ window.FALLBACK_DATA = {
       devOnly: true,
       cover: "",
       url: "portfolio-items/private-domain-conversion-funnel.html"
+    },
+    {
+      id: "autonomous-ai-lab",
+      platform: "产品方向",
+      title: "自主AI自主测试（自动化实验室）",
+      description: "一个独立沙盒项目：由AI每日自动做站点健康检查与GitHub学习探索，只新增不改动原有项目。",
+      storyLine: "为了保证主站稳定，我把所有自动化尝试收敛到一个隔离项目里，先跑通再迁移。",
+      result: "你只负责内容更新；其余探索由AI自动执行并沉淀为可复用流程。",
+      devOnly: true,
+      cover: "",
+      url: "portfolio-items/autonomous-ai-lab.html"
     }
   ],
   sitePages: {},

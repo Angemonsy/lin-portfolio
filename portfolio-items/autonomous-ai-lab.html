@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇绩怪谈AIQ | 自主AI自主测试（自动化实验室）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brandFrom: "#3b82f6", brandTo: "#6366f1", softBg: "#f8fafc" } } } };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="antialiased">
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="../assets/avatar-kunki.jpg" alt="奇绩怪谈AIQ Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">奇绩怪谈AIQ</span></a>
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-24 pb-16">
+    <section class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <article class="reveal rounded-3xl border border-slate-200 bg-white p-8">
+        <p class="text-sm font-semibold text-blue-600">作品详情 · 产品方向</p>
+        <h1 class="mt-3 text-3xl font-extrabold text-slate-900">自主AI自主测试（自动化实验室）</h1>
+        <p class="mt-4 text-sm leading-relaxed text-slate-600">这是我给 AI 开放的独立实验区。它不承担主站的稳定展示，而是允许 AI 围绕我的商业定位做学习、试错、发掘需求和生成内容，把每次有效尝试都变成可复用资产。只要某个项目是 AI 自动跑、自动更新、自动沉淀，它都应该挂在这里。</p>
+
+        <div class="mt-6 grid gap-4 md:grid-cols-2">
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <h2 class="text-base font-bold text-slate-900">自动化流程 A：站点健康检查</h2>
+            <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+              <li>每天自动检查项目数据文件是否可解析。</li>
+              <li>每天自动核对作品集条目与详情页文件是否匹配。</li>
+              <li>发现风险时优先给出“新增式”修复建议，避免破坏旧内容。</li>
+            </ul>
+          </section>
+
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <h2 class="text-base font-bold text-slate-900">自动化流程 B：GitHub 学习探索</h2>
+            <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+              <li>每天聚焦 1 个与我商业定位相关的实践方向。</li>
+              <li>优先从信息结构、用户流程、转化承接、内容可读性里找改进点。</li>
+              <li>能落地的内容、页面、脚本和小项目，先在这里验证，再考虑迁移。</li>
+            </ul>
+          </section>
+        </div>
+
+        <section class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">当前挂载的自动执行项目</h2>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">这些项目不是单独摆在作品集里，而是作为实验室里的常驻任务持续更新。它们可以继续扩展，也可以随时替换成新的 AI 自动项目。</p>
+            </div>
+            <a href="../portfolio.html" class="inline-flex items-center rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100">回作品集看全貌</a>
+          </div>
+          <div class="mt-5 grid gap-4 md:grid-cols-2">
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 01</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生自媒体选题雷达</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 每天根据平台、身份和时间预算生成可拍选题、标题钩子、脚本骨架和 7 天游玩排期，帮助内容持续更新。</p>
+              <a href="./campus-content-radar.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 02</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">应届生求职冲刺看板</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 持续把求职准备拆成路线、题库、简历优化和投递追踪，让焦虑变成每天可执行的动作。</p>
+              <a href="./campus-offer-sprint-planner.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-dashed border-blue-300 bg-blue-50/60 p-6">
+          <h2 class="text-base font-bold text-slate-900">执行边界（安全约束）</h2>
+          <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+            <li>只加不删：优先新增文件、新增条目，不覆盖原有页面。</li>
+            <li>先验证再迁移：实验通过后再考虑推广到主内容区。</li>
+            <li>保持可回滚：每次改动保持独立、可审阅、可追踪。</li>
+          </ul>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+          <h2 class="text-base font-bold text-slate-900">这个区域对网站的意义</h2>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">它让网站不只是“展示我做过什么”，而是持续产生新内容、新工具和新实验。对来访的人来说，这里也是一眼看懂我在做什么、为什么做、还能继续往哪里做的入口。</p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href="./autonomous-ai-lab-business.html" class="inline-flex items-center rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-95">查看项目说明与探索入口</a>
+            <a href="../services.html" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">看可合作服务</a>
+          </div>
+        </section>
+      </article>
+      <div class="mt-8">
+        <a href="../portfolio.html" class="inline-flex items-center rounded-xl border border-blue-200 bg-blue-50 px-5 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100">返回作品集</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white/95">
+    <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-5 md:flex-row md:items-center md:justify-between md:gap-8">
+        <p class="text-base font-semibold text-slate-700 md:text-xl">用 AI 和结构化系统，在校内外持续拿结果。</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="platform-btn platform-btn--footer" data-qr-platform="wechat" type="button">微信</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="shipinhao" type="button">视频号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="xiaohongshu" type="button">小红书</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="gongzhonghao" type="button">公众号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="douyin" type="button">抖音</button>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-slate-200/80">
+      <div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-4 text-center text-sm text-slate-600 sm:px-6 lg:px-8">
+        <p>© 2026 奇绩怪谈AIQ</p>
+        <p class="text-xs text-slate-500"><a data-icp-record href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="transition hover:text-blue-600 hover:underline">工信部备案号：粤ICP备2026039646号</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/data-fallback.js"></script>
+  <script src="../assets/site-common.js"></script>
+  <script>
+    (function () {
+      SiteCommon.initNav({ currentKey: "portfolio" });
+      SiteCommon.initQrModal({ assetPrefix: "../" });
+      SiteCommon.initReveal(document);
+    })();
+  </script>
+</body>
+</html>

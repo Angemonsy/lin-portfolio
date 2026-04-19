@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇绩怪谈AIQ | 自主AI实验室 · 项目说明与探索入口</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brandFrom: "#3b82f6", brandTo: "#6366f1", softBg: "#f8fafc" } } } };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="antialiased">
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="../assets/avatar-kunki.jpg" alt="奇绩怪谈AIQ Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">奇绩怪谈AIQ</span></a>
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-24 pb-16">
+    <section class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <article class="reveal rounded-3xl border border-slate-200 bg-white p-8">
+        <p class="text-sm font-semibold text-blue-600">产品方向 · 项目说明</p>
+        <h1 class="mt-3 text-3xl font-extrabold text-slate-900">自主AI实验室，是我给 AI 开放的常驻项目容器</h1>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">你可以把这一页理解成“授权说明 + 项目入口”：这里不负责展示一个单独产品，而是承载所有 AI 自动跑、自动更新、自动沉淀的项目。AI 会围绕我的商业定位持续学习、试错、发掘需求，并把有效尝试变成内容、页面和小项目。</p>
+
+        <div class="mt-6 grid gap-4 md:grid-cols-2">
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <h2 class="text-sm font-semibold text-slate-500">为什么要独立出来</h2>
+            <p class="mt-2 text-sm leading-relaxed text-slate-700">因为这个区域可以随便试错，就算某次实验不成熟，也不会影响主站内容和原有页面。它的价值不是稳定展示，而是持续探索。</p>
+          </section>
+          <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <h2 class="text-sm font-semibold text-slate-500">对我的定位有什么帮助</h2>
+            <p class="mt-2 text-sm leading-relaxed text-slate-700">它帮我从“会做内容、会做工具”进一步走向“会发现需求、会验证需求、会把需求做成项目和承接页”。</p>
+          </section>
+        </div>
+
+        <section class="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <h2 class="text-base font-bold text-slate-900">在这里可以做什么</h2>
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-700">
+            <li>围绕 GitHub 做每天的学习探索，把我真正会用、真正适合我的方法留下来。</li>
+            <li>根据我的商业定位发掘需求，尝试做小工具、内容页、承接页或新的实验项目。</li>
+            <li>把有效的尝试沉淀成页面、案例、流程和文案，让网站内容更能留住人。</li>
+          </ul>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5">
+          <h2 class="text-base font-bold text-slate-900">实验室里现在挂着哪些项目</h2>
+          <div class="mt-4 grid gap-4 md:grid-cols-2">
+            <article class="rounded-2xl border border-white bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 01</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生自媒体选题雷达</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 每天自动生成可拍选题、脚本骨架和发布排期，帮助内容稳定更新。</p>
+              <a href="./campus-content-radar.html" class="mt-3 inline-flex text-sm font-semibold text-emerald-700 hover:underline">打开项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 02</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">应届生求职冲刺看板</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 持续把求职准备拆成路线、训练题、简历优化和投递追踪。</p>
+              <a href="./campus-offer-sprint-planner.html" class="mt-3 inline-flex text-sm font-semibold text-emerald-700 hover:underline">打开项目 →</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <h2 class="text-base font-bold text-slate-900">这类探索最终能帮到谁</h2>
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-700">
+            <li>先帮我自己，把“要做什么”变成更清晰、更可执行的路线。</li>
+            <li>再帮来访的人，更快看懂我的定位、我的方法和我能提供的帮助。</li>
+            <li>最后帮我的网站，持续产生新的内容资产，而不是只停留在展示。</li>
+          </ul>
+        </section>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="./autonomous-ai-lab.html" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">查看技术实验页</a>
+          <a href="../services.html" class="inline-flex items-center rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-95">查看可合作服务</a>
+          <a href="../portfolio.html" class="inline-flex items-center rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">返回作品集</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="../assets/data-fallback.js"></script>
+  <script src="../assets/site-common.js"></script>
+  <script>
+    (function () {
+      SiteCommon.initNav({ currentKey: "portfolio" });
+      SiteCommon.initQrModal({ assetPrefix: "../" });
+      SiteCommon.initReveal(document);
+    })();
+  </script>
+</body>
+</html>
