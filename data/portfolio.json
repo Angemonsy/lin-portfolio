@@ -1,5 +1,17 @@
 [
   {
+    "id": "campus-hook-defense",
+    "platform": "产品方向",
+    "title": "校园爆款标题防守战",
+    "description": "一个60秒标题判断小游戏，接住具体、有场景、有结果的好标题，避开空泛标题，训练大学生自媒体选题敏感度。",
+    "storyLine": "很多同学不是不会发内容，而是不知道什么标题值得发。这个小游戏把标题判断做成可重复训练。",
+    "result": "用游戏化方式训练选题判断，并用本地存储记录最高分和最佳连击。",
+    "cover": "",
+    "previewUrl": "portfolio-items/demos/campus-hook-defense-source.html?mode=preview",
+    "url": "portfolio-items/campus-hook-defense.html",
+    "devOnly": true
+  },
+  {
     "id": "campus-content-radar",
     "platform": "产品方向",
     "title": "大学生自媒体选题雷达",
@@ -8,7 +20,8 @@
     "result": "把选题从灵感依赖变成结构化生成，并能把已选题保存为本地内容池。",
     "cover": "",
     "previewUrl": "portfolio-items/demos/campus-content-radar-source.html?mode=preview",
-    "url": "portfolio-items/campus-content-radar.html"
+    "url": "portfolio-items/campus-content-radar.html",
+    "devOnly": true
   },
   {
     "id": "xiaohongshu-learning-system",
@@ -42,6 +55,30 @@
     "cover": "",
     "previewUrl": "portfolio-items/demos/campus-offer-sprint-planner-source.html?mode=preview",
     "url": "portfolio-items/campus-offer-sprint-planner.html"
+  },
+  {
+    "id": "campus-interview-sparring",
+    "platform": "产品方向",
+    "title": "大学生面试追问陪练台",
+    "description": "围绕实习、校招和项目答辩里的高频追问，生成连续追问链路、回答骨架和复盘标签，帮助大学生把卡壳题练熟。",
+    "storyLine": "很多同学准备面试时只背标准答案，真正失分往往发生在“再追问一句”之后。",
+    "result": "把追问练习做成可重复的前端工具，并用本地错题本保存高频薄弱题。",
+    "cover": "",
+    "previewUrl": "portfolio-items/demos/campus-interview-sparring-source.html?mode=preview",
+    "url": "portfolio-items/campus-interview-sparring.html",
+    "devOnly": true
+  },
+  {
+    "id": "campus-gap-buddy",
+    "platform": "产品方向",
+    "title": "大学生空档搭子局",
+    "description": "把课间空档、预算、社交压力和活动目标变成可执行的校园搭子方案，附带邀约文案、备选计划和本地收藏。",
+    "storyLine": "很多同学不是没有社交机会，而是卡在“下课这 45 分钟到底怎么开口约人”。",
+    "result": "用纯前端工具把校园社交冷启动做成可复制动作，并用 localStorage 保存可复用的邀约计划。",
+    "cover": "",
+    "previewUrl": "portfolio-items/demos/campus-gap-buddy-source.html?mode=preview",
+    "url": "portfolio-items/campus-gap-buddy.html",
+    "devOnly": true
   },
   {
     "id": "shipinhao-thesis-workflow",

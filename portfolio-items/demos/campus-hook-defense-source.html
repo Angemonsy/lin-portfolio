@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校园爆款标题防守战 Demo</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6f89;
+      --line: #d6e1ee;
+      --blue: #2563eb;
+      --green: #07805d;
+      --red: #c2410c;
+      --yellow: #b7791f;
+      --surface: rgba(255, 255, 255, .92);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(37, 99, 235, .09), transparent 35%),
+        linear-gradient(180deg, #f8fbff 0%, #eef7f0 100%);
+    }
+    button { cursor: pointer; font: inherit; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 26px 0; }
+    .hero { display: grid; grid-template-columns: .9fr 1.1fr; gap: 18px; align-items: stretch; }
+    .intro, .game-wrap, .coach, .rules { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    .intro { padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .eyebrow { margin: 0; color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .08em; }
+    h1 { margin: 10px 0 0; font-size: clamp(30px, 4vw, 50px); line-height: 1.08; letter-spacing: 0; }
+    .lead { margin: 15px 0 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .btn { border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #334155; padding: 10px 13px; font-weight: 800; }
+    .btn.primary { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .btn:focus-visible { outline: 3px solid rgba(37, 99, 235, .22); outline-offset: 2px; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    .stat { border: 1px solid #e0e8f3; border-radius: 8px; background: #fff; padding: 11px; min-height: 78px; }
+    .stat span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .stat strong { display: block; margin-top: 7px; font-size: 26px; }
+    .game-wrap { padding: 12px; }
+    .game-stage { position: relative; min-height: 520px; border: 1px solid #b9cce4; border-radius: 8px; overflow: hidden; background: #10213d; }
+    canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+    .overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 18px; background: rgba(15, 33, 61, .66); color: #fff; text-align: center; }
+    .overlay.hidden { display: none; }
+    .overlay-box { width: min(430px, 100%); border: 1px solid rgba(255,255,255,.24); border-radius: 8px; background: rgba(255,255,255,.12); padding: 22px; backdrop-filter: blur(10px); }
+    .overlay-box h2 { margin: 0; font-size: 28px; }
+    .overlay-box p { margin: 12px 0 0; color: rgba(255,255,255,.82); line-height: 1.65; }
+    .lower { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .coach, .rules { padding: 18px; }
+    .coach h2, .rules h2 { margin: 8px 0 0; font-size: 20px; }
+    .coach-list, .rule-list { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 9px; color: #475569; font-size: 14px; line-height: 1.6; }
+    .coach-list li, .rule-list li { border-left: 3px solid #93c5fd; padding-left: 10px; }
+    body[data-mode="preview"] .full-only { display: none !important; }
+    body[data-mode="preview"] .hero { grid-template-columns: 1fr; }
+    body[data-mode="preview"] .intro { min-height: 0; }
+    body[data-mode="preview"] .game-stage { min-height: 430px; }
+    body[data-mode="preview"] .lower { display: none; }
+    @media (max-width: 920px) {
+      .hero, .lower { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .game-stage { min-height: 460px; }
+    }
+    @media (max-width: 520px) {
+      .shell { width: min(100% - 20px, 1180px); padding: 14px 0; }
+      .intro { padding: 18px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .game-stage { min-height: 420px; }
+    }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="shell">
+    <section class="hero">
+      <article class="intro">
+        <div>
+          <p class="eyebrow">HOOK DEFENSE GAME</p>
+          <h1>校园爆款标题防守战</h1>
+          <p class="lead">接住具体标题，避开空泛标题。把“这个好像能火”的模糊感觉，练成能判断场景、结果和冲突的内容敏感度。</p>
+        </div>
+        <div>
+          <div class="actions full-only">
+            <button id="startBtn" class="btn primary" type="button">开始 60 秒训练</button>
+            <button id="resetBtn" class="btn" type="button">清空最高分</button>
+          </div>
+          <div class="stats">
+            <article class="stat"><span>得分</span><strong id="score">0</strong></article>
+            <article class="stat"><span>连击</span><strong id="combo">0</strong></article>
+            <article class="stat"><span>剩余</span><strong id="time">60</strong></article>
+            <article class="stat"><span>最高</span><strong id="best">0</strong></article>
+          </div>
+        </div>
+      </article>
+
+      <section class="game-wrap">
+        <div class="game-stage" id="stage">
+          <canvas id="gameCanvas" width="960" height="620" aria-label="标题防守小游戏画布"></canvas>
+          <div id="overlay" class="overlay">
+            <div class="overlay-box">
+              <h2>准备接标题</h2>
+              <p>左右方向键、A/D 或鼠标拖动角色。绿色标题要接住，橙色空泛标题要避开。</p>
+              <div class="actions" style="justify-content:center;">
+                <button id="overlayStart" class="btn primary" type="button">开始训练</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="lower full-only">
+      <article class="coach">
+        <p class="eyebrow">TITLE COACH</p>
+        <h2>标题判断口径</h2>
+        <ul class="coach-list" id="coachList">
+          <li>好标题通常包含明确对象、真实场景、可感知结果。</li>
+          <li>坏标题通常只有态度，没有细节，没有行动方向。</li>
+          <li>连续接住好标题会提升倍率，误接空标题会打断连击。</li>
+        </ul>
+      </article>
+      <article class="rules">
+        <p class="eyebrow">LOCAL STORAGE</p>
+        <h2>本地记录</h2>
+        <ul class="rule-list">
+          <li>最高分和最佳连击会保存在当前浏览器。</li>
+          <li>刷新页面后仍能看到上次训练结果。</li>
+          <li>这个小游戏不上传数据，也不依赖后端。</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var canvas = document.getElementById("gameCanvas");
+      var ctx = canvas.getContext("2d");
+      var stage = document.getElementById("stage");
+      var overlay = document.getElementById("overlay");
+      var scoreEl = document.getElementById("score");
+      var comboEl = document.getElementById("combo");
+      var timeEl = document.getElementById("time");
+      var bestEl = document.getElementById("best");
+      var coachList = document.getElementById("coachList");
+      var storeKey = "campus_hook_defense_v1";
+      var keys = {};
+      var pointerActive = false;
+      var lastTime = 0;
+      var spawnTimer = 0;
+      var state = "ready";
+      var player = { x: 430, y: 540, w: 150, h: 34, speed: 520 };
+      var items = [];
+      var particles = [];
+      var game = { score: 0, combo: 0, bestCombo: 0, time: 60, elapsed: 0 };
+      var goodHooks = [
+        "普通大学生用AI省下3小时的真实流程",
+        "绩点前5%的人都在偷用这张周计划表",
+        "从0开始做小红书账号的7天选题清单",
+        "我把课程论文拆成了4个可执行步骤",
+        "大学生第一份实习简历这样改更像项目",
+        "一天只学90分钟，怎么保住核心成绩"
+      ];
+      var badHooks = [
+        "努力学习真的很重要",
+        "大学生一定要变优秀",
+        "自律的人生更精彩",
+        "分享一些个人感悟",
+        "今天也要继续加油",
+        "普通人如何逆袭"
+      ];
+      var tips = [
+        "对象越具体，标题越容易让人停下来。",
+        "结果越可感知，收藏意愿越强。",
+        "空泛标题容易像口号，缺少点击理由。",
+        "好标题先给场景，再给方法或结果。"
+      ];
+
+      function readBest() {
+        try {
+          var data = JSON.parse(localStorage.getItem(storeKey) || "{}");
+          return { score: Number(data.score) || 0, combo: Number(data.combo) || 0 };
+        } catch (e) {
+          return { score: 0, combo: 0 };
+        }
+      }
+      function writeBest() {
+        var best = readBest();
+        var next = { score: Math.max(best.score, game.score), combo: Math.max(best.combo, game.bestCombo) };
+        try { localStorage.setItem(storeKey, JSON.stringify(next)); } catch (e) {}
+        bestEl.textContent = String(next.score);
+      }
+      function resetBest() {
+        try { localStorage.removeItem(storeKey); } catch (e) {}
+        bestEl.textContent = "0";
+      }
+      function resizeCanvas() {
+        var rect = stage.getBoundingClientRect();
+        var ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        canvas.width = Math.max(640, Math.floor(rect.width * ratio));
+        canvas.height = Math.max(420, Math.floor(rect.height * ratio));
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        player.y = rect.height - 70;
+        player.x = Math.max(0, Math.min(rect.width - player.w, player.x));
+      }
+      function displaySize() {
+        return { w: canvas.width / Math.max(1, Math.min(2, window.devicePixelRatio || 1)), h: canvas.height / Math.max(1, Math.min(2, window.devicePixelRatio || 1)) };
+      }
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+      function spawnItem() {
+        var size = displaySize();
+        var good = Math.random() > .34;
+        var pool = good ? goodHooks : badHooks;
+        var text = pool[Math.floor(Math.random() * pool.length)];
+        var w = Math.min(300, Math.max(190, text.length * 13));
+        items.push({
+          x: rand(12, Math.max(13, size.w - w - 12)),
+          y: -70,
+          w: w,
+          h: 58,
+          vy: rand(92, 150) + game.elapsed * 1.7,
+          good: good,
+          text: text,
+          spin: rand(-.015, .015)
+        });
+      }
+      function addParticles(x, y, good) {
+        for (var i = 0; i < 14; i++) {
+          particles.push({ x: x, y: y, vx: rand(-90, 90), vy: rand(-150, -40), life: rand(.35, .72), good: good });
+        }
+      }
+      function startGame() {
+        resizeCanvas();
+        items = [];
+        particles = [];
+        spawnTimer = 0;
+        lastTime = performance.now();
+        state = "playing";
+        game = { score: 0, combo: 0, bestCombo: 0, time: mode === "preview" ? 30 : 60, elapsed: 0 };
+        overlay.classList.add("hidden");
+        updateStats();
+      }
+      function endGame() {
+        state = "ended";
+        writeBest();
+        overlay.classList.remove("hidden");
+        overlay.querySelector("h2").textContent = "训练结束";
+        overlay.querySelector("p").textContent = "本轮得分 " + game.score + "，最佳连击 " + game.bestCombo + "。再来一轮，继续训练标题敏感度。";
+      }
+      function updateStats() {
+        scoreEl.textContent = String(game.score);
+        comboEl.textContent = String(game.combo);
+        timeEl.textContent = String(Math.max(0, Math.ceil(game.time)));
+      }
+      function updateCoach(message, good) {
+        if (!coachList || mode === "preview") return;
+        coachList.insertAdjacentHTML("afterbegin", '<li style="border-left-color:' + (good ? "#34d399" : "#fb923c") + '">' + message + '</li>');
+        while (coachList.children.length > 5) coachList.removeChild(coachList.lastElementChild);
+      }
+      function handleCatch(item) {
+        if (item.good) {
+          game.combo += 1;
+          game.bestCombo = Math.max(game.bestCombo, game.combo);
+          game.score += 10 + Math.min(30, game.combo * 2);
+          updateCoach(tips[Math.floor(Math.random() * tips.length)], true);
+        } else {
+          game.combo = 0;
+          game.score = Math.max(0, game.score - 12);
+          game.time = Math.max(0, game.time - 3);
+          updateCoach("这类标题太空，缺少对象、场景或结果。", false);
+        }
+        addParticles(item.x + item.w / 2, item.y + item.h / 2, item.good);
+      }
+      function update(dt) {
+        var size = displaySize();
+        if (keys.ArrowLeft || keys.a || keys.A) player.x -= player.speed * dt;
+        if (keys.ArrowRight || keys.d || keys.D) player.x += player.speed * dt;
+        player.x = Math.max(8, Math.min(size.w - player.w - 8, player.x));
+        game.elapsed += dt;
+        game.time -= dt;
+        spawnTimer -= dt;
+        if (spawnTimer <= 0) {
+          spawnItem();
+          spawnTimer = Math.max(.34, .88 - game.elapsed * .008);
+        }
+        for (var i = items.length - 1; i >= 0; i--) {
+          var item = items[i];
+          item.y += item.vy * dt;
+          var hitX = item.x < player.x + player.w && item.x + item.w > player.x;
+          var hitY = item.y + item.h >= player.y && item.y <= player.y + player.h;
+          if (hitX && hitY) {
+            handleCatch(item);
+            items.splice(i, 1);
+          } else if (item.y > size.h + 80) {
+            if (item.good) {
+              game.combo = 0;
+              game.time = Math.max(0, game.time - 2);
+              updateCoach("错过好标题：具体信息越多，越值得优先保留。", false);
+            }
+            items.splice(i, 1);
+          }
+        }
+        for (var p = particles.length - 1; p >= 0; p--) {
+          var part = particles[p];
+          part.life -= dt;
+          part.x += part.vx * dt;
+          part.y += part.vy * dt;
+          part.vy += 260 * dt;
+          if (part.life <= 0) particles.splice(p, 1);
+        }
+        updateStats();
+        if (game.time <= 0) endGame();
+      }
+      function roundRect(x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+      }
+      function drawBackground(size) {
+        ctx.clearRect(0, 0, size.w, size.h);
+        var bg = ctx.createLinearGradient(0, 0, size.w, size.h);
+        bg.addColorStop(0, "#10213d");
+        bg.addColorStop(1, "#17423a");
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, size.w, size.h);
+        ctx.strokeStyle = "rgba(147,197,253,.14)";
+        ctx.lineWidth = 1;
+        for (var x = 0; x < size.w; x += 46) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 120, size.h); ctx.stroke();
+        }
+        ctx.fillStyle = "rgba(255,255,255,.08)";
+        ctx.fillRect(0, player.y + 52, size.w, 2);
+      }
+      function drawPlayer() {
+        roundRect(player.x, player.y, player.w, player.h, 8);
+        ctx.fillStyle = "#eaf2ff";
+        ctx.fill();
+        ctx.strokeStyle = "#93c5fd";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = "#2563eb";
+        ctx.beginPath();
+        ctx.arc(player.x + player.w / 2, player.y + 10, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fff";
+        ctx.font = "700 13px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("CREATOR", player.x + player.w / 2, player.y + 15);
+      }
+      function drawItem(item) {
+        ctx.save();
+        ctx.translate(item.x + item.w / 2, item.y + item.h / 2);
+        ctx.rotate(item.spin * item.y);
+        roundRect(-item.w / 2, -item.h / 2, item.w, item.h, 8);
+        ctx.fillStyle = item.good ? "#ecfdf5" : "#fff7ed";
+        ctx.fill();
+        ctx.strokeStyle = item.good ? "#34d399" : "#fb923c";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = item.good ? "#047857" : "#c2410c";
+        ctx.font = "800 12px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(item.good ? "好标题" : "空标题", -item.w / 2 + 12, -item.h / 2 + 19);
+        ctx.fillStyle = "#172033";
+        ctx.font = "700 14px sans-serif";
+        var text = item.text.length > 18 ? item.text.slice(0, 18) + "..." : item.text;
+        ctx.fillText(text, -item.w / 2 + 12, 12);
+        ctx.restore();
+      }
+      function drawParticles() {
+        particles.forEach(function (p) {
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.fillStyle = p.good ? "#34d399" : "#fb923c";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+      }
+      function drawIdle(size) {
+        ctx.fillStyle = "rgba(255,255,255,.84)";
+        ctx.font = "800 22px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("接具体标题，躲空泛标题", size.w / 2, 72);
+        ctx.font = "500 14px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,.62)";
+        ctx.fillText("标题训练从判断好坏开始", size.w / 2, 100);
+      }
+      function loop(now) {
+        var dt = Math.min(.034, (now - lastTime) / 1000 || .016);
+        lastTime = now;
+        var size = displaySize();
+        if (state === "playing") update(dt);
+        drawBackground(size);
+        items.forEach(drawItem);
+        drawParticles();
+        drawPlayer();
+        if (state !== "playing") drawIdle(size);
+        requestAnimationFrame(loop);
+      }
+
+      document.addEventListener("keydown", function (e) { keys[e.key] = true; });
+      document.addEventListener("keyup", function (e) { keys[e.key] = false; });
+      canvas.addEventListener("pointerdown", function (e) { pointerActive = true; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener("pointerup", function () { pointerActive = false; });
+      canvas.addEventListener("pointermove", function (e) {
+        if (!pointerActive && e.pointerType !== "mouse") return;
+        var rect = canvas.getBoundingClientRect();
+        player.x = e.clientX - rect.left - player.w / 2;
+        var size = displaySize();
+        player.x = Math.max(8, Math.min(size.w - player.w - 8, player.x));
+      });
+      window.addEventListener("resize", resizeCanvas);
+      document.getElementById("startBtn").addEventListener("click", startGame);
+      document.getElementById("overlayStart").addEventListener("click", startGame);
+      document.getElementById("resetBtn").addEventListener("click", resetBest);
+
+      var best = readBest();
+      bestEl.textContent = String(best.score);
+      resizeCanvas();
+      if (mode === "preview") {
+        overlay.classList.add("hidden");
+        startGame();
+      }
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
