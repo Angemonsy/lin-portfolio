@@ -56,16 +56,19 @@
       </div>
     </nav>
   </header>
+  <div class="scroll-progress" aria-hidden="true">
+    <div class="scroll-progress__bar" data-scroll-progress></div>
+  </div>
 
   <main class="pt-16">
     <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 py-16 sm:px-6 lg:px-8"></section>
     <!-- Hero 区 -->
-    <section class="site-static relative overflow-hidden">
-      <div class="hero-grid absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-slate-50"></div>
-      <div class="pointer-events-none absolute -top-28 right-0 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl"></div>
-      <div class="pointer-events-none absolute -bottom-24 left-8 h-72 w-72 rounded-full bg-indigo-200/35 blur-3xl"></div>
+    <section class="site-static scroll-hero relative overflow-hidden" data-scroll-hero>
+      <div class="hero-grid absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-slate-50" data-parallax="grid"></div>
+      <div class="pointer-events-none absolute -top-28 right-0 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" data-parallax="orb-fast"></div>
+      <div class="pointer-events-none absolute -bottom-24 left-8 h-72 w-72 rounded-full bg-indigo-200/35 blur-3xl" data-parallax="orb-slow"></div>
 
-      <div class="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <div class="scroll-hero__content relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28" data-parallax="content">
         <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
           <div class="reveal lg:col-span-6">
             <p class="inline-flex items-center rounded-full border border-blue-100 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-blue-700">
@@ -355,6 +358,55 @@
   <script>
     // 首页文章动态渲染：优先 fetch，失败自动兜底
     (function () {
+      function initScrollDynamics() {
+        var progressBar = document.querySelector("[data-scroll-progress]");
+        var hero = document.querySelector("[data-scroll-hero]");
+        var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var ticking = false;
+
+        function clamp(value, min, max) {
+          return Math.min(Math.max(value, min), max);
+        }
+
+        function updateProgressBar() {
+          if (!progressBar) return;
+          var doc = document.documentElement;
+          var total = Math.max(doc.scrollHeight - window.innerHeight, 0);
+          var ratio = total > 0 ? clamp(window.scrollY / total, 0, 1) : 0;
+          progressBar.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+        }
+
+        function updateHeroParallax() {
+          if (!hero) return;
+          if (prefersReduced) {
+            hero.style.setProperty("--hero-progress", "0");
+            return;
+          }
+          var rect = hero.getBoundingClientRect();
+          var heroHeight = Math.max(rect.height, 1);
+          var ratio = clamp(-rect.top / heroHeight, 0, 1);
+          hero.style.setProperty("--hero-progress", ratio.toFixed(4));
+        }
+
+        function run() {
+          updateProgressBar();
+          updateHeroParallax();
+        }
+
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(function () {
+            run();
+            ticking = false;
+          });
+        }
+
+        run();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+      }
+
       function initAiEraMotion() {
         var section = document.querySelector(".ai-era-block");
         if (!section || section.dataset.motionBound === "1") return;
@@ -442,6 +494,7 @@
       });
 
       SiteCommon.initReveal(document);
+      initScrollDynamics();
       initAiEraMotion();
     })();
   </script>
