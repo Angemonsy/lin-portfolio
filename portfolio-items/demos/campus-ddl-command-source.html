@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生DDL拆弹指挥台 Demo</title>
+  <style>
+    :root {
+      --ink:#111827;
+      --muted:#6b7280;
+      --line:#e5d6d0;
+      --fire:#b91c1c;
+      --ember:#ea580c;
+      --paper:#fffaf5;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(251,146,60,.18), transparent 24%),
+        radial-gradient(circle at 86% 14%, rgba(239,68,68,.18), transparent 24%),
+        linear-gradient(180deg, #fff7f0 0%, #fffdf9 58%, #f8f5f0 100%);
+    }
+    button, input, select { font:inherit; }
+    button { cursor:pointer; }
+    .shell { width:min(1240px, calc(100% - 28px)); margin:0 auto; padding:24px 0 40px; }
+    .hero { display:grid; grid-template-columns:1.04fr .96fr; gap:18px; align-items:stretch; }
+    .workspace { display:grid; grid-template-columns:360px 1fr; gap:18px; margin-top:18px; align-items:start; }
+    .slab {
+      border:1px solid rgba(148,163,184,.2);
+      border-radius:30px;
+      background:rgba(255,250,245,.92);
+      box-shadow:0 24px 56px rgba(17,24,39,.08);
+      backdrop-filter:blur(10px);
+    }
+    .pad { padding:22px; }
+    .eyebrow { margin:0; color:var(--fire); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { margin:12px 0 0; font-size:clamp(34px, 5.2vw, 68px); line-height:1; letter-spacing:-.06em; }
+    .lead { margin:16px 0 0; max-width:58ch; color:var(--muted); font-size:16px; line-height:1.8; }
+    .btn-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .btn {
+      border:1px solid #d6c8c0;
+      border-radius:18px;
+      background:#fff;
+      padding:12px 15px;
+      color:#374151;
+      font-weight:800;
+    }
+    .btn.primary {
+      border-color:transparent;
+      background:linear-gradient(135deg, var(--fire), var(--ember));
+      color:#fff;
+      box-shadow:0 14px 26px rgba(185,28,28,.22);
+    }
+    .poster {
+      position:relative;
+      overflow:hidden;
+      min-height:380px;
+      color:#fff7ed;
+      background:
+        radial-gradient(circle at 22% 20%, rgba(255,255,255,.15), transparent 18%),
+        linear-gradient(155deg, #2b0f10 0%, #7f1d1d 42%, #c2410c 100%);
+    }
+    .poster::after {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.14);
+      pointer-events:none;
+    }
+    .poster-chip-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .poster-chip {
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .poster-grid { position:absolute; inset:auto 24px 24px 24px; display:grid; gap:10px; }
+    .poster-note {
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.12);
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.7;
+    }
+    .poster-note strong { display:block; margin-bottom:4px; font-size:13px; letter-spacing:.04em; }
+    .label { display:block; margin-top:14px; color:#374151; font-size:13px; font-weight:800; }
+    input, select {
+      width:100%;
+      margin-top:7px;
+      border:1px solid #d6c8c0;
+      border-radius:16px;
+      background:#fff;
+      padding:12px 13px;
+      color:var(--ink);
+    }
+    .status {
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid #f5c7b8;
+      background:#fff7ed;
+      padding:13px 14px;
+      color:#7c2d12;
+      font-size:13px;
+      line-height:1.7;
+    }
+    .summary { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric {
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.94);
+      padding:16px;
+    }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .pane { margin-top:14px; display:grid; gap:12px; }
+    .task-list { display:grid; gap:10px; }
+    .task-item {
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:center;
+      border:1px solid #efd5c7;
+      border-radius:22px;
+      background:linear-gradient(180deg, #fffefc, #fff6ee);
+      padding:14px 16px;
+    }
+    .task-item strong { display:block; font-size:15px; line-height:1.45; }
+    .task-item span { display:block; margin-top:6px; color:var(--muted); font-size:12px; line-height:1.7; }
+    .risk-pill {
+      min-width:96px;
+      text-align:center;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      color:#fff;
+      background:linear-gradient(135deg, #b91c1c, #fb7185);
+    }
+    .plan {
+      display:grid;
+      gap:14px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,247,240,.95));
+      padding:18px;
+    }
+    .plan-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .plan h2 { margin:0; font-size:24px; line-height:1.25; }
+    .plan p { margin:0; color:var(--muted); font-size:14px; line-height:1.7; }
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:92px;
+      border-radius:999px;
+      padding:7px 12px;
+      background:#fff1e8;
+      color:var(--fire);
+      font-size:12px;
+      font-weight:800;
+    }
+    .plan-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+    .box {
+      min-height:124px;
+      border-radius:20px;
+      padding:13px;
+      border:1px solid #ebd7cb;
+      background:linear-gradient(180deg, #ffffff, #fff7ef);
+    }
+    .box strong { display:block; color:#374151; font-size:12px; }
+    .box span { display:block; margin-top:8px; color:#4b5563; font-size:13px; line-height:1.7; white-space:pre-line; }
+    .saved-list { display:grid; gap:10px; margin-top:14px; }
+    .saved {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      border-radius:20px;
+      border:1px solid #efd5c7;
+      background:linear-gradient(180deg, #fffefc, #fff5eb);
+      padding:13px 14px;
+    }
+    .saved strong { display:block; font-size:14px; line-height:1.5; }
+    .saved span { display:block; margin-top:4px; color:var(--muted); font-size:12px; }
+    .section-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .divider { height:1px; margin:14px 0; background:linear-gradient(90deg, rgba(185,28,28,.16), rgba(234,88,12,.03)); }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero,
+    body[data-mode="preview"] .workspace,
+    body[data-mode="preview"] .summary,
+    body[data-mode="preview"] .plan-grid { grid-template-columns:1fr; }
+    @media (max-width: 1040px) {
+      .hero, .workspace, .summary, .plan-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="shell">
+    <section class="hero">
+      <div class="slab pad">
+        <p class="eyebrow">Deadline Rescue Board</p>
+        <h1>大学生DDL拆弹指挥台</h1>
+        <p class="lead">不是泛泛做计划，而是先决定哪颗炸弹先拆。把作业、汇报、考试和小组协作录进来，页面会按截止时间、工时、影响和依赖风险自动排优先级，给你 12 小时冲刺顺序、最小可交付版本和催办文案。适合考试周、周末补作业、论文节点和团队项目卡住的时候。</p>
+        <div class="btn-row full-only">
+          <button id="seedBtn" class="btn" type="button">加载考试周样例</button>
+          <button id="buildBtn" class="btn primary" type="button">生成拆弹顺序</button>
+          <button id="exportBtn" class="btn" type="button">导出 JSON</button>
+        </div>
+      </div>
+      <div class="slab poster pad">
+        <p class="eyebrow" style="color:#fed7aa;">12-Hour Rescue</p>
+        <h2 style="margin:10px 0 0; max-width:10ch; font-size:clamp(30px, 4.6vw, 56px); line-height:1; letter-spacing:-.05em;">把慌乱，变成可执行的拆弹表。</h2>
+        <div class="poster-chip-row">
+          <span class="poster-chip">课程作业</span>
+          <span class="poster-chip">考试周</span>
+          <span class="poster-chip">小组协作催办</span>
+          <span class="poster-chip">本地 JSON 存档</span>
+        </div>
+        <div class="poster-grid">
+          <div class="poster-note"><strong>爆炸半径 01</strong>距离截止不足 24 小时且工时大于 4 小时的任务，必须先拆出“保底可交付”。</div>
+          <div class="poster-note"><strong>爆炸半径 02</strong>依赖队友材料的任务不能盲等，要在第一轮里同步发催办文案和替代方案。</div>
+          <div class="poster-note"><strong>爆炸半径 03</strong>考试周最怕把高分值但可切块的任务拖到最后，系统会强行拆成可完成的最小冲刺块。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="slab pad full-only">
+        <p style="margin:0; font-size:15px; font-weight:800;">录入一颗新的 DDL 炸弹</p>
+        <p style="margin:10px 0 0; color:var(--muted); font-size:13px; line-height:1.7;">任务板默认保存在浏览器本地。分值影响越高、剩余时间越少、依赖越强，风险评分越高。</p>
+        <label class="label">任务名称<input id="taskNameInput" value="微观经济学小组汇报"></label>
+        <label class="label">任务类型<select id="taskTypeInput"><option selected>课程作业</option><option>考试复习</option><option>论文/报告</option><option>小组协作</option></select></label>
+        <label class="label">距离截止还有多久<select id="hoursLeftInput"><option>8</option><option selected>16</option><option>24</option><option>36</option><option>48</option><option>72</option></select></label>
+        <label class="label">预计还要多少小时<select id="effortInput"><option>1</option><option>2</option><option selected>4</option><option>6</option><option>8</option></select></label>
+        <label class="label">分值/后果影响<select id="impactInput"><option>低</option><option selected>中</option><option>高</option><option>致命</option></select></label>
+        <label class="label">当前卡点<select id="blockerInput"><option selected>资料没整理</option><option>还没开工</option><option>队友未反馈</option><option>不会下笔</option><option>知识点太散</option></select></label>
+        <div class="btn-row" style="margin-top:16px;">
+          <button id="addBtn" class="btn primary" type="button">加入任务板</button>
+          <button id="resetBtn" class="btn" type="button">重置为默认任务</button>
+        </div>
+        <div id="statusBox" class="status">先把任务板补完整，再点“生成拆弹顺序”。系统会给出先救谁、怎么救、发什么催办话术。</div>
+      </aside>
+
+      <section>
+        <div class="summary">
+          <article class="metric"><p>当前炸弹数</p><strong id="metricCount">0</strong></article>
+          <article class="metric"><p>最高风险</p><strong id="metricRisk">0</strong></article>
+          <article class="metric"><p>总剩余工时</p><strong id="metricEffort">0h</strong></article>
+          <article class="metric"><p>12 小时保底数</p><strong id="metricSafe">0</strong></article>
+        </div>
+
+        <section class="slab pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Mission Board</p>
+              <h2 style="margin:8px 0 0; font-size:24px; line-height:1.2;">当前任务板</h2>
+            </div>
+            <button id="clearBtn" class="btn full-only" type="button">清空任务板</button>
+          </div>
+          <div class="divider"></div>
+          <div id="taskList" class="task-list"></div>
+        </section>
+
+        <div id="planBoard" class="pane"></div>
+      </section>
+    </section>
+
+    <section class="slab pad full-only" style="margin-top:18px;">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Saved Boards</p>
+          <h2 style="margin:8px 0 0; font-size:24px; line-height:1.2;">本地任务快照</h2>
+        </div>
+      </div>
+      <div id="savedList" class="saved-list"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var boardKey = "campus_ddl_command_board_v1";
+      var snapKey = "campus_ddl_command_snapshots_v1";
+      var latestKey = "campus_ddl_command_latest_plan_v1";
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        name: $("taskNameInput"),
+        type: $("taskTypeInput"),
+        hoursLeft: $("hoursLeftInput"),
+        effort: $("effortInput"),
+        impact: $("impactInput"),
+        blocker: $("blockerInput"),
+        status: $("statusBox"),
+        taskList: $("taskList"),
+        planBoard: $("planBoard"),
+        savedList: $("savedList"),
+        metricCount: $("metricCount"),
+        metricRisk: $("metricRisk"),
+        metricEffort: $("metricEffort"),
+        metricSafe: $("metricSafe")
+      };
+
+      function read(key, fallback) {
+        try {
+          var raw = localStorage.getItem(key);
+          if (!raw) return fallback;
+          var parsed = JSON.parse(raw);
+          return parsed || fallback;
+        } catch (err) {
+          return fallback;
+        }
+      }
+
+      function write(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (err) {}
+      }
+
+      function impactWeight(impact) {
+        return { "低": 1, "中": 2, "高": 3, "致命": 4 }[impact] || 2;
+      }
+
+      function blockerAdvice(blocker) {
+        if (blocker === "队友未反馈") return "先发催办，再并行做你能独立完成的部分。";
+        if (blocker === "不会下笔") return "先列 3 个小标题，再补每个标题的最小结论。";
+        if (blocker === "知识点太散") return "先列提纲，不要直接从细节开始。";
+        if (blocker === "资料没整理") return "用 20 分钟只做素材归堆，不评价好坏。";
+        return "先做 25 分钟启动块，把空白页变成半成品。";
+      }
+
+      function taskTemplate() {
+        return {
+          title: els.name ? els.name.value.trim() : "",
+          type: els.type ? els.type.value : "课程作业",
+          hoursLeft: Number(els.hoursLeft ? els.hoursLeft.value : 16),
+          effort: Number(els.effort ? els.effort.value : 4),
+          impact: els.impact ? els.impact.value : "中",
+          blocker: els.blocker ? els.blocker.value : "资料没整理"
+        };
+      }
+
+      function scoreTask(task) {
+        var urgency = Math.max(1, 80 - task.hoursLeft);
+        var impact = impactWeight(task.impact) * 12;
+        var effort = task.effort * 4;
+        var dependency = task.blocker === "队友未反馈" ? 14 : 0;
+        return urgency + impact + effort + dependency;
+      }
+
+      function tone(score) {
+        if (score >= 90) return "立即拆";
+        if (score >= 70) return "今晚先救";
+        return "可排后";
+      }
+
+      function setStatus(text) {
+        if (els.status) els.status.textContent = text;
+      }
+
+      function currentBoard() {
+        return read(boardKey, []);
+      }
+
+      function saveBoard(board) {
+        write(boardKey, board);
+      }
+
+      function renderBoard() {
+        var ranked = currentBoard().map(function (task) {
+          return Object.assign({}, task, { score: scoreTask(task) });
+        }).sort(function (a, b) { return b.score - a.score; });
+        els.metricCount.textContent = String(ranked.length);
+        els.metricRisk.textContent = ranked.length ? String(ranked[0].score) : "0";
+        els.metricEffort.textContent = ranked.reduce(function (sum, item) { return sum + item.effort; }, 0) + "h";
+        els.metricSafe.textContent = String(ranked.filter(function (item) { return item.effort <= 3 || item.hoursLeft <= 24; }).length);
+        els.taskList.innerHTML = ranked.length ? ranked.map(function (task) {
+          return '<article class="task-item"><div><strong>' + task.title + '</strong><span>' + task.type + '｜剩余 ' + task.hoursLeft + 'h｜还需 ' + task.effort + 'h｜影响 ' + task.impact + '｜卡点：' + task.blocker + '</span></div><div style="display:flex; gap:10px; align-items:center;"><span class="risk-pill">' + tone(task.score) + ' ' + task.score + '</span><button class="btn full-only" data-remove="' + task.id + '" type="button">删除</button></div></article>';
+        }).join("") : '<article class="task-item"><div><strong>任务板还是空的</strong><span>先录入作业、考试或小组协作任务，再生成拆弹顺序。</span></div></article>';
+      }
+
+      function addTask() {
+        var task = taskTemplate();
+        if (!task.title) {
+          setStatus("任务名称不能为空。");
+          return;
+        }
+        var board = currentBoard();
+        task.id = "task-" + Date.now();
+        board.unshift(task);
+        saveBoard(board.slice(0, 12));
+        renderBoard();
+        setStatus("已加入任务板。任务越完整，拆弹顺序越可信。");
+      }
+
+      function removeTask(id) {
+        saveBoard(currentBoard().filter(function (item) { return item.id !== id; }));
+        renderBoard();
+        setStatus("已移除一项任务。");
+      }
+
+      function buildPlan() {
+        var ranked = currentBoard().map(function (task) {
+          return Object.assign({}, task, { score: scoreTask(task) });
+        }).sort(function (a, b) { return b.score - a.score; });
+        if (!ranked.length) {
+          setStatus("先至少加入 1 个任务。");
+          return;
+        }
+        var top = ranked[0];
+        var second = ranked[1];
+        var support = ranked.slice(2).map(function (task) { return "补一块：" + task.title; }).join("\n") || "暂无第三优先级任务";
+        var safeVersion = top.type === "考试复习"
+          ? "保底动作：先过 2 套最常考题型 + 错题清单，不追求全复习。"
+          : "保底动作：先交一个可运行/可展示/可提交的最小版本，再补细节。";
+        var nudge = top.blocker === "队友未反馈"
+          ? "催办文案：我这边今晚要在 23:00 前把 " + top.title + " 收口，你负责的部分最晚能几点给我？如果赶不及，我先按缺省版本补上。"
+          : "自我启动文案：先给自己 25 分钟，只做第一段，不评价质量。";
+        var twelveHour = [
+          "00:00-00:25：把 " + top.title + " 拆成最小可交付结构",
+          "00:30-01:30：推进 " + top.title + " 主体内容",
+          second ? "01:45-02:30：切到 " + second.title + "，至少完成保底块" : "01:45-02:30：补当前任务的证据和检查",
+          "剩余时间：按风险顺序补齐高分任务"
+        ].join("\n");
+        var notes = [
+          "最高风险：" + top.title + "（" + top.score + " 分）",
+          safeVersion,
+          "卡点处理：" + blockerAdvice(top.blocker)
+        ].join("\n");
+
+        els.planBoard.innerHTML = '<section class="slab pad" style="margin-top:18px;"><p class="eyebrow">Rescue Plan</p><div class="plan" style="margin-top:12px;"><div class="plan-top"><div><h2>先拆 "' + top.title + '"，再救后面两颗</h2><p style="margin-top:8px;">系统按时间、工时、影响和依赖综合排序。你现在不缺计划，缺的是先救最危险的一颗。</p></div><span class="badge">' + top.score + ' 风险分</span></div><div class="plan-grid"><div class="box"><strong>12 小时冲刺顺序</strong><span>' + twelveHour + '</span></div><div class="box"><strong>保底交付与催办</strong><span>' + notes + '\n' + nudge + '</span></div><div class="box"><strong>第二梯队处理</strong><span>' + (second ? second.title + "：" + blockerAdvice(second.blocker) : "暂无第二梯队任务") + '\n' + support + '</span></div></div><div class="btn-row full-only" style="margin-top:0;"><button id="saveSnapBtn" class="btn primary" type="button">保存这次拆弹快照</button></div></div></section>';
+
+        write(latestKey, {
+          createdAt: new Date().toLocaleString("zh-CN"),
+          ranked: ranked
+        });
+        setStatus("拆弹顺序已生成。先做第一颗最高风险任务的保底版本，不要一口气试图全救完。");
+      }
+
+      function renderSnapshots() {
+        var snaps = read(snapKey, []);
+        els.savedList.innerHTML = snaps.length ? snaps.map(function (snap, index) {
+          return '<div class="saved"><div><strong>' + snap.title + '</strong><span>' + snap.savedAt + '｜' + snap.summary + '</span></div><button class="btn" data-drop="' + index + '" type="button">删除</button></div>';
+        }).join("") : '<div class="saved"><div><strong>还没有保存的拆弹快照</strong><span>生成一次拆弹顺序后，可以把这一轮任务板存下来，方便考试周反复复盘。</span></div></div>';
+      }
+
+      function saveSnapshot() {
+        var latest = read(latestKey, null);
+        if (!latest || !latest.ranked || !latest.ranked.length) {
+          setStatus("先生成拆弹顺序，再保存快照。");
+          return;
+        }
+        var top = latest.ranked[0];
+        var snaps = read(snapKey, []);
+        snaps.unshift({
+          title: "优先救：" + top.title,
+          summary: "最高风险 " + top.score + " 分，剩余 " + top.hoursLeft + "h",
+          savedAt: new Date().toLocaleString("zh-CN"),
+          ranked: latest.ranked
+        });
+        write(snapKey, snaps.slice(0, 10));
+        renderSnapshots();
+        setStatus("这轮任务板已保存为本地快照。");
+      }
+
+      function exportBoard() {
+        var payload = {
+          board: currentBoard(),
+          snapshots: read(snapKey, []),
+          exportedAt: new Date().toISOString()
+        };
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "campus-ddl-command.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        setStatus("任务板与快照已导出为 JSON。");
+      }
+
+      function seedBoard() {
+        saveBoard([
+          { id: "seed-1", title: "计量经济学期中作业", type: "课程作业", hoursLeft: 12, effort: 5, impact: "高", blocker: "资料没整理" },
+          { id: "seed-2", title: "数字营销考试复习", type: "考试复习", hoursLeft: 20, effort: 4, impact: "高", blocker: "知识点太散" },
+          { id: "seed-3", title: "创新创业路演 PPT", type: "小组协作", hoursLeft: 18, effort: 3, impact: "致命", blocker: "队友未反馈" }
+        ]);
+        renderBoard();
+        buildPlan();
+        setStatus("已加载考试周样例。可以直接看排序，也可以删改成你自己的任务。");
+      }
+
+      function resetForm() {
+        if (els.name) els.name.value = "微观经济学小组汇报";
+        if (els.type) els.type.value = "课程作业";
+        if (els.hoursLeft) els.hoursLeft.value = "16";
+        if (els.effort) els.effort.value = "4";
+        if (els.impact) els.impact.value = "中";
+        if (els.blocker) els.blocker.value = "资料没整理";
+        setStatus("表单已重置。");
+      }
+
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target.id === "addBtn") addTask();
+        if (target.id === "buildBtn") buildPlan();
+        if (target.id === "seedBtn") seedBoard();
+        if (target.id === "exportBtn") exportBoard();
+        if (target.id === "resetBtn") resetForm();
+        if (target.id === "clearBtn") {
+          saveBoard([]);
+          renderBoard();
+          els.planBoard.innerHTML = "";
+          setStatus("任务板已清空。");
+        }
+        if (target.id === "saveSnapBtn") saveSnapshot();
+        if (target.hasAttribute("data-remove")) removeTask(target.getAttribute("data-remove"));
+        if (target.hasAttribute("data-drop")) {
+          var snaps = read(snapKey, []);
+          snaps.splice(Number(target.getAttribute("data-drop")), 1);
+          write(snapKey, snaps);
+          renderSnapshots();
+          setStatus("已删除一个旧快照。");
+        }
+      });
+
+      renderBoard();
+      renderSnapshots();
+      if (!currentBoard().length) seedBoard();
+    })();
+  </script>
+</body>
+</html>

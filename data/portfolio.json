@@ -81,6 +81,18 @@
     "devOnly": true
   },
   {
+    "id": "campus-ddl-command",
+    "platform": "产品方向",
+    "title": "大学生DDL拆弹指挥台",
+    "description": "把作业、考试、汇报和小组任务按风险排序，生成 12 小时冲刺顺序、保底交付动作和催办文案。",
+    "storyLine": "很多大学生不是不努力，而是在多个 DDL 同时逼近时，分不清到底该先救哪一个。",
+    "result": "把考试周和赶作业的混乱感做成可运行的前端任务板，并用 localStorage + JSON 导出保存每轮拆弹快照。",
+    "cover": "",
+    "previewUrl": "portfolio-items/demos/campus-ddl-command-source.html?mode=preview",
+    "url": "portfolio-items/campus-ddl-command.html",
+    "devOnly": true
+  },
+  {
     "id": "shipinhao-thesis-workflow",
     "platform": "视频号",
     "title": "AI工具实战：论文提纲 20 分钟重构",
