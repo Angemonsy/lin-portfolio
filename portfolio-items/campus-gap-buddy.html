@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇绩怪谈AIQ | 大学生空档搭子局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brandFrom: "#0f766e", brandTo: "#0ea5e9" } } } };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="antialiased">
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="../assets/avatar-kunki.jpg" alt="奇绩怪谈AIQ Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">奇绩怪谈AIQ</span></a>
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-24 pb-16">
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <article class="reveal rounded-3xl border border-slate-200 bg-white p-8 md:p-10">
+        <p class="text-sm font-semibold text-teal-600">作品详情 · 产品方向</p>
+        <h1 class="mt-3 text-3xl font-extrabold text-slate-900">大学生空档搭子局</h1>
+        <p class="mt-4 max-w-3xl text-base leading-relaxed text-slate-600">把“下课后有一小时，但不知道约谁、去哪、怎么开口”的尴尬，变成可以直接发出去的邀约方案。输入空档时长、预算、社交压力和活动目标，页面会生成适合校园场景的搭子建议、邀约话术、被拒后的备选方案，并把你准备发出的计划保存在本地。</p>
+
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl border border-teal-200 bg-teal-50 p-5">
+            <p class="text-xs font-semibold tracking-wide text-teal-700">需求依据</p>
+            <p class="mt-3 text-sm leading-relaxed text-slate-700">大学里很多社交机会不是缺人，而是卡在“开口成本太高”。尤其是课间空档、饭点和晚自习前后，最容易想约又放弃。</p>
+          </div>
+          <div class="rounded-2xl border border-sky-200 bg-sky-50 p-5">
+            <p class="text-xs font-semibold tracking-wide text-sky-700">核心功能</p>
+            <p class="mt-3 text-sm leading-relaxed text-slate-700">生成 3 组搭子方案、破冰文案、预算与时间安排，支持收藏计划、导出 JSON、快速复制邀约文案。</p>
+          </div>
+          <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+            <p class="text-xs font-semibold tracking-wide text-amber-700">数据方式</p>
+            <p class="mt-3 text-sm leading-relaxed text-slate-700">纯前端静态可跑，活动历史和已收藏邀约方案使用 localStorage 轻量存储。</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a href="demos/campus-gap-buddy-source.html" target="_blank" rel="noopener" class="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-700">打开完整体验页</a>
+          <button data-qr-platform="wechat" type="button" class="inline-flex rounded-xl border border-teal-200 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-100">加微信共创校园工具</button>
+        </div>
+      </article>
+
+      <section class="mt-8 reveal rounded-3xl border border-slate-200 bg-white p-4 md:p-6">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="text-lg font-bold text-slate-900">在线预览</h2>
+          <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">预览模式（完整交互请点上方按钮）</span>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <iframe id="preview-frame-gap-buddy" title="大学生空档搭子局预览" data-preview-src="demos/campus-gap-buddy-source.html?mode=preview" class="h-[78vh] w-full" loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <div class="mt-8">
+        <a href="../portfolio.html" class="inline-flex items-center rounded-xl border border-blue-200 bg-blue-50 px-5 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100">返回作品集</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white/95">
+    <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-5 md:flex-row md:items-center md:justify-between md:gap-8">
+        <p class="text-base font-semibold text-slate-700 md:text-xl">用 AI 和结构化系统，在校内外持续拿结果。</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="platform-btn platform-btn--footer" data-qr-platform="wechat" type="button">微信</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="shipinhao" type="button">视频号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="xiaohongshu" type="button">小红书</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="gongzhonghao" type="button">公众号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="douyin" type="button">抖音</button>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-slate-200/80">
+      <div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-4 text-center text-sm text-slate-600 sm:px-6 lg:px-8">
+        <p>© 2026 奇绩怪谈AIQ</p>
+        <p class="text-xs text-slate-500"><a data-icp-record href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="transition hover:text-blue-600 hover:underline">工信部备案号：粤ICP备2026039646号</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/data-fallback.js"></script>
+  <script src="../assets/site-common.js"></script>
+  <script>
+    (function () {
+      SiteCommon.initNav({ currentKey: "portfolio" });
+      SiteCommon.initQrModal({ assetPrefix: "../" });
+      var frame = document.getElementById("preview-frame-gap-buddy");
+      if (frame) {
+        var base = frame.getAttribute("data-preview-src");
+        var sep = base.indexOf("?") === -1 ? "?" : "&";
+        frame.src = base + sep + "v=" + Date.now();
+      }
+      SiteCommon.initReveal(document);
+    })();
+  </script>
+</body>
+</html>

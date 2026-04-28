@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生空档搭子局 Demo</title>
+  <style>
+    :root {
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#d8e4ea;
+      --teal:#0f766e;
+      --sky:#0284c7;
+      --paper:#f3fbfb;
+      --cream:#fffaf1;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15,118,110,.14), transparent 32%),
+        radial-gradient(circle at 85% 15%, rgba(2,132,199,.16), transparent 28%),
+        linear-gradient(180deg, #f7fbff 0%, #eef8f6 100%);
+    }
+    button, input, select { font:inherit; }
+    button { cursor:pointer; }
+    .shell { width:min(1220px, calc(100% - 28px)); margin:0 auto; padding:24px 0 40px; }
+    .hero { display:grid; grid-template-columns:1.08fr .92fr; gap:18px; align-items:stretch; }
+    .workspace { display:grid; grid-template-columns:320px 1fr; gap:18px; margin-top:18px; align-items:start; }
+    .card {
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:30px;
+      background:rgba(255,255,255,.92);
+      box-shadow:0 22px 48px rgba(15,23,42,.07);
+      backdrop-filter:blur(12px);
+    }
+    .pad { padding:22px; }
+    .eyebrow { margin:0; color:var(--teal); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { margin:12px 0 0; font-size:clamp(34px, 5vw, 64px); line-height:1.02; letter-spacing:-.05em; }
+    .lead { margin:16px 0 0; max-width:58ch; color:var(--muted); font-size:16px; line-height:1.8; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .btn {
+      border:1px solid #cbd5e1;
+      border-radius:18px;
+      background:#fff;
+      padding:12px 15px;
+      color:#334155;
+      font-weight:800;
+    }
+    .btn.primary {
+      border-color:transparent;
+      background:linear-gradient(135deg, var(--teal), var(--sky));
+      color:#fff;
+      box-shadow:0 12px 22px rgba(2,132,199,.22);
+    }
+    .poster {
+      position:relative;
+      min-height:360px;
+      overflow:hidden;
+      color:#ecfeff;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(255,255,255,.18), transparent 18%),
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,.12), transparent 24%),
+        linear-gradient(145deg, #042f2e 0%, #0f766e 48%, #0284c7 100%);
+    }
+    .poster::after {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:28px;
+      pointer-events:none;
+    }
+    .badge-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+    }
+    .poster-stack {
+      position:absolute;
+      left:28px;
+      right:28px;
+      bottom:28px;
+      display:grid;
+      gap:10px;
+    }
+    .poster-note {
+      border-radius:22px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
+      line-height:1.7;
+      font-size:14px;
+    }
+    .poster-note strong { display:block; font-size:13px; letter-spacing:.04em; }
+    .label { display:block; margin-top:14px; color:#334155; font-size:13px; font-weight:800; }
+    input, select {
+      width:100%;
+      margin-top:7px;
+      border:1px solid #cbd5e1;
+      border-radius:16px;
+      background:#fff;
+      padding:12px 13px;
+      color:var(--ink);
+    }
+    .status {
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid #dbeafe;
+      background:#f8fbff;
+      padding:13px 14px;
+      color:#475569;
+      font-size:13px;
+      line-height:1.7;
+    }
+    .metrics { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric {
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.94);
+      padding:16px;
+    }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .board { margin-top:14px; display:grid; gap:12px; }
+    .plan {
+      display:grid;
+      gap:14px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,251,255,.96));
+      padding:18px;
+    }
+    .plan-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .plan h2 { margin:0; font-size:22px; line-height:1.35; }
+    .plan p { margin:0; color:var(--muted); font-size:14px; line-height:1.7; }
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:86px;
+      border-radius:999px;
+      padding:7px 12px;
+      background:#ecfeff;
+      color:var(--teal);
+      font-size:12px;
+      font-weight:800;
+    }
+    .plan-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+    .box {
+      min-height:120px;
+      border-radius:20px;
+      padding:13px;
+      border:1px solid #dbe7f0;
+      background:linear-gradient(180deg, #ffffff, #f5fbfb);
+    }
+    .box strong { display:block; color:#334155; font-size:12px; }
+    .box span { display:block; margin-top:8px; color:#475569; font-size:13px; line-height:1.7; white-space:pre-line; }
+    .saved-list { display:grid; gap:10px; margin-top:14px; }
+    .saved {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      border-radius:20px;
+      border:1px solid #cde7e3;
+      background:linear-gradient(180deg, #ffffff, #f3fbfb);
+      padding:13px 14px;
+    }
+    .saved strong { display:block; font-size:14px; line-height:1.5; }
+    .saved span { display:block; margin-top:4px; color:var(--muted); font-size:12px; }
+    .section-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero,
+    body[data-mode="preview"] .workspace,
+    body[data-mode="preview"] .metrics,
+    body[data-mode="preview"] .plan-grid { grid-template-columns:1fr; }
+    @media (max-width: 980px) {
+      .hero, .workspace, .metrics, .plan-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="shell">
+    <section class="hero">
+      <div class="card pad">
+        <p class="eyebrow">Campus Buddy Generator</p>
+        <h1>大学生空档搭子局</h1>
+        <p class="lead">不是教你“如何社交”，而是直接给你一套今天就能发出去的约人方案。选空档时长、活动目标、预算和你的社交压力，页面会生成 3 组适合校园的搭子计划：去哪、聊什么、第一句怎么发、如果对方没空怎么办。</p>
+        <div class="hero-actions full-only">
+          <button id="buildBtn" class="btn primary" type="button">生成 3 组搭子方案</button>
+          <button id="copyBtn" class="btn" type="button">复制邀约文案</button>
+        </div>
+      </div>
+      <div class="card poster pad">
+        <p class="eyebrow" style="color:#ccfbf1;">Campus Idle Time</p>
+        <h2 style="margin:10px 0 0; max-width:12ch; font-size:clamp(30px, 4.4vw, 54px); line-height:1.02; letter-spacing:-.05em;">把空档时间，变成可发起的连接。</h2>
+        <div class="badge-row">
+          <span class="badge">30-120 分钟空档</span>
+          <span class="badge">低预算校内场景</span>
+          <span class="badge">适合社恐冷启动</span>
+        </div>
+        <div class="poster-stack">
+          <div class="poster-note"><strong>场景 01</strong>下课后 45 分钟，不想一个人刷手机，可以发起“图书馆并排自习 + 结束后买杯水”的轻连接。</div>
+          <div class="poster-note"><strong>场景 02</strong>晚饭前 60 分钟，不想硬社交，可以约“操场散步 + 交换一个最近在烦什么”。</div>
+          <div class="poster-note"><strong>场景 03</strong>周末下午 90 分钟，想认识新同学，可以发起“校内探店/展板打卡 + 低压力破冰题”。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="card pad full-only">
+        <p style="margin:0; font-size:15px; font-weight:800;">输入今天的空档条件</p>
+        <p style="margin:10px 0 0; color:var(--muted); font-size:13px; line-height:1.7;">默认把你收藏过的搭子计划存到浏览器本地。适合学习搭子、饭搭子、散步搭子和校园破冰场景。</p>
+        <label class="label">今天有多久空档<input id="durationInput" value="45分钟"></label>
+        <label class="label">你想做什么<select id="goalSelect"><option selected>认识新同学</option><option>约自习搭子</option><option>找饭搭子</option><option>散步解压</option></select></label>
+        <label class="label">预算范围<select id="budgetSelect"><option selected>0-15元</option><option>15-30元</option><option>30-50元</option></select></label>
+        <label class="label">社交压力<select id="energySelect"><option>低压慢热</option><option selected>正常</option><option>想主动一点</option></select></label>
+        <label class="label">优先区域<select id="zoneSelect"><option selected>图书馆周边</option><option>食堂附近</option><option>操场/校园路</option><option>校门口商圈</option></select></label>
+        <div id="statusBox" class="status">准备好了，点一次生成就能拿到今天可用的约人方案。</div>
+      </aside>
+
+      <section>
+        <div class="metrics">
+          <article class="metric"><p>推荐方案</p><strong id="metricCount">3</strong></article>
+          <article class="metric"><p>平均预算</p><strong id="metricBudget">12元</strong></article>
+          <article class="metric"><p>社交强度</p><strong id="metricEnergy">中</strong></article>
+          <article class="metric"><p>适配时长</p><strong id="metricDuration">45分</strong></article>
+        </div>
+        <div id="planBoard" class="board"></div>
+      </section>
+    </section>
+
+    <section class="card pad full-only" style="margin-top:18px;">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Saved Plans</p>
+          <h2 style="margin:8px 0 0; font-size:24px; line-height:1.2;">本地收藏计划</h2>
+        </div>
+        <div class="hero-actions" style="margin-top:0;">
+          <button id="exportBtn" class="btn" type="button">导出 JSON</button>
+          <button id="clearBtn" class="btn" type="button">清空收藏</button>
+        </div>
+      </div>
+      <div id="savedList" class="saved-list"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var storageKey = "campus_gap_buddy_v1";
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        duration: $("durationInput"),
+        goal: $("goalSelect"),
+        budget: $("budgetSelect"),
+        energy: $("energySelect"),
+        zone: $("zoneSelect"),
+        status: $("statusBox"),
+        metricCount: $("metricCount"),
+        metricBudget: $("metricBudget"),
+        metricEnergy: $("metricEnergy"),
+        metricDuration: $("metricDuration"),
+        board: $("planBoard"),
+        saved: $("savedList")
+      };
+
+      var planBank = {
+        "认识新同学": [
+          {
+            title: "三问破冰散步局",
+            intro: "从教学楼走到操场，边走边聊三个低压力问题，让陌生感自然降下来。",
+            invite: "我刚好这会儿有点空，想去操场走一圈放松下，要不要一起？不用太正式，顺便聊聊最近在忙什么。",
+            fallback: "如果对方没空，就改成“下次你有 30 分钟的时候我们补一圈”，别追着确认。",
+            detail: "问题顺序：最近最忙什么、这学期最烦什么、最近最想试的事。",
+            budget: "0-5元",
+            vibe: "慢热友好"
+          },
+          {
+            title: "校内展板/公告打卡局",
+            intro: "挑一条校园里有内容可看的路线，避免纯尬聊。",
+            invite: "我准备去看下图书馆旁边的新展板，顺便透口气，你要是也想活动一下可以一起去。",
+            fallback: "改成发一张现场照片，再补一句“下次一起逛这个路线也行”。",
+            detail: "途中给彼此一个任务：各自选一个最想吐槽或最想试的活动。",
+            budget: "0元",
+            vibe: "有话题支点"
+          },
+          {
+            title: "奶茶店门口站聊局",
+            intro: "不强行坐下，先站聊 15 分钟，社交压力更低。",
+            invite: "我等会儿打算去买杯喝的，刚好你在附近的话一起？站着聊会儿也行。",
+            fallback: "对方拒绝就保留轻松感，回一句“行，下次碰到再临时组”。",
+            detail: "适合社恐冷启动，先短聊再决定要不要延长。",
+            budget: "8-18元",
+            vibe: "轻接触"
+          }
+        ],
+        "约自习搭子": [
+          {
+            title: "并排自习 + 结束互问局",
+            intro: "先自习 35 分钟，再互问一个卡住的问题，兼顾效率和社交。",
+            invite: "我这会儿准备去图书馆补一段任务，大概 45 分钟。你要不要一起并排坐，结束后互相汇报一下进度？",
+            fallback: "对方忙就改成线上互打卡，约定结束后互发一句“完成了什么”。",
+            detail: "开始前先定一个最小目标，结束后只复盘一件做成的事。",
+            budget: "0-6元",
+            vibe: "结果导向"
+          },
+          {
+            title: "番茄钟双人局",
+            intro: "25 分钟专注 + 5 分钟休息，适合课程作业和论文材料整理。",
+            invite: "我准备开两轮番茄钟清一波任务，你有空的话一起占个位置？中间休息的时候还能互相提醒别摸鱼。",
+            fallback: "对方没空就把番茄钟截图发给对方，当作轻量邀请续接。",
+            detail: "休息时只聊当前任务，不把节奏带跑偏。",
+            budget: "0元",
+            vibe: "低干扰"
+          },
+          {
+            title: "食堂自习前补能局",
+            intro: "先买低预算饮品再进图书馆，能降低“坐下就累”的心理阻力。",
+            invite: "我打算先去食堂边上买点喝的，然后找地方补一小时任务。你要不要一起冲一下？",
+            fallback: "对方拒绝时顺势问一句“那你今天准备在哪学”，为下次约自习留接口。",
+            detail: "适合晚饭后低能量阶段，先移动再坐定。",
+            budget: "6-15元",
+            vibe: "柔性启动"
+          }
+        ],
+        "找饭搭子": [
+          {
+            title: "低成本食堂试菜局",
+            intro: "先给对方一个很轻的饭搭子理由，比“出来聊聊”更容易答应。",
+            invite: "我准备去试一下新开的窗口，一个人去有点亏，你要不要一起顺便吃个晚饭？",
+            fallback: "对方没空就让对方推荐窗口，顺便延续对话。",
+            detail: "吃饭时聊“最近最值和最坑的一次消费”，自然不尬。",
+            budget: "10-20元",
+            vibe: "生活感强"
+          },
+          {
+            title: "下课直冲食堂局",
+            intro: "用“顺路”降低邀约门槛，适合还不熟的同学。",
+            invite: "你是不是也刚下课？我正准备去食堂，不赶时间的话一起走过去？",
+            fallback: "对方赶时间就结束在路上，不强拉进食堂。",
+            detail: "从共同路线开始，比直接约完整一餐更好答应。",
+            budget: "8-15元",
+            vibe: "低门槛"
+          },
+          {
+            title: "夜宵复盘局",
+            intro: "适合考试周、项目周后的小范围放松。",
+            invite: "今天任务终于收尾了，我想去吃点夜宵缓一下，你要是也想放空一下可以一起。",
+            fallback: "对方不来就把局缩成“买点东西边走边吃”。",
+            detail: "主题只聊今天最累的一件事和最有成就感的一件事。",
+            budget: "15-30元",
+            vibe: "情绪回血"
+          }
+        ],
+        "散步解压": [
+          {
+            title: "操场慢速排压局",
+            intro: "把注意力放在走路和呼吸上，聊天只占一半，适合低能量日。",
+            invite: "我这会儿脑子有点乱，想去操场走几圈缓一下，你要不要一起？不想多说话也没事。",
+            fallback: "对方没空就保留一句“你下次想散步的时候也可以戳我”。",
+            detail: "前 10 分钟只聊近况，后 10 分钟再聊烦心事。",
+            budget: "0元",
+            vibe: "情绪安全"
+          },
+          {
+            title: "校园拍照散步局",
+            intro: "给散步一个任务，社交自然轻一点。",
+            invite: "我准备在校园里走走顺便拍几张最近好看的角落，你要不要一起，当个轻松散心局。",
+            fallback: "对方不来，就把一张路上的照片发过去继续开启话题。",
+            detail: "各自拍三张图，最后互相讲一张最喜欢的原因。",
+            budget: "0-5元",
+            vibe: "观察型"
+          },
+          {
+            title: "校门口补给局",
+            intro: "适合傍晚小空档，走到校门口买个小零食再慢慢回来。",
+            invite: "我想出去透口气顺便买点小零食，要不要一起走一趟？来回也就半小时多一点。",
+            fallback: "如果对方只愿意聊两句，就把邀约收束成“下次顺路再组”。",
+            detail: "用“顺便”替代“正式约”，压力更小。",
+            budget: "5-15元",
+            vibe: "轻松补气"
+          }
+        ]
+      };
+
+      function readSaved() {
+        try {
+          var data = JSON.parse(localStorage.getItem(storageKey) || "[]");
+          return Array.isArray(data) ? data : [];
+        } catch (err) {
+          return [];
+        }
+      }
+
+      function writeSaved(items) {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(items));
+        } catch (err) {}
+      }
+
+      function energyLabel(value) {
+        if (value === "想主动一点") return "高";
+        if (value === "低压慢热") return "低";
+        return "中";
+      }
+
+      function budgetAverage(value) {
+        if (value === "30-50元") return "38元";
+        if (value === "15-30元") return "22元";
+        return "12元";
+      }
+
+      function profile() {
+        return {
+          duration: els.duration ? els.duration.value : "45分钟",
+          goal: els.goal ? els.goal.value : "认识新同学",
+          budget: els.budget ? els.budget.value : "0-15元",
+          energy: els.energy ? els.energy.value : "正常",
+          zone: els.zone ? els.zone.value : "图书馆周边"
+        };
+      }
+
+      function setStatus(text) {
+        if (els.status) els.status.textContent = text;
+      }
+
+      function buildPlans() {
+        var p = profile();
+        var base = planBank[p.goal] || planBank["认识新同学"];
+        els.metricCount.textContent = String(base.length);
+        els.metricBudget.textContent = budgetAverage(p.budget);
+        els.metricEnergy.textContent = energyLabel(p.energy);
+        els.metricDuration.textContent = p.duration.replace("分钟", "分");
+        return base.map(function (plan, index) {
+          return {
+            title: plan.title,
+            intro: plan.intro + " 推荐区域：" + p.zone + "。",
+            invite: plan.invite,
+            fallback: plan.fallback,
+            detail: "建议安排：" + p.duration + "｜预算：" + plan.budget + "｜社交节奏：" + plan.vibe + "\n" + plan.detail,
+            tag: index === 0 ? "最稳妥" : index === 1 ? "更自然" : "更有趣"
+          };
+        });
+      }
+
+      function renderPlans(plans) {
+        els.board.innerHTML = plans.map(function (plan, index) {
+          return [
+            '<article class="plan">',
+            '  <div class="plan-top">',
+            '    <div><h2>' + plan.title + '</h2><p style="margin-top:8px;">' + plan.intro + '</p></div>',
+            '    <span class="pill">' + plan.tag + '</span>',
+            '  </div>',
+            '  <div class="plan-grid">',
+            '    <div class="box"><strong>发给对方的第一句</strong><span>' + plan.invite + '</span></div>',
+            '    <div class="box"><strong>被拒后的备选</strong><span>' + plan.fallback + '</span></div>',
+            '    <div class="box"><strong>执行提醒</strong><span>' + plan.detail + '</span></div>',
+            '  </div>',
+            '  <div class="hero-actions full-only" style="margin-top:0;">',
+            '    <button class="btn primary" data-save="' + index + '" type="button">收藏这组计划</button>',
+            '  </div>',
+            '</article>'
+          ].join("");
+        }).join("");
+      }
+
+      function renderSaved() {
+        var items = readSaved();
+        els.saved.innerHTML = items.length ? items.map(function (item, index) {
+          return '<div class="saved"><div><strong>' + item.title + '</strong><span>' + item.savedAt + '</span></div><button class="btn" data-remove="' + index + '" type="button">删除</button></div>';
+        }).join("") : '<div class="saved"><div><strong>还没有收藏的搭子计划</strong><span>先生成方案，再把今天最想发的一组留下来。</span></div></div>';
+      }
+
+      function copyInvite() {
+        var plans = currentPlans;
+        var first = plans[0];
+        if (!first) return;
+        var text = [
+          "今天空档搭子文案",
+          "方案：" + first.title,
+          "邀约文案：" + first.invite,
+          "被拒备选：" + first.fallback
+        ].join("\n");
+        if (navigator.clipboard) navigator.clipboard.writeText(text);
+      }
+
+      function exportSaved() {
+        var blob = new Blob([JSON.stringify(readSaved(), null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "campus-gap-buddy.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      var currentPlans = [];
+      function regenerate() {
+        currentPlans = buildPlans();
+        renderPlans(currentPlans);
+        setStatus("已生成 3 组新方案。先挑一组最容易发出去的，不用追求最完美。");
+      }
+
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target.id === "buildBtn") regenerate();
+        if (target.id === "copyBtn") {
+          copyInvite();
+          setStatus("第一组邀约文案已复制。");
+        }
+        if (target.id === "exportBtn") {
+          exportSaved();
+          setStatus("已导出收藏计划 JSON。");
+        }
+        if (target.id === "clearBtn") {
+          writeSaved([]);
+          renderSaved();
+          setStatus("已清空本地收藏计划。");
+        }
+        if (target.hasAttribute("data-save")) {
+          var item = currentPlans[Number(target.getAttribute("data-save"))];
+          var list = readSaved();
+          list.unshift({
+            title: item.title + "｜" + item.invite,
+            savedAt: new Date().toLocaleString("zh-CN"),
+            item: item
+          });
+          writeSaved(list.slice(0, 12));
+          renderSaved();
+          setStatus("这组搭子计划已加入本地收藏。");
+        }
+        if (target.hasAttribute("data-remove")) {
+          var items = readSaved();
+          items.splice(Number(target.getAttribute("data-remove")), 1);
+          writeSaved(items);
+          renderSaved();
+          setStatus("已删除这组收藏。");
+        }
+      });
+
+      regenerate();
+      renderSaved();
+    })();
+  </script>
+</body>
+</html>

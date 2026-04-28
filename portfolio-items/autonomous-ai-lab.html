@@ -68,6 +68,44 @@
           </section>
         </div>
 
+        <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">今天从 GitHub 学到什么</h2>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">我看了几类和你定位很贴的仓库：大学生学习支持、内容自动化、以及轻量 agent 教程。共同点很明确，都是先把对象、结果和反馈闭环做好，再往复杂自动化走。</p>
+            </div>
+            <a href="https://github.com/KayvanShah1/VirtuTA" target="_blank" rel="noopener" class="inline-flex items-center rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">看一个教育类样本</a>
+          </div>
+          <div class="mt-4 grid gap-3 md:grid-cols-3">
+            <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p class="text-xs font-semibold tracking-wide text-blue-700">学习结论 01</p>
+              <h3 class="mt-2 text-sm font-bold text-slate-900">教育类项目先做“诊断 + 反馈”</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">VirtuTA、repo-ai、eduadapt-ai 这类仓库都在强调个性化支持：按学生表现、学习节奏和答题反馈来推荐下一步，而不是只做信息堆叠。</p>
+            </article>
+            <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">学习结论 02</p>
+              <h3 class="mt-2 text-sm font-bold text-slate-900">内容类项目要有“拆分 + 复用 + 复核”</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">n8n 和 repurpose 相关仓库说明：长内容拆成多平台内容很有价值，但必须保留人工复核口子，避免自动化把低质量放大。</p>
+            </article>
+            <article class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <p class="text-xs font-semibold tracking-wide text-amber-700">学习结论 03</p>
+              <h3 class="mt-2 text-sm font-bold text-slate-900">小项目更适合先跑通再扩展</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">ai-agents-from-scratch、LLM tutorial 这类仓库给我的启发是先做可审阅、可理解、可重复的小系统，再慢慢叠更复杂的能力。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-indigo-200 bg-indigo-50/70 p-5">
+          <h2 class="text-base font-bold text-slate-900">项目升级门槛</h2>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">自动项目默认留在实验室。只有同时满足下面三条，才值得考虑迁移到首页或公开作品集。</p>
+          <ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-700">
+            <li>可重复：同类输入能稳定产出同类结果，不需要每次都靠人工救火。</li>
+            <li>可解释：我能清楚说明它解决什么问题，以及为什么它值得继续保留。</li>
+            <li>可维护：内容和数据结构足够轻，后续迁移到更公开的页面时成本可控。</li>
+            <li>可迁移：如果要从实验室升到首页或作品集，必须能补齐变更说明和验证结果。</li>
+          </ul>
+        </section>
+
         <section class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6">
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -80,14 +118,62 @@
             <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
               <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 01</p>
               <h3 class="mt-2 text-lg font-bold text-slate-900">大学生自媒体选题雷达</h3>
-              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 每天根据平台、身份和时间预算生成可拍选题、标题钩子、脚本骨架和 7 天游玩排期，帮助内容持续更新。</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。根据平台、身份和时间预算生成可拍选题、标题钩子、脚本骨架和 7 天发布排期。</p>
               <a href="./campus-content-radar.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
             </article>
             <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
               <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 02</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">校园爆款标题防守战</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。把标题判断做成 60 秒小游戏，先在实验室观察可玩性和内容训练价值。</p>
+              <a href="./campus-hook-defense.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 03</p>
               <h3 class="mt-2 text-lg font-bold text-slate-900">应届生求职冲刺看板</h3>
               <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 持续把求职准备拆成路线、题库、简历优化和投递追踪，让焦虑变成每天可执行的动作。</p>
               <a href="./campus-offer-sprint-planner.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 04</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生面试追问陪练台</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。围绕实习、校招和项目答辩里的高频追问，帮大学生把“被追问就断片”的问题练成熟悉动作。</p>
+              <a href="./campus-interview-sparring.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 05</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生空档搭子局</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。把课间空档、饭点和晚自习前后的低压力社交，变成可以直接发出去的搭子方案与邀约文案。</p>
+              <a href="./campus-gap-buddy.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 06</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生DDL拆弹指挥台</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。把作业、考试、汇报和小组协作按风险排序，生成 12 小时冲刺顺序、保底动作和催办文案。</p>
+              <a href="./campus-ddl-command.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 07</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生成果证据仓</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。把奖学金、综测、保研和求职里反复要用的成果证据整理成可提交清单，并支持本地 JSON 备份。</p>
+              <a href="./campus-proof-vault.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 08</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生异地面试出发台</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。调用公开天气 API 结合通勤与着装要求，生成异地面试的出发时间、打包清单、风险提示和确认文案。</p>
+              <a href="./campus-interview-trip-kit.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 09</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生小组作业对齐板</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。把小组作业里最容易扯皮的分工、检查点和群聊催办口径收进一个可保存、可导出的协作战情板。</p>
+              <a href="./campus-group-sync-board.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
+            </article>
+            <article class="rounded-2xl border border-white bg-white p-5 shadow-sm">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">自动执行项目 10</p>
+              <h3 class="mt-2 text-lg font-bold text-slate-900">大学生宿舍公约谈判局</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">AI 自动产出/待人工精选。把熄灯、空调、卫生和外放冲突做成 6 回合快节奏协商游戏，结束后自动生成可直接发群的宿舍公约草案。</p>
+              <a href="./campus-dorm-peace-pact.html" class="mt-4 inline-flex items-center text-sm font-semibold text-emerald-700 hover:underline">查看这个项目 →</a>
             </article>
           </div>
         </section>
@@ -96,14 +182,15 @@
           <h2 class="text-base font-bold text-slate-900">执行边界（安全约束）</h2>
           <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
             <li>只加不删：优先新增文件、新增条目，不覆盖原有页面。</li>
-            <li>先验证再迁移：实验通过后再考虑推广到主内容区。</li>
+            <li>默认隔离：自动生成的新项目只放在 AI 实验室，不动主站首页。</li>
+            <li>你来决定：是否继续扩展、暂停，或者迁移到别的页面，都由你最后拍板。</li>
             <li>保持可回滚：每次改动保持独立、可审阅、可追踪。</li>
           </ul>
         </section>
 
         <section class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-6">
           <h2 class="text-base font-bold text-slate-900">这个区域对网站的意义</h2>
-          <p class="mt-3 text-sm leading-relaxed text-slate-600">它让网站不只是“展示我做过什么”，而是持续产生新内容、新工具和新实验。对来访的人来说，这里也是一眼看懂我在做什么、为什么做、还能继续往哪里做的入口。</p>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">它让网站不只是“展示我做过什么”，而是持续产生新内容、新工具和新实验。对来访的人来说，这里也是一眼看懂我在做什么、为什么做、还能继续往哪里做的入口；对首页和作品集来说，它则负责把试验态内容先隔离掉。</p>
           <div class="mt-4 flex flex-wrap gap-3">
             <a href="./autonomous-ai-lab-business.html" class="inline-flex items-center rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-95">查看项目说明与探索入口</a>
             <a href="../services.html" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">看可合作服务</a>

@@ -215,6 +215,18 @@ window.FALLBACK_DATA = {
   ],
   portfolio: [
     {
+      id: "campus-hook-defense",
+      platform: "产品方向",
+      title: "校园爆款标题防守战",
+      description: "一个60秒标题判断小游戏，接住具体、有场景、有结果的好标题，避开空泛标题，训练大学生自媒体选题敏感度。",
+      storyLine: "很多同学不是不会发内容，而是不知道什么标题值得发。这个小游戏把标题判断做成可重复训练。",
+      result: "用游戏化方式训练选题判断，并用本地存储记录最高分和最佳连击。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-hook-defense-source.html?mode=preview",
+      url: "portfolio-items/campus-hook-defense.html",
+      devOnly: true
+    },
+    {
       id: "campus-content-radar",
       platform: "产品方向",
       title: "大学生自媒体选题雷达",
@@ -223,7 +235,8 @@ window.FALLBACK_DATA = {
       result: "把选题从灵感依赖变成结构化生成，并能把已选题保存为本地内容池。",
       cover: "",
       previewUrl: "portfolio-items/demos/campus-content-radar-source.html?mode=preview",
-      url: "portfolio-items/campus-content-radar.html"
+      url: "portfolio-items/campus-content-radar.html",
+      devOnly: true
     },
     {
       id: "xiaohongshu-learning-system",
@@ -253,6 +266,78 @@ window.FALLBACK_DATA = {
       cover: "",
       previewUrl: "portfolio-items/demos/campus-offer-sprint-planner-source.html?mode=preview",
       url: "portfolio-items/campus-offer-sprint-planner.html"
+    },
+    {
+      id: "campus-interview-sparring",
+      platform: "产品方向",
+      title: "大学生面试追问陪练台",
+      description: "围绕实习、校招和项目答辩里的高频追问，生成连续追问链路、回答骨架和复盘标签，帮助大学生把卡壳题练熟。",
+      storyLine: "很多同学准备面试时只背标准答案，真正失分往往发生在“再追问一句”之后。",
+      result: "把追问练习做成可重复的前端工具，并用本地错题本保存高频薄弱题。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-interview-sparring-source.html?mode=preview",
+      url: "portfolio-items/campus-interview-sparring.html",
+      devOnly: true
+    },
+    {
+      id: "campus-gap-buddy",
+      platform: "产品方向",
+      title: "大学生空档搭子局",
+      description: "把课间空档、预算、社交压力和活动目标变成可执行的校园搭子方案，附带邀约文案、备选计划和本地收藏。",
+      storyLine: "很多同学不是没有社交机会，而是卡在“下课这 45 分钟到底怎么开口约人”。",
+      result: "用纯前端工具把校园社交冷启动做成可复制动作，并用 localStorage 保存可复用的邀约计划。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-gap-buddy-source.html?mode=preview",
+      url: "portfolio-items/campus-gap-buddy.html",
+      devOnly: true
+    },
+    {
+      id: "campus-ddl-command",
+      platform: "产品方向",
+      title: "大学生DDL拆弹指挥台",
+      description: "把作业、考试、汇报和小组任务按风险排序，生成 12 小时冲刺顺序、保底交付动作和催办文案。",
+      storyLine: "很多大学生不是不努力，而是在多个 DDL 同时逼近时，分不清到底该先救哪一个。",
+      result: "把考试周和赶作业的混乱感做成可运行的前端任务板，并用 localStorage + JSON 导出保存每轮拆弹快照。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-ddl-command-source.html?mode=preview",
+      url: "portfolio-items/campus-ddl-command.html",
+      devOnly: true
+    },
+    {
+      id: "campus-proof-vault",
+      platform: "产品方向",
+      title: "大学生成果证据仓",
+      description: "把奖学金、综测、保研、实习和简历里会反复用到的成果证据收进本地账本，自动整理可提交清单和缺件提醒。",
+      storyLine: "很多大学生不是没成果，而是成果散在聊天记录、邮箱、网盘和相册里，真正要申报时才发现证据链断掉了。",
+      result: "把学生成果整理做成可运行的轻量证据仓，并用 localStorage + JSON 导入导出保存每轮申报状态。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-proof-vault-source.html?mode=preview",
+      url: "portfolio-items/campus-proof-vault.html",
+      devOnly: true
+    },
+    {
+      id: "campus-interview-trip-kit",
+      platform: "产品方向",
+      title: "大学生异地面试出发台",
+      description: "输入面试城市、时间和通勤信息后，自动结合天气预测生成出发时刻、打包清单、天气风险和确认文案。",
+      storyLine: "很多大学生第一次去异地面试时，真正失控的不是面试题，而是迟到、下雨、着装和材料遗漏同时发生。",
+      result: "把求职出发前一晚的混乱做成可运行的前端工具，并用公开天气 API + localStorage 快照保存每轮方案。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-interview-trip-kit-source.html?mode=preview",
+      url: "portfolio-items/campus-interview-trip-kit.html",
+      devOnly: true
+    },
+    {
+      id: "campus-group-sync-board",
+      platform: "产品方向",
+      title: "大学生小组作业对齐板",
+      description: "输入课程、成员、截止时间和协作氛围后，自动生成分工 sticky、检查点时间线、群聊催办文案与本地快照。",
+      storyLine: "很多大学生不是不会做作业，而是小组协作里总有人潜水、资料太散、PPT 最后一天才合并，最后一晚一起爆炸。",
+      result: "把小组作业协作做成可运行的前端战情板，并用 localStorage + JSON 导入导出沉淀每次分工方案。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-group-sync-board-source.html?mode=preview",
+      url: "portfolio-items/campus-group-sync-board.html",
+      devOnly: true
     },
     {
       id: "shipinhao-thesis-workflow",

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生小组作业对齐板 Demo</title>
+  <style>
+    :root{--ink:#1f2937;--muted:#667085;--paper:#fbf2df;--accent:#d94f04;--surface:#fffaf0ee;--shadow:0 24px 60px rgba(59,38,11,.12)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:"Noto Sans SC","Microsoft YaHei",sans-serif;color:var(--ink);background:radial-gradient(circle at top left,rgba(217,79,4,.18),transparent 24%),radial-gradient(circle at 88% 18%,rgba(34,87,122,.14),transparent 20%),linear-gradient(180deg,#f8eed9 0%,#f3e6ca 48%,#f7f0df 100%)}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.app{width:min(1380px,calc(100% - 28px));margin:0 auto;padding:22px 0 36px}.board-shell{display:grid;grid-template-columns:360px minmax(0,1fr);gap:18px;align-items:start}.sheet{border:1px solid rgba(100,68,28,.18);border-radius:30px;background:var(--surface);box-shadow:var(--shadow);backdrop-filter:blur(10px);overflow:hidden}.sheet-head{padding:24px 24px 20px;background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.45)),repeating-linear-gradient(0deg,transparent 0 29px,rgba(100,68,28,.07) 29px 30px);border-bottom:1px solid rgba(100,68,28,.12)}.eyebrow{margin:0;color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}h1{margin:10px 0 0;font-size:clamp(34px,5vw,68px);line-height:.94;letter-spacing:-.07em;max-width:9ch}.lead{margin:14px 0 0;max-width:58ch;color:#5b5142;font-size:15px;line-height:1.9}.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.hero-meta span{display:inline-flex;align-items:center;border-radius:999px;background:rgba(255,250,240,.84);border:1px solid rgba(100,68,28,.14);padding:9px 12px;font-size:12px;font-weight:800;letter-spacing:.03em}.sheet-body{display:grid;grid-template-columns:1.1fr .9fr}.panel{padding:22px;border-right:1px dashed rgba(100,68,28,.14)}.panel:last-child{border-right:none}.subhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.subhead h2{margin:8px 0 0;font-size:22px;letter-spacing:-.04em}.muted{margin:0;color:var(--muted);font-size:13px;line-height:1.7}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.field-grid .full{grid-column:1/-1}label{display:block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6d5731}input,select,textarea{width:100%;margin-top:7px;border:1px solid rgba(100,68,28,.16);border-radius:18px;background:#fffdf8;padding:12px 13px;color:var(--ink)}textarea{min-height:96px;resize:vertical}input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(217,79,4,.44);box-shadow:0 0 0 4px rgba(217,79,4,.08)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.btn{border:none;border-radius:16px;padding:12px 15px;font-weight:800;letter-spacing:.02em}.btn.primary{color:#fff;background:linear-gradient(135deg,#c2410c,#dd6b20);box-shadow:0 16px 28px rgba(194,65,12,.24)}.btn.secondary{color:#5b3b10;background:#fff6df;box-shadow:inset 0 0 0 1px rgba(100,68,28,.14)}.status-strip{margin-top:14px;border-radius:18px;padding:12px 14px;background:linear-gradient(90deg,rgba(217,79,4,.12),rgba(217,79,4,.03));color:#8a3b06;font-size:13px;line-height:1.7}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.metric{padding:16px;border-radius:22px;background:#fffaf2;border:1px solid rgba(100,68,28,.12);transform:translateY(14px);opacity:0;animation:rise .55s ease forwards}.metric:nth-child(2){animation-delay:.05s}.metric:nth-child(3){animation-delay:.1s}.metric:nth-child(4){animation-delay:.15s}.metric p{margin:0;color:var(--muted);font-size:12px;font-weight:700}.metric strong{display:block;margin-top:10px;font-size:28px;letter-spacing:-.05em}.workspace{display:grid;gap:14px;margin-top:18px}.lane{border-radius:26px;border:1px solid rgba(100,68,28,.12);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,250,240,.82)),repeating-linear-gradient(0deg,transparent 0 29px,rgba(100,68,28,.04) 29px 30px);padding:18px;box-shadow:0 10px 24px rgba(59,38,11,.06)}.lane h3{margin:0;font-size:18px;letter-spacing:-.03em}.lane-list{display:grid;gap:12px;margin-top:14px}.sticky{position:relative;padding:14px 16px;border-radius:18px 18px 22px 18px;background:var(--paper);box-shadow:0 16px 24px rgba(99,64,20,.08);border:1px solid rgba(100,68,28,.12);overflow:hidden}.sticky::before{content:"";position:absolute;top:0;right:24px;width:72px;height:18px;background:rgba(255,255,255,.5);transform:rotate(5deg) translateY(-6px);border-radius:0 0 12px 12px}.sticky strong{display:block;font-size:15px}.sticky p,.sticky ul{color:#5b5142;font-size:13px;line-height:1.8}.sticky p{margin:8px 0 0}.sticky ul{margin:10px 0 0;padding-left:18px}.ruler{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.signal,.archive-item{border-radius:20px;padding:14px;background:#fff;border:1px solid rgba(100,68,28,.12)}.signal span{display:block;color:var(--muted);font-size:12px;font-weight:800}.signal strong{display:block;margin-top:10px;font-size:22px;letter-spacing:-.04em}.archive-list{display:grid;gap:10px}.archive-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}.archive-item strong{display:block;font-size:14px}.archive-item span{display:block;margin-top:5px;color:var(--muted);font-size:12px;line-height:1.7}.mini-btn{border:none;border-radius:12px;padding:10px 12px;background:#f2ead6;color:#5b3b10;font-weight:800}.full-only{display:block}.hidden-file{display:none}body[data-mode="preview"] .full-only{display:none!important}body[data-mode="preview"] .board-shell,body[data-mode="preview"] .sheet-body,body[data-mode="preview"] .metrics,body[data-mode="preview"] .ruler{grid-template-columns:1fr}body[data-mode="preview"] .panel{border-right:none}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@media (max-width:1160px){.board-shell,.sheet-body,.metrics,.ruler,.field-grid{grid-template-columns:1fr}.panel{border-right:none;border-bottom:1px dashed rgba(100,68,28,.14)}.panel:last-child{border-bottom:none}}
+  </style>
+</head>
+<body data-mode="full">
+  <main class="app">
+    <section class="board-shell">
+      <aside class="sheet full-only">
+        <div class="sheet-head">
+          <p class="eyebrow">Group Assignment Sync</p>
+          <h1>大学生小组作业对齐板</h1>
+          <p class="lead">把“谁负责、什么时候交、谁最可能潜水、怎么催不伤感情”收进同一块战情板。输入课程、成员和风险偏好，系统会给出分工、组会流程、催办文案和本地快照。</p>
+          <div class="hero-meta"><span>轻量数据存储</span><span>localStorage 快照</span><span>JSON 导入导出</span></div>
+        </div>
+        <div class="panel">
+          <div class="subhead"><div><p class="eyebrow">Setup</p><h2>配置这次小组局</h2></div></div>
+          <p class="muted">建议把成员名按常用昵称填写，后面生成的分工单和催办文案会直接复用。</p>
+          <div class="field-grid">
+            <label>课程名<input id="courseInput" value="数字媒体策划"></label>
+            <label>截止时间<input id="deadlineInput" type="datetime-local"></label>
+            <label>交付类型<select id="deliverableInput"><option>课堂汇报 + PPT</option><option selected>研究报告 + 汇报</option><option>短视频 + 策划案</option><option>海报 + 答辩</option></select></label>
+            <label>当前阶段<select id="phaseInput"><option>刚组队</option><option selected>资料搜集</option><option>PPT 整合</option><option>彩排冲刺</option></select></label>
+            <label class="full">成员名单<textarea id="membersInput">你, 林林, 阿泽, 七喜</textarea></label>
+            <label>你负责的角色<select id="roleInput"><option>总控 / 组长</option><option selected>内容骨架</option><option>数据整理</option><option>视觉排版</option><option>答辩主讲</option></select></label>
+            <label>风险偏好<select id="riskInput"><option>保守：多留缓冲</option><option selected>平衡：保证效率</option><option>激进：压缩时间</option></select></label>
+            <label>群聊氛围<select id="toneInput"><option selected>同学式，直给但不冒犯</option><option>轻松一点，偏朋友口吻</option><option>正式一点，像项目协作</option></select></label>
+            <label>最担心什么<select id="fearInput"><option selected>有人潜水不回消息</option><option>资料搜太散，最后返工</option><option>PPT 最后一天才开始合并</option><option>答辩时没有统一口径</option></select></label>
+            <label class="full">补充备注<textarea id="notesInput">老师要求至少引用 3 篇文献，现场答辩 8 分钟，最好有 1 页数据图。</textarea></label>
+          </div>
+          <div class="actions">
+            <button id="sampleBtn" class="btn secondary" type="button">加载样例</button>
+            <button id="generateBtn" class="btn primary" type="button">生成对齐板</button>
+            <button id="saveBtn" class="btn secondary" type="button">保存快照</button>
+            <button id="exportBtn" class="btn secondary" type="button">导出 JSON</button>
+            <button id="importBtn" class="btn secondary" type="button">导入 JSON</button>
+            <input id="importFile" class="hidden-file" type="file" accept="application/json">
+          </div>
+          <div id="statusBox" class="status-strip">先生成一轮对齐板。系统会自动给你拆角色、排检查点，并给出一条不尴尬的群聊催办话术。</div>
+        </div>
+      </aside>
+      <section class="sheet">
+        <div class="sheet-head">
+          <p class="eyebrow">Mission Board</p>
+          <h1 style="max-width:none;">把扯皮点提前拆掉，而不是最后一晚爆炸。</h1>
+          <p class="lead">右侧是本轮自动生成的协作方案。它不会替你做作业，但会把最容易失控的四件事先固定下来：角色、检查点、风险提醒和群聊口径。</p>
+          <div class="metrics">
+            <article class="metric"><p>协作风险</p><strong id="riskMetric">-</strong></article>
+            <article class="metric"><p>最近组会</p><strong id="meetingMetric">-</strong></article>
+            <article class="metric"><p>分工人数</p><strong id="ownerMetric">-</strong></article>
+            <article class="metric"><p>检查点数</p><strong id="checkpointMetric">-</strong></article>
+          </div>
+        </div>
+        <div class="sheet-body">
+          <section class="panel">
+            <div class="subhead"><div><p class="eyebrow">Generated</p><h2>分工与推进</h2></div><p id="sourceTag" class="muted">等待生成</p></div>
+            <div class="workspace">
+              <section class="lane"><h3>角色 sticky</h3><div id="roleList" class="lane-list"></div></section>
+              <section class="lane"><h3>检查点时间线</h3><div id="timelineList" class="lane-list"></div></section>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="subhead"><div><p class="eyebrow">Signals</p><h2>风险与沟通</h2></div></div>
+            <div class="ruler">
+              <article class="signal"><span>最可能卡住</span><strong id="riskLabel">-</strong></article>
+              <article class="signal"><span>老师要求</span><strong id="teacherLabel">-</strong></article>
+              <article class="signal"><span>建议节奏</span><strong id="paceLabel">-</strong></article>
+            </div>
+            <div class="workspace">
+              <section class="lane"><h3>群聊开场</h3><div id="messageCard" class="sticky"><strong>还没生成</strong><p>先点“生成对齐板”，这里会出现一条可以直接发群里的对齐消息。</p></div></section>
+              <section class="lane"><h3>复盘与备份</h3><div id="archiveList" class="archive-list"></div></section>
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+  <script>
+    (function(){
+      var mode=new URLSearchParams(location.search).get("mode")==="preview"?"preview":"full";document.body.setAttribute("data-mode",mode);
+      var storageKey="campus_group_sync_board_runs_v1",latestKey="campus_group_sync_board_latest_v1";
+      var roleTemplates=[{name:"资料侦察",note:"把可引用资料收敛成 3-5 个可信来源，并给出一句可复用观点。"},{name:"内容骨架",note:"先把汇报逻辑排顺，避免最后一晚改大纲。"},{name:"数据图页",note:"补一页能支撑老师追问的数据或案例。"},{name:"视觉排版",note:"统一字号、配色和页码，防止看起来像四个人各做各的。"},{name:"答辩主讲",note:"负责最后 8 分钟的口径统一与开场节奏。"}];
+      var riskCopy={"有人潜水不回消息":"先约定最晚回消息时间，再给未回复的人单独点名，不要在群里阴阳。","资料搜太散，最后返工":"每个人交资料时必须附一句“这段要放到哪一页/哪一节”。","PPT 最后一天才开始合并":"至少提前 24 小时锁一个合并版本，后续只允许小修。","答辩时没有统一口径":"把开场、转场、结尾和老师高频追问写成统一话术。"};
+      var paceMap={"保守：多留缓冲":{ahead:30,label:"两轮检查，缓冲优先"},"平衡：保证效率":{ahead:18,label:"一轮合并，一轮查漏"},"激进：压缩时间":{ahead:10,label:"先过线，再补亮点"}};
+      function $(id){return document.getElementById(id)}
+      var els={courseInput:$("courseInput"),deadlineInput:$("deadlineInput"),deliverableInput:$("deliverableInput"),phaseInput:$("phaseInput"),membersInput:$("membersInput"),roleInput:$("roleInput"),riskInput:$("riskInput"),toneInput:$("toneInput"),fearInput:$("fearInput"),notesInput:$("notesInput"),statusBox:$("statusBox"),riskMetric:$("riskMetric"),meetingMetric:$("meetingMetric"),ownerMetric:$("ownerMetric"),checkpointMetric:$("checkpointMetric"),sourceTag:$("sourceTag"),roleList:$("roleList"),timelineList:$("timelineList"),riskLabel:$("riskLabel"),teacherLabel:$("teacherLabel"),paceLabel:$("paceLabel"),messageCard:$("messageCard"),archiveList:$("archiveList"),importFile:$("importFile")};
+      function read(key,fallback){try{var raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch(err){return fallback}}function write(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(err){}}
+      function pad(num){return String(num).padStart(2,"0")}function setStatus(text){if(els.statusBox)els.statusBox.textContent=text}
+      function toLocalInputValue(date){var copy=new Date(date.getTime()-date.getTimezoneOffset()*60000);return copy.toISOString().slice(0,16)}
+      function formatDateTime(value){if(!value)return"未设置";var date=new Date(value);if(Number.isNaN(date.getTime()))return value;return date.getMonth()+1+"月"+date.getDate()+"日 "+pad(date.getHours())+":"+pad(date.getMinutes())}
+      function parseMembers(){var raw=els.membersInput&&els.membersInput.value||"";return raw.split(/[\n,，]/).map(function(item){return item.trim()}).filter(Boolean)}
+      function currentConfig(){return{course:els.courseInput?els.courseInput.value.trim():"数字媒体策划",deadline:els.deadlineInput?els.deadlineInput.value:"",deliverable:els.deliverableInput?els.deliverableInput.value:"研究报告 + 汇报",phase:els.phaseInput?els.phaseInput.value:"资料搜集",members:parseMembers(),yourRole:els.roleInput?els.roleInput.value:"内容骨架",riskStyle:els.riskInput?els.riskInput.value:"平衡：保证效率",tone:els.toneInput?els.toneInput.value:"同学式，直给但不冒犯",fear:els.fearInput?els.fearInput.value:"有人潜水不回消息",notes:els.notesInput?els.notesInput.value.trim():""}}
+      function hoursBeforeDeadline(config,hours){if(!config.deadline)return"未设置";var date=new Date(config.deadline);date.setHours(date.getHours()-hours);return formatDateTime(toLocalInputValue(date))}
+      function computeRisk(config){var risk=18;if(config.members.length>=5)risk+=14;if(config.phase==="刚组队")risk+=12;if(config.phase==="PPT 整合")risk+=10;if(config.phase==="彩排冲刺")risk+=8;if(config.deliverable.indexOf("汇报")!==-1)risk+=10;if(config.fear.indexOf("潜水")!==-1)risk+=16;if(config.fear.indexOf("返工")!==-1)risk+=14;if(config.fear.indexOf("PPT")!==-1)risk+=12;risk+=paceMap[config.riskStyle].ahead<=10?10:paceMap[config.riskStyle].ahead>=30?-6:0;return risk>=60?"高":risk>=40?"中":"低"}
+      function assignRoles(config){var members=config.members.length?config.members:["你","同学A","同学B","同学C"];return members.map(function(member,index){var template=roleTemplates[index%roleTemplates.length];return{member:member,role:member==="你"?config.yourRole:template.name,mission:member==="你"?"你负责先把节奏拉起来，并在群里锁住关键节点。":template.note}})}
+      function buildTimeline(config){var ahead=paceMap[config.riskStyle].ahead;return[{title:"第一次对齐会",time:config.deadline?hoursBeforeDeadline(config,72):"今天晚上",note:"用 15 分钟锁分工、页数和交付标准，不讨论无关细节。"},
+        {title:"资料收口",time:config.deadline?hoursBeforeDeadline(config,48):"明天下午",note:"每人至少交 1 个能直接进入 "+config.deliverable+" 的素材。"},
+        {title:"合并版本",time:config.deadline?hoursBeforeDeadline(config,24+ahead):"后天中午",note:"提前完成第一版合并，后面只改错不换大纲。"},
+        {title:"答辩/提交前检查",time:config.deadline?hoursBeforeDeadline(config,ahead):"截止前",note:config.phase==="彩排冲刺"?"跑一遍完整演练，控制总时长并预演老师追问。":"核对格式、引用、页码和导出文件，不在最后 1 小时做大改。"}]}
+      function tonePrefix(tone){if(tone.indexOf("朋友")!==-1)return"兄弟姐妹们";if(tone.indexOf("正式")!==-1)return"大家好";return"各位"}
+      function buildMessage(config,roles,timeline){var roleText=roles.map(function(item){return item.member+" 负责"+item.role}).join("；");return tonePrefix(config.tone)+"，这次《"+config.course+"》我们先把分工锁一下："+roleText+"。今晚先按这个节奏推进，"+timeline[1].time+" 前把资料或初稿发群里，"+timeline[2].time+" 前合并第一版。老师要求："+config.notes+"。如果谁卡住了请直接说，不要到最后一晚再补锅。"}
+      function buildPlan(config,source){var roles=assignRoles(config),timeline=buildTimeline(config),risk=computeRisk(config);return{course:config.course,source:source,risk:risk,nextMeeting:(timeline[0].time==="未设置"?"今晚":timeline[0].time.split(" ")[0]),ownerCount:roles.length,checkpoints:timeline.length,riskLabel:config.fear.replace("有人","").replace("最后一天才开始","").replace("答辩时",""),teacherLabel:config.notes?((config.notes.length>18?config.notes.slice(0,18)+"...":config.notes)):"待补老师要求",paceLabel:paceMap[config.riskStyle].label,riskNote:riskCopy[config.fear],roles:roles,timeline:timeline,message:buildMessage(config,roles,timeline),summary:config.course+"｜"+config.phase+"｜风险"+risk,savedAt:new Date().toLocaleString("zh-CN")}}
+      function renderStickies(container,items,mapper){container.innerHTML=items.map(function(item){var mapped=mapper(item);return'<article class="sticky"><strong>'+mapped.title+'</strong><p>'+mapped.body+'</p>'+(mapped.list?'<ul>'+mapped.list.map(function(line){return"<li>"+line+"</li>"}).join("")+"</ul>":"")+"</article>"}).join("")}
+      function renderArchive(){var runs=read(storageKey,[]);els.archiveList.innerHTML=runs.length?runs.map(function(item,index){return'<article class="archive-item"><div><strong>'+item.summary+'</strong><span>'+item.savedAt+"｜下次组会 "+item.nextMeeting+'</span></div><div><button class="mini-btn" data-load="'+index+'" type="button">回填</button></div></article>'}).join(""):'<article class="archive-item"><div><strong>还没有保存的协作快照</strong><span>保存后可以把不同课程、不同组员风格的分工策略积累下来。</span></div></article>'}
+      function renderPlan(plan){els.riskMetric.textContent=plan.risk;els.meetingMetric.textContent=plan.nextMeeting;els.ownerMetric.textContent=String(plan.ownerCount);els.checkpointMetric.textContent=String(plan.checkpoints);els.sourceTag.textContent=plan.source;els.riskLabel.textContent=plan.riskLabel;els.teacherLabel.textContent=plan.teacherLabel;els.paceLabel.textContent=plan.paceLabel;renderStickies(els.roleList,plan.roles,function(item){return{title:item.member+" · "+item.role,body:item.mission}});renderStickies(els.timelineList,plan.timeline,function(item){return{title:item.title+"｜"+item.time,body:item.note}});els.messageCard.innerHTML='<strong>可以直接发群的版本</strong><p>'+plan.message+'</p><ul><li>'+plan.riskNote+'</li><li>如果有人延迟，先点名具体任务，不要泛泛催进度。</li></ul>'}
+      function loadSample(){if(els.courseInput)els.courseInput.value="数字媒体策划";if(els.deadlineInput){var future=new Date();future.setDate(future.getDate()+3);future.setHours(19,30,0,0);els.deadlineInput.value=toLocalInputValue(future)}if(els.deliverableInput)els.deliverableInput.value="研究报告 + 汇报";if(els.phaseInput)els.phaseInput.value="资料搜集";if(els.membersInput)els.membersInput.value="你, 林林, 阿泽, 七喜";if(els.roleInput)els.roleInput.value="内容骨架";if(els.riskInput)els.riskInput.value="平衡：保证效率";if(els.toneInput)els.toneInput.value="同学式，直给但不冒犯";if(els.fearInput)els.fearInput.value="有人潜水不回消息";if(els.notesInput)els.notesInput.value="老师要求至少引用 3 篇文献，现场答辩 8 分钟，最好有 1 页数据图。";setStatus("样例已加载。现在可以直接生成对齐板。")}
+      function generatePlan(source){var config=currentConfig();if(!config.course)return setStatus("先填课程名。");if(config.members.length<2)return setStatus("至少填 2 个成员名，不然没有协作意义。");var plan=buildPlan(config,source||"实时生成");renderPlan(plan);write(latestKey,plan);setStatus("对齐板已生成。先看角色 sticky，再把群聊开场那段直接发出去。")}
+      function savePlan(){var latest=read(latestKey,null);if(!latest)return setStatus("先生成一轮对齐板，再保存快照。");var runs=read(storageKey,[]);runs.unshift(latest);write(storageKey,runs.slice(0,10));renderArchive();setStatus("这次协作方案已经保存。后面碰到类似课程可以直接回填重跑。")}
+      function exportPlans(){var runs=read(storageKey,[]);if(!runs.length)return setStatus("还没有可导出的快照。先保存至少一条。");var blob=new Blob([JSON.stringify(runs,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),anchor=document.createElement("a");anchor.href=url;anchor.download="campus-group-sync-board-runs.json";anchor.click();URL.revokeObjectURL(url);setStatus("快照 JSON 已导出。")}
+      function importPlans(file){if(!file)return;var reader=new FileReader();reader.onload=function(){try{var data=JSON.parse(reader.result);if(!Array.isArray(data))throw new Error("invalid");write(storageKey,data.slice(0,10));renderArchive();setStatus("快照 JSON 已导入。")}catch(err){setStatus("导入失败：请选择这个工具导出的 JSON 数组文件。")}};reader.readAsText(file,"utf-8")}
+      function loadRun(index){var runs=read(storageKey,[]),item=runs[index];if(!item)return;renderPlan(item);write(latestKey,item);setStatus("已回填一条旧快照。你可以直接接着保存，或者先改输入再重跑。")}
+      document.addEventListener("click",function(event){var target=event.target;if(target.id==="sampleBtn")loadSample();if(target.id==="generateBtn")generatePlan("实时生成");if(target.id==="saveBtn")savePlan();if(target.id==="exportBtn")exportPlans();if(target.id==="importBtn"&&els.importFile)els.importFile.click();if(target.hasAttribute("data-load"))loadRun(Number(target.getAttribute("data-load")))});
+      if(els.importFile){els.importFile.addEventListener("change",function(event){importPlans(event.target.files&&event.target.files[0]);event.target.value=""})}
+      loadSample();renderArchive();if(mode==="preview")generatePlan("预览样例");
+    })();
+  </script>
+</body>
+</html>
