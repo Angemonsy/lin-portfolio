@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生夜宵拼单不吵架局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#180f2d",glow:"#f97316",berry:"#a855f7"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at 15% 15%,rgba(168,85,247,.28),transparent 26%),radial-gradient(circle at 85% 14%,rgba(249,115,22,.24),transparent 24%),linear-gradient(140deg,#12061d,#271043 45%,#431407 100%);color:#f8fafc}
+    .glass{background:rgba(16,10,31,.68);backdrop-filter:blur(18px)}
+    .chip{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
+    .chip:hover{transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="mb-5 overflow-hidden rounded-[2rem] border border-white/10 glass">
+      <div class="grid gap-0 lg:grid-cols-[1.1fr,0.9fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-orange-200">Campus Snack Sync</p>
+          <h1 class="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl">夜宵拼单不吵架局</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-200">三步解决宿舍夜宵内耗：先录室友预算和忌口，再勾想吃的店单，最后一键算出最稳的凑单方案、每个人该付的钱和可以直接发群里的邀约文案。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="generateBtn" class="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink">生成今晚方案</button>
+            <button id="resetBtn" class="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white">恢复默认样例</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">目标门槛</p>
+              <p id="thresholdValue" class="mt-3 text-3xl font-extrabold text-white">￥48</p>
+              <p class="mt-2 text-sm text-slate-300">自动比较是否跨过起送与满减线。</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">本地快照</p>
+              <p id="historyCount" class="mt-3 text-3xl font-extrabold text-white">0</p>
+              <p class="mt-2 text-sm text-slate-300">最近方案会保存在浏览器里。</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">今晚关键词</p>
+              <p id="moodValue" class="mt-3 text-xl font-extrabold text-orange-200">先吃上，再算清</p>
+              <p class="mt-2 text-sm text-slate-300">满减不够、口味冲突、谁先垫付都能一起处理。</p>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 bg-white/5 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-400">今晚输入</p>
+          <div class="mt-4 space-y-4">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <label class="text-sm font-semibold text-white" for="shopName">店名 / 场景</label>
+              <input id="shopName" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400" value="北门炸鸡拼单" placeholder="例如：东门烧烤局">
+            </div>
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4"><label class="text-sm font-semibold text-white" for="minOrder">起送</label><input id="minOrder" type="number" min="0" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="28"></div>
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4"><label class="text-sm font-semibold text-white" for="discountThreshold">满减线</label><input id="discountThreshold" type="number" min="0" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="48"></div>
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4"><label class="text-sm font-semibold text-white" for="discountAmount">优惠</label><input id="discountAmount" type="number" min="0" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="10"></div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4"><label class="text-sm font-semibold text-white" for="deliveryFee">配送费</label><input id="deliveryFee" type="number" min="0" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="4"></div>
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4"><label class="text-sm font-semibold text-white" for="runnerTip">跑腿费</label><input id="runnerTip" type="number" min="0" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-5 lg:grid-cols-[1.1fr,0.9fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5 sm:px-8">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-[0.22em] text-slate-400">宿舍成员</p>
+              <h2 class="mt-2 text-2xl font-bold text-white">预算、口味、雷区先说清</h2>
+            </div>
+            <button id="addPersonBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">新增室友</button>
+          </div>
+        </div>
+        <div id="peopleList" class="space-y-4 p-6 sm:p-8"></div>
+      </article>
+
+      <aside class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-[0.22em] text-slate-400">备选菜单</p>
+              <h2 class="mt-2 text-2xl font-bold text-white">想吃什么先打勾</h2>
+            </div>
+            <button id="addMenuBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">新增菜品</button>
+          </div>
+        </div>
+        <div id="menuList" class="space-y-4 p-6 sm:p-8"></div>
+      </aside>
+    </section>
+
+    <section class="mt-5 grid gap-5 lg:grid-cols-[1fr,0.95fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-400">智能结果</p>
+          <h2 class="mt-2 text-2xl font-bold text-white">今晚最稳的拼单方案</h2>
+        </div>
+        <div class="space-y-4 p-6 sm:p-8">
+          <div id="summaryCards" class="grid gap-4 md:grid-cols-3"></div>
+          <div class="grid gap-4 md:grid-cols-[1fr,0.95fr]">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-5">
+              <p class="text-xs uppercase tracking-[0.18em] text-slate-400">推荐菜品</p>
+              <div id="selectedMenu" class="mt-4 space-y-3 text-sm text-slate-200">点击“生成今晚方案”后显示。</div>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-5">
+              <p class="text-xs uppercase tracking-[0.18em] text-slate-400">付款分摊</p>
+              <div id="splitList" class="mt-4 space-y-3 text-sm text-slate-200">会按各自点单金额比例分摊配送和优惠。</div>
+            </div>
+          </div>
+          <div class="rounded-3xl border border-white/10 bg-black/15 p-5">
+            <p class="text-xs uppercase tracking-[0.18em] text-slate-400">群聊文案</p>
+            <div id="messageBox" class="mt-4 whitespace-pre-line rounded-3xl border border-dashed border-white/15 bg-white/5 p-4 text-sm leading-relaxed text-slate-100">生成后会给出一段能直接发宿舍群的邀约文案。</div>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button id="copyMessageBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">复制文案</button>
+              <button id="saveSnapshotBtn" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink">保存本地快照</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">历史方案</p>
+            <h3 class="mt-2 text-xl font-bold text-white">最近三次宿舍夜宵局</h3>
+          </div>
+          <div id="historyList" class="space-y-3 px-6 py-5 text-sm leading-relaxed text-slate-300">
+            <p class="rounded-2xl border border-dashed border-white/15 p-4">你保存过的方案会显示在这里。</p>
+          </div>
+        </section>
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">JSON 快照</p>
+            <h3 class="mt-2 text-xl font-bold text-white">导出 / 导入</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <button id="exportBtn" class="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white">导出今晚配置</button>
+            <label class="block cursor-pointer rounded-2xl border border-dashed border-white/20 bg-black/15 px-4 py-4 text-sm leading-relaxed text-slate-300">
+              选择 JSON 文件恢复配置
+              <input id="importInput" type="file" accept="application/json" class="hidden">
+            </label>
+            <p id="importStatus" class="text-sm leading-relaxed text-slate-400">适合把固定宿舍组合在不同设备上复用。</p>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var storageKey = "campus-snack-split-snapshots";
+      var defaultState = {
+        shopName: "北门炸鸡拼单",
+        minOrder: 28,
+        discountThreshold: 48,
+        discountAmount: 10,
+        deliveryFee: 4,
+        runnerTip: 2,
+        people: [
+          { id: "p1", name: "阿橙", budget: 18, flavor: "想吃辣", avoid: "不要葱" },
+          { id: "p2", name: "小周", budget: 22, flavor: "想吃主食", avoid: "不吃太油" },
+          { id: "p3", name: "77", budget: 16, flavor: "想喝点冰的", avoid: "不要太辣" }
+        ],
+        menu: [
+          { id: "m1", name: "爆汁鸡腿堡", price: 16, tags: "主食,不辣", pickedBy: "阿橙,小周" },
+          { id: "m2", name: "秘制鸡米花", price: 14, tags: "小食,辣", pickedBy: "阿橙" },
+          { id: "m3", name: "柠檬冰粉", price: 8, tags: "甜品,解辣", pickedBy: "77" },
+          { id: "m4", name: "蒜香薯条", price: 12, tags: "小食,共享", pickedBy: "阿橙,小周" },
+          { id: "m5", name: "肥宅快乐水", price: 6, tags: "饮料,冰", pickedBy: "77" }
+        ]
+      };
+
+      var state = clone(defaultState);
+      var latestPlan = null;
+      var history = loadHistory();
+      var els = {
+        shopName: byId("shopName"),
+        minOrder: byId("minOrder"),
+        discountThreshold: byId("discountThreshold"),
+        discountAmount: byId("discountAmount"),
+        deliveryFee: byId("deliveryFee"),
+        runnerTip: byId("runnerTip"),
+        peopleList: byId("peopleList"),
+        menuList: byId("menuList"),
+        summaryCards: byId("summaryCards"),
+        selectedMenu: byId("selectedMenu"),
+        splitList: byId("splitList"),
+        messageBox: byId("messageBox"),
+        historyList: byId("historyList"),
+        historyCount: byId("historyCount"),
+        thresholdValue: byId("thresholdValue"),
+        moodValue: byId("moodValue"),
+        importStatus: byId("importStatus"),
+        copyMessageBtn: byId("copyMessageBtn")
+      };
+
+      byId("generateBtn").addEventListener("click", generatePlan);
+      byId("resetBtn").addEventListener("click", function () {
+        state = clone(defaultState);
+        latestPlan = null;
+        syncInputs();
+        renderPeople();
+        renderMenu();
+        renderPlanPlaceholder();
+      });
+      byId("addPersonBtn").addEventListener("click", function () {
+        state.people.push({ id: uid("p"), name: "新室友", budget: 15, flavor: "想吃点啥", avoid: "暂无" });
+        renderPeople();
+      });
+      byId("addMenuBtn").addEventListener("click", function () {
+        state.menu.push({ id: uid("m"), name: "新菜品", price: 10, tags: "共享", pickedBy: state.people[0] ? state.people[0].name : "" });
+        renderMenu();
+      });
+      byId("saveSnapshotBtn").addEventListener("click", saveSnapshot);
+      byId("copyMessageBtn").addEventListener("click", copyMessage);
+      byId("exportBtn").addEventListener("click", exportSnapshot);
+      byId("importInput").addEventListener("change", importSnapshot);
+      ["shopName", "minOrder", "discountThreshold", "discountAmount", "deliveryFee", "runnerTip"].forEach(function (id) {
+        byId(id).addEventListener("input", syncStateFromInputs);
+      });
+
+      syncInputs();
+      renderPeople();
+      renderMenu();
+      renderPlanPlaceholder();
+      renderHistory();
+
+      function byId(id) { return document.getElementById(id); }
+      function clone(value) { return JSON.parse(JSON.stringify(value)); }
+      function uid(prefix) { return prefix + Math.random().toString(36).slice(2, 8); }
+      function money(n) { return "￥" + n.toFixed(2); }
+      function toNumber(value) { var num = Number(value); return Number.isFinite(num) && num >= 0 ? num : 0; }
+      function escapeHtml(value) { return value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+
+      function syncInputs() {
+        els.shopName.value = state.shopName;
+        els.minOrder.value = state.minOrder;
+        els.discountThreshold.value = state.discountThreshold;
+        els.discountAmount.value = state.discountAmount;
+        els.deliveryFee.value = state.deliveryFee;
+        els.runnerTip.value = state.runnerTip;
+        els.thresholdValue.textContent = "￥" + Number(state.discountThreshold || 0);
+      }
+
+      function syncStateFromInputs() {
+        state.shopName = els.shopName.value.trim() || "今晚夜宵局";
+        state.minOrder = toNumber(els.minOrder.value);
+        state.discountThreshold = toNumber(els.discountThreshold.value);
+        state.discountAmount = toNumber(els.discountAmount.value);
+        state.deliveryFee = toNumber(els.deliveryFee.value);
+        state.runnerTip = toNumber(els.runnerTip.value);
+        els.thresholdValue.textContent = "￥" + Number(state.discountThreshold || 0);
+      }
+
+      function renderPeople() {
+        els.peopleList.innerHTML = "";
+        state.people.forEach(function (person, index) {
+          var card = document.createElement("article");
+          card.className = "rounded-3xl border border-white/10 bg-black/15 p-5";
+          card.innerHTML = '<div class="flex flex-wrap items-center justify-between gap-3"><p class="text-sm font-semibold text-white">室友 ' + (index + 1) + '</p><button data-remove-person="' + person.id + '" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-300">移除</button></div><div class="mt-4 grid gap-4 md:grid-cols-2">' + personField("名字", person.id, "name", person.name) + personField("预算", person.id, "budget", person.budget, "number") + personField("想吃", person.id, "flavor", person.flavor) + personField("雷区", person.id, "avoid", person.avoid) + "</div>";
+          els.peopleList.appendChild(card);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-person-id]"), function (input) {
+          input.addEventListener("input", function () {
+            var person = state.people.find(function (item) { return item.id === input.getAttribute("data-person-id"); });
+            if (!person) return;
+            var key = input.getAttribute("data-person-key");
+            person[key] = key === "budget" ? toNumber(input.value) : input.value;
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-remove-person]"), function (button) {
+          button.addEventListener("click", function () {
+            if (state.people.length <= 1) return;
+            var id = button.getAttribute("data-remove-person");
+            state.people = state.people.filter(function (person) { return person.id !== id; });
+            renderPeople();
+          });
+        });
+      }
+
+      function personField(label, id, key, value, type) {
+        var inputType = type || "text";
+        return '<label class="block text-sm text-slate-300">' + label + '<input data-person-id="' + id + '" data-person-key="' + key + '" type="' + inputType + '" value="' + escapeHtml(String(value)) + '" class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"></label>';
+      }
+
+      function renderMenu() {
+        els.menuList.innerHTML = "";
+        state.menu.forEach(function (item, index) {
+          var card = document.createElement("article");
+          card.className = "rounded-3xl border border-white/10 bg-black/15 p-5";
+          card.innerHTML = '<div class="flex flex-wrap items-center justify-between gap-3"><p class="text-sm font-semibold text-white">菜品 ' + (index + 1) + '</p><button data-remove-menu="' + item.id + '" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-300">移除</button></div><div class="mt-4 grid gap-4"><label class="block text-sm text-slate-300">名字<input data-menu-id="' + item.id + '" data-menu-key="name" value="' + escapeHtml(item.name) + '" class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"></label><div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm text-slate-300">价格<input data-menu-id="' + item.id + '" data-menu-key="price" type="number" min="0" value="' + item.price + '" class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"></label><label class="block text-sm text-slate-300">标签<input data-menu-id="' + item.id + '" data-menu-key="tags" value="' + escapeHtml(item.tags) + '" class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"></label></div><label class="block text-sm text-slate-300">谁想吃（逗号分隔）<input data-menu-id="' + item.id + '" data-menu-key="pickedBy" value="' + escapeHtml(item.pickedBy) + '" class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" placeholder="阿橙,77"></label></div>';
+          els.menuList.appendChild(card);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-menu-id]"), function (input) {
+          input.addEventListener("input", function () {
+            var item = state.menu.find(function (entry) { return entry.id === input.getAttribute("data-menu-id"); });
+            if (!item) return;
+            var key = input.getAttribute("data-menu-key");
+            item[key] = key === "price" ? toNumber(input.value) : input.value;
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-remove-menu]"), function (button) {
+          button.addEventListener("click", function () {
+            var id = button.getAttribute("data-remove-menu");
+            state.menu = state.menu.filter(function (item) { return item.id !== id; });
+            renderMenu();
+          });
+        });
+      }
+
+      function generatePlan() {
+        syncStateFromInputs();
+        var assignments = state.people.map(function (person) {
+          return { id: person.id, name: person.name || "未命名室友", budget: toNumber(person.budget), flavor: person.flavor || "随便", avoid: person.avoid || "暂无", items: [], subtotal: 0, pay: 0, discountShare: 0, feeShare: 0, overBudget: 0 };
+        });
+        var normalizedMenu = state.menu.filter(function (item) { return toNumber(item.price) > 0; }).map(function (item) {
+          var names = item.pickedBy.split(",").map(function (chunk) { return chunk.trim(); }).filter(Boolean);
+          var owners = assignments.filter(function (person) { return names.indexOf(person.name) !== -1; });
+          return { name: item.name || "未命名菜品", price: toNumber(item.price), tags: item.tags || "共享", owners: owners.length ? owners : assignments.slice(0,1) };
+        });
+        normalizedMenu.forEach(function (item) {
+          var target = item.owners[0];
+          target.items.push(item);
+          target.subtotal += item.price;
+        });
+        var total = normalizedMenu.reduce(function (sum, item) { return sum + item.price; }, 0);
+        var discountApplied = total >= state.discountThreshold ? Math.min(state.discountAmount, total) : 0;
+        var extraFee = state.deliveryFee + state.runnerTip;
+        var finalTotal = Math.max(0, total - discountApplied + extraFee);
+        var weightedBase = assignments.reduce(function (sum, person) { return sum + person.subtotal; }, 0) || 1;
+        assignments.forEach(function (person) {
+          var ratio = person.subtotal / weightedBase;
+          person.discountShare = discountApplied * ratio;
+          person.feeShare = extraFee * ratio;
+          person.pay = Math.max(0, person.subtotal - person.discountShare + person.feeShare);
+          person.overBudget = person.pay - person.budget;
+        });
+        var thresholdGap = state.discountThreshold > total ? state.discountThreshold - total : 0;
+        latestPlan = {
+          timestamp: new Date().toISOString(),
+          shopName: state.shopName,
+          total: total,
+          finalTotal: finalTotal,
+          discountApplied: discountApplied,
+          extraFee: extraFee,
+          thresholdGap: thresholdGap,
+          vibe: thresholdGap > 0 ? "还差一点满减，优先补共享小食" : assignments.some(function (person) { return person.overBudget > 0.01; }) ? "预算有人吃紧，建议先收口" : "这单阻力很低，可以直接发群",
+          assignments: assignments,
+          menu: normalizedMenu
+        };
+        renderPlan(latestPlan);
+      }
+
+      function renderPlan(plan) {
+        els.moodValue.textContent = plan.vibe;
+        els.summaryCards.innerHTML = card("菜品原价", money(plan.total), "先看今晚吃了多少。") + card("最终实付", money(plan.finalTotal), plan.discountApplied > 0 ? "已经吃到 " + money(plan.discountApplied) + " 满减。" : "这单还没吃到优惠。") + card("下单判断", plan.thresholdGap > 0 ? "建议补单" : "可以下单", plan.thresholdGap > 0 ? "还差 " + money(plan.thresholdGap) : "起送与优惠条件已满足");
+        els.selectedMenu.innerHTML = plan.menu.map(function (item) {
+          var owners = item.owners.map(function (owner) { return owner.name; }).join(" / ");
+          return '<div class="rounded-2xl border border-white/10 bg-white/5 p-4"><div class="flex items-center justify-between gap-3"><p class="font-semibold text-white">' + escapeHtml(item.name) + '</p><span class="rounded-full border border-white/10 px-2 py-1 text-xs text-orange-200">' + money(item.price) + '</span></div><p class="mt-2 text-sm text-slate-300">归属：' + escapeHtml(owners) + ' · ' + escapeHtml(item.tags) + '</p></div>';
+        }).join("");
+        els.splitList.innerHTML = plan.assignments.map(function (person) {
+          var tone = person.overBudget > 0.01 ? "text-rose-200" : "text-emerald-200";
+          var hint = person.overBudget > 0.01 ? "超预算 " + money(person.overBudget) : "预算内";
+          return '<div class="rounded-2xl border border-white/10 bg-white/5 p-4"><div class="flex items-center justify-between gap-3"><p class="font-semibold text-white">' + escapeHtml(person.name) + '</p><span class="' + tone + ' text-sm font-semibold">' + money(person.pay) + '</span></div><p class="mt-2 text-sm text-slate-300">点单额 ' + money(person.subtotal) + '，优惠分摊 -' + money(person.discountShare) + '，配送/跑腿 +' + money(person.feeShare) + '</p><p class="mt-2 text-sm ' + tone + '">' + hint + '</p></div>';
+        }).join("");
+        els.messageBox.textContent = ["【" + plan.shopName + "】","我先把这单算好了：原价 " + money(plan.total) + "，优惠 " + money(plan.discountApplied) + "，配送和跑腿 " + money(plan.extraFee) + "，最后实付 " + money(plan.finalTotal) + "。",plan.assignments.map(function (person) { return person.name + " 付 " + money(person.pay); }).join("；"),plan.thresholdGap > 0 ? "还差 " + money(plan.thresholdGap) + " 才能吃到满减，建议再补一个共享小食。" : "如果没异议我就按这版下单。"].join("\n");
+        els.copyMessageBtn.textContent = "复制文案";
+      }
+
+      function renderPlanPlaceholder() {
+        els.summaryCards.innerHTML = card("菜品原价", "待计算", "先确认今晚谁想吃什么。") + card("最终实付", "待计算", "满减和配送费会自动算进去。") + card("下单判断", "待生成", "生成后告诉你要不要补单。");
+        els.selectedMenu.textContent = "点击“生成今晚方案”后显示。";
+        els.splitList.textContent = "会按各自点单金额比例分摊配送和优惠。";
+        els.messageBox.textContent = "生成后会给出一段能直接发宿舍群的邀约文案。";
+        els.moodValue.textContent = "先吃上，再算清";
+      }
+
+      function card(label, value, tip) {
+        return '<div class="rounded-3xl border border-white/10 bg-black/15 p-4"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">' + label + '</p><p class="mt-3 text-2xl font-extrabold text-white">' + value + '</p><p class="mt-2 text-sm text-slate-300">' + tip + '</p></div>';
+      }
+
+      function saveSnapshot() {
+        syncStateFromInputs();
+        if (!latestPlan) generatePlan();
+        if (!latestPlan) return;
+        history.unshift({ savedAt: new Date().toISOString(), state: clone(state), plan: clone(latestPlan) });
+        history = history.slice(0, 3);
+        persistHistory();
+        renderHistory();
+      }
+
+      function renderHistory() {
+        els.historyCount.textContent = String(history.length);
+        if (!history.length) {
+          els.historyList.innerHTML = '<p class="rounded-2xl border border-dashed border-white/15 p-4">你保存过的方案会显示在这里。</p>';
+          return;
+        }
+        els.historyList.innerHTML = history.map(function (snapshot, index) {
+          return '<button data-history-index="' + index + '" class="chip w-full rounded-2xl border border-white/10 bg-black/15 p-4 text-left"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">' + new Date(snapshot.savedAt).toLocaleString("zh-CN",{hour12:false}) + '</p><p class="mt-2 text-sm font-semibold text-white">' + escapeHtml(snapshot.state.shopName || "夜宵局") + '</p><p class="mt-2 text-sm text-slate-300">实付 ' + money(snapshot.plan.finalTotal) + " · " + escapeHtml(snapshot.plan.vibe) + "</p></button>";
+        }).join("");
+        Array.prototype.forEach.call(document.querySelectorAll("[data-history-index]"), function (button) {
+          button.addEventListener("click", function () {
+            var snapshot = history[Number(button.getAttribute("data-history-index"))];
+            if (!snapshot) return;
+            state = clone(snapshot.state);
+            latestPlan = clone(snapshot.plan);
+            syncInputs();
+            renderPeople();
+            renderMenu();
+            renderPlan(latestPlan);
+          });
+        });
+      }
+
+      function persistHistory() { try { localStorage.setItem(storageKey, JSON.stringify(history)); } catch (_) {} }
+      function loadHistory() { try { var raw = localStorage.getItem(storageKey); return raw ? JSON.parse(raw) : []; } catch (_) { return []; } }
+
+      function exportSnapshot() {
+        syncStateFromInputs();
+        var payload = { exportedAt: new Date().toISOString(), state: clone(state), plan: latestPlan ? clone(latestPlan) : null };
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "campus-snack-split-snapshot.json";
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function importSnapshot(event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          try {
+            var payload = JSON.parse(String(reader.result));
+            if (!payload.state || !payload.state.people || !payload.state.menu) throw new Error("bad");
+            state = clone(payload.state);
+            latestPlan = payload.plan ? clone(payload.plan) : null;
+            syncInputs();
+            renderPeople();
+            renderMenu();
+            if (latestPlan) renderPlan(latestPlan); else renderPlanPlaceholder();
+            els.importStatus.textContent = "导入成功，今晚配置已恢复。";
+          } catch (_) {
+            els.importStatus.textContent = "导入失败，这不是可识别的快照文件。";
+          }
+          event.target.value = "";
+        };
+        reader.readAsText(file, "utf-8");
+      }
+
+      function copyMessage() {
+        var text = els.messageBox.textContent;
+        if (!text || text.indexOf("生成后") === 0) {
+          els.copyMessageBtn.textContent = "先生成方案";
+          setTimeout(function () { els.copyMessageBtn.textContent = "复制文案"; }, 1200);
+          return;
+        }
+        navigator.clipboard.writeText(text).then(function () {
+          els.copyMessageBtn.textContent = "已复制";
+          setTimeout(function () { els.copyMessageBtn.textContent = "复制文案"; }, 1200);
+        }).catch(function () {
+          els.copyMessageBtn.textContent = "复制失败";
+          setTimeout(function () { els.copyMessageBtn.textContent = "复制文案"; }, 1200);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

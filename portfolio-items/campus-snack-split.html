@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇绩怪谈AIQ | 大学生夜宵拼单不吵架局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{brandFrom:"#7c3aed",brandTo:"#ea580c"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="antialiased">
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="../assets/avatar-kunki.jpg" alt="奇绩怪谈AIQ Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">奇绩怪谈AIQ</span></a>
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="pt-24 pb-16">
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <article class="reveal overflow-hidden rounded-[2rem] border border-slate-200 bg-white">
+        <div class="bg-[radial-gradient(circle_at_top_left,_rgba(192,132,252,0.28),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(251,146,60,0.24),_transparent_28%),linear-gradient(135deg,#111827,#581c87_48%,#9a3412)] p-8 text-white md:p-10">
+          <p class="text-sm font-semibold text-orange-100">作品详情 · 校园生活 / 轻量数据存储</p>
+          <h1 class="mt-3 max-w-3xl text-3xl font-extrabold md:text-4xl">大学生夜宵拼单不吵架局</h1>
+          <p class="mt-4 max-w-3xl text-base leading-relaxed text-slate-100">把宿舍夜宵最容易吵起来的三件事一起解决：谁点什么、满减怎么凑、最后到底谁该付多少钱。输入室友、预算和口味后，页面会自动给出推荐拼单、AA 金额、顺手可发到群里的邀约文案，并支持本地保存与 JSON 快照导入导出。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="demos/campus-snack-split-source.html" target="_blank" rel="noopener" class="inline-flex rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-orange-50">打开完整体验页</a>
+            <button data-qr-platform="wechat" type="button" class="inline-flex rounded-xl border border-white/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20">加微信共创校园生活工具</button>
+          </div>
+        </div>
+        <div class="grid gap-4 p-8 md:grid-cols-3 md:p-10">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5"><p class="text-xs font-semibold tracking-wide text-slate-500">需求依据</p><p class="mt-3 text-sm leading-relaxed text-slate-700">大学生宿舍拼夜宵时，常见问题不是“没人想吃”，而是预算不齐、忌口冲突、红包满减算不清，最后有人吃亏也有人不想再开口。</p></div>
+          <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5"><p class="text-xs font-semibold tracking-wide text-violet-700">核心功能</p><p class="mt-3 text-sm leading-relaxed text-slate-700">宿舍成员偏好录入、智能凑单建议、红包与配送费分摊、邀约文案生成、本地历史记录、JSON 导出与导入恢复。</p></div>
+          <div class="rounded-2xl border border-orange-200 bg-orange-50 p-5"><p class="text-xs font-semibold tracking-wide text-orange-700">技术形态</p><p class="mt-3 text-sm leading-relaxed text-slate-700">纯前端静态网页，使用 localStorage 保存最近方案，并支持 JSON 快照备份；只挂到 AI 实验室，不进入公开作品流。</p></div>
+        </div>
+      </article>
+      <section class="mt-8 reveal rounded-[2rem] border border-slate-200 bg-white p-4 md:p-6">
+        <div class="mb-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <h2 class="text-lg font-bold text-slate-900">在线预览</h2>
+          <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">预览模式，完整交互请点上方按钮</span>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <iframe id="preview-frame-snack-split" title="大学生夜宵拼单不吵架局预览" data-preview-src="demos/campus-snack-split-source.html?mode=preview" class="h-[78vh] w-full" loading="lazy"></iframe>
+        </div>
+      </section>
+      <section class="mt-8 grid gap-4 md:grid-cols-2">
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6"><h2 class="text-lg font-bold text-slate-900">改动文件</h2><ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600"><li>portfolio-items/campus-snack-split.html：项目详情页与预览入口。</li><li>portfolio-items/demos/campus-snack-split-source.html：可运行拼单工具、本地存储与 JSON 快照逻辑。</li><li>portfolio-items/autonomous-ai-lab.html：实验室技术页新增项目卡片。</li><li>portfolio-items/autonomous-ai-lab-business.html：实验室说明页新增项目卡片。</li></ul></div>
+        <div class="reveal rounded-2xl border border-slate-200 bg-white p-6"><h2 class="text-lg font-bold text-slate-900">下一步建议</h2><p class="mt-3 text-sm leading-relaxed text-slate-600">下一轮可以接入真实外卖菜单或校园地图数据，把“宿舍内部分账”继续扩展到“哪家店更适合这群人今晚下单”。</p></div>
+      </section>
+      <div class="mt-8"><a href="../portfolio.html" class="inline-flex items-center rounded-xl border border-orange-200 bg-orange-50 px-5 py-2 text-sm font-semibold text-orange-700 hover:bg-orange-100">返回作品集</a></div>
+    </section>
+  </main>
+  <footer class="border-t border-slate-200 bg-white/95">
+    <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8"><div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-5 md:flex-row md:items-center md:justify-between md:gap-8"><p class="text-base font-semibold text-slate-700 md:text-xl">用 AI 和结构化系统，在校内外持续拿结果。</p><div class="flex flex-wrap items-center gap-3"><button class="platform-btn platform-btn--footer" data-qr-platform="wechat" type="button">微信</button><button class="platform-btn platform-btn--footer" data-qr-platform="shipinhao" type="button">视频号</button><button class="platform-btn platform-btn--footer" data-qr-platform="xiaohongshu" type="button">小红书</button><button class="platform-btn platform-btn--footer" data-qr-platform="gongzhonghao" type="button">公众号</button><button class="platform-btn platform-btn--footer" data-qr-platform="douyin" type="button">抖音</button></div></div></div>
+    <div class="border-t border-slate-200/80"><div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-4 text-center text-sm text-slate-600 sm:px-6 lg:px-8"><p>© 2026 奇绩怪谈AIQ</p><p class="text-xs text-slate-500"><a data-icp-record href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="transition hover:text-blue-600 hover:underline">工信部备案号：粤ICP备2026039646号</a></p></div></div>
+  </footer>
+  <script src="../assets/data-fallback.js"></script>
+  <script src="../assets/site-common.js"></script>
+  <script>(function(){SiteCommon.initNav({currentKey:"portfolio"});SiteCommon.initQrModal({assetPrefix:"../"});var f=document.getElementById("preview-frame-snack-split");if(f){var b=f.getAttribute("data-preview-src");f.src=b+(b.indexOf("?")===-1?"?":"&")+"v="+Date.now()}SiteCommon.initReveal(document)})();</script>
+</body>
+</html>

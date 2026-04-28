@@ -59,6 +59,9 @@
       position:relative;
       overflow:hidden;
       min-height:380px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
       color:#fff7ed;
       background:
         radial-gradient(circle at 22% 20%, rgba(255,255,255,.15), transparent 18%),
@@ -84,7 +87,20 @@
       background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.16);
     }
-    .poster-grid { position:absolute; inset:auto 24px 24px 24px; display:grid; gap:10px; }
+    .poster-title {
+      margin:8px 0 0;
+      max-width:12ch;
+      font-size:clamp(26px, 4vw, 52px);
+      line-height:1.08;
+      letter-spacing:-.04em;
+      text-wrap:balance;
+      overflow-wrap:anywhere;
+    }
+    .poster-grid {
+      margin-top:auto;
+      display:grid;
+      gap:10px;
+    }
     .poster-note {
       border-radius:22px;
       border:1px solid rgba(255,255,255,.14);
@@ -202,6 +218,13 @@
     body[data-mode="preview"] .plan-grid { grid-template-columns:1fr; }
     @media (max-width: 1040px) {
       .hero, .workspace, .summary, .plan-grid { grid-template-columns:1fr; }
+      .poster { min-height:unset; }
+    }
+    @media (max-width: 720px) {
+      .poster-title { max-width:100%; font-size:clamp(24px, 8vw, 38px); }
+      .poster-chip-row { gap:8px; }
+      .poster-chip { padding:7px 10px; font-size:11px; }
+      .poster-note { padding:12px 14px; font-size:13px; line-height:1.6; }
     }
   </style>
 </head>
@@ -220,7 +243,7 @@
       </div>
       <div class="slab poster pad">
         <p class="eyebrow" style="color:#fed7aa;">12-Hour Rescue</p>
-        <h2 style="margin:10px 0 0; max-width:10ch; font-size:clamp(30px, 4.6vw, 56px); line-height:1; letter-spacing:-.05em;">把慌乱，变成可执行的拆弹表。</h2>
+        <h2 class="poster-title">把慌乱，变成可执行的拆弹表。</h2>
         <div class="poster-chip-row">
           <span class="poster-chip">课程作业</span>
           <span class="poster-chip">考试周</span>

@@ -404,11 +404,11 @@ window.FALLBACK_DATA = {
     },
     {
       id: "autonomous-ai-lab",
-      platform: "产品方向",
-      title: "自主AI自主测试（自动化实验室）",
-      description: "一个独立沙盒项目：由AI每日自动做站点健康检查与GitHub学习探索，只新增不改动原有项目。",
-      storyLine: "为了保证主站稳定，我把所有自动化尝试收敛到一个隔离项目里，先跑通再迁移。",
-      result: "你只负责内容更新；其余探索由AI自动执行并沉淀为可复用流程。",
+      platform: "实验室",
+      title: "校园梗玩法实验室（AI自动化）",
+      description: "一个独立沙盒项目：由 AI 自动迭代校园梗玩法，优先验证可玩性、转发率和复玩率，淘汰伪需求。",
+      storyLine: "为了不再堆“看似有用但没人打开”的工具，我把自动化探索收敛到实验室，先跑玩法再迁移。",
+      result: "把大学生真实会玩的方向做成持续更新的实验流水线，保留可复用项目并淘汰低价值尝试。",
       devOnly: true,
       cover: "",
       url: "portfolio-items/autonomous-ai-lab.html"
