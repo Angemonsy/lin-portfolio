@@ -214,16 +214,5 @@
     "result": "AI 负责自动学习和自动尝试，我负责看结果、定方向，并给值得长期展示的项目补上变更说明与验证结果。",
     "cover": "",
     "url": "portfolio-items/autonomous-ai-lab.html"
-  },
-  {
-    "id": "autonomous-ai-lab-business-summary",
-    "platform": "产品方向",
-    "title": "自主AI实验室 · 项目说明与探索入口",
-    "description": "把自动执行实验室讲清楚：它承载哪些 AI 项目、为什么独立、能持续长出什么新内容。",
-    "storyLine": "这不是一篇普通案例页，而是给 AI 开放的实验说明书，让外部用户看懂这块区域的用途。",
-    "result": "把“这个区域是干嘛的”说清楚，再把学习、试错和项目扩展串起来。",
-    "cover": "",
-    "previewUrl": "portfolio-items/autonomous-ai-lab-business.html",
-    "url": "portfolio-items/autonomous-ai-lab-business.html"
   }
 ]
