@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生宿舍公约谈判局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#0f172a",calm:"#99f6e4"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at 20% 18%,rgba(45,212,191,.24),transparent 28%),radial-gradient(circle at 85% 12%,rgba(56,189,248,.2),transparent 24%),linear-gradient(135deg,#020617,#0f172a 38%,#111827 64%,#164e63);color:#e2e8f0}
+    .glass{background:rgba(15,23,42,.62);backdrop-filter:blur(18px)}
+    .meter{transition:width .24s ease,background-color .24s ease}
+    .choice{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}.choice:hover{transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="mb-5 overflow-hidden rounded-[2rem] border border-white/10 glass">
+      <div class="grid lg:grid-cols-[1.2fr,0.8fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.25em] text-calm">Campus Peace Protocol</p>
+          <h1 class="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl">宿舍公约谈判局</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-300">六个宿舍高压场景，十八秒内做出回应。你不是来吵赢，而是要把宿舍从“今晚要炸”谈到“还能一起住”。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="startBtn" class="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink">开始这一局</button>
+            <button id="restartBtn" class="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white">重开一局</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div><p class="text-xs uppercase tracking-[0.22em] text-slate-400">关系值</p><div class="mt-2 h-2 rounded-full bg-white/10"><div id="trustBar" class="meter h-2 rounded-full bg-emerald-300" style="width:60%"></div></div><p id="trustValue" class="mt-2 text-sm font-semibold text-white">60</p></div>
+            <div><p class="text-xs uppercase tracking-[0.22em] text-slate-400">执行值</p><div class="mt-2 h-2 rounded-full bg-white/10"><div id="actionBar" class="meter h-2 rounded-full bg-sky-300" style="width:60%"></div></div><p id="actionValue" class="mt-2 text-sm font-semibold text-white">60</p></div>
+            <div><p class="text-xs uppercase tracking-[0.22em] text-slate-400">舒适值</p><div class="mt-2 h-2 rounded-full bg-white/10"><div id="comfortBar" class="meter h-2 rounded-full bg-amber-300" style="width:60%"></div></div><p id="comfortValue" class="mt-2 text-sm font-semibold text-white">60</p></div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 bg-white/5 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <div class="flex items-start justify-between gap-4"><div><p class="text-xs uppercase tracking-[0.22em] text-slate-400">局势面板</p><p id="phase" class="mt-3 text-2xl font-bold text-white">待开局</p></div><div class="rounded-2xl border border-white/10 bg-black/15 px-4 py-3 text-right"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">倒计时</p><p id="timer" class="mt-1 text-3xl font-extrabold text-calm">18</p></div></div>
+          <div class="mt-8 space-y-4">
+            <div class="rounded-2xl border border-white/10 bg-black/15 p-4"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">当前回合</p><p id="round" class="mt-2 text-lg font-bold text-white">0 / 6</p></div>
+            <div class="rounded-2xl border border-white/10 bg-black/15 p-4"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">本局得分</p><p id="score" class="mt-2 text-lg font-bold text-white">0</p></div>
+            <div class="rounded-2xl border border-white/10 bg-black/15 p-4"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">历史最佳</p><p id="bestScore" class="mt-2 text-lg font-bold text-white">0</p><p id="bestText" class="mt-2 text-sm leading-relaxed text-slate-300">还没有完成记录。</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="grid gap-5 lg:grid-cols-[1.35fr,0.65fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5 sm:px-8"><div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-xs uppercase tracking-[0.22em] text-slate-400">情境现场</p><h2 id="title" class="mt-2 text-2xl font-bold text-white">点击“开始这一局”进入宿舍谈判。</h2></div><span id="tag" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold tracking-wide text-calm">待命中</span></div></div>
+        <div class="grid lg:grid-cols-[1.05fr,0.95fr]">
+          <div class="p-6 sm:p-8"><p id="body" class="text-base leading-relaxed text-slate-300">每个场景都来自大学生宿舍的高频冲突。你要在时间压力下做出更稳妥的回应，而不是单纯赢一嘴。</p><div class="mt-6 rounded-3xl border border-white/10 bg-black/15 p-5"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">协商原则</p><ul id="rules" class="mt-3 space-y-2 text-sm leading-relaxed text-slate-200"><li>先说明影响，再提执行动作。</li><li>先给缓冲方案，再设共同规则。</li><li>不要让任何一方只能硬吃。</li></ul></div></div>
+          <div class="border-t border-white/10 bg-white/5 p-6 sm:p-8 lg:border-l lg:border-t-0"><p class="text-xs uppercase tracking-[0.22em] text-slate-400">你的回应</p><div id="choices" class="mt-4 space-y-3"></div><div id="feedback" class="mt-5 rounded-3xl border border-dashed border-white/15 p-4 text-sm leading-relaxed text-slate-300">开局后会显示每次选择的即时反馈。</div></div>
+        </div>
+      </article>
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass"><div class="border-b border-white/10 px-6 py-5"><p class="text-xs uppercase tracking-[0.22em] text-slate-400">谈判日志</p><h3 class="mt-2 text-xl font-bold text-white">你做过什么选择</h3></div><div id="log" class="space-y-3 px-6 py-5 text-sm leading-relaxed text-slate-300"><p class="rounded-2xl border border-dashed border-white/15 p-4">开始后，这里会记录每一轮选择和留下来的风格。</p></div></section>
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass"><div class="border-b border-white/10 px-6 py-5"><p class="text-xs uppercase tracking-[0.22em] text-slate-400">自动产出</p><h3 class="mt-2 text-xl font-bold text-white">宿舍公约草案</h3></div><div class="px-6 py-5"><div id="pact" class="rounded-3xl border border-dashed border-white/15 bg-black/15 p-4 text-sm leading-relaxed text-slate-200">打完整局后，这里会生成一份可直接复制到宿舍群的公约建议。</div><button id="copyBtn" class="mt-4 inline-flex items-center rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">复制公约草案</button></div></section>
+      </aside>
+    </section>
+  </div>
+  <script>
+    (function(){
+      var q=[
+        {tag:"熄灯",title:"明早有人 7:30 考试，但另一位舍友想 1 点后继续亮灯赶报告。",body:"你需要给出一个既能保住睡眠，也不把赶工的人直接逼到墙角的说法。",rules:["先承认对方真的在赶时间。","提出可执行替代方案。","把约定锁到今天。"],choices:[{label:"先关大灯，台灯 + 耳机继续到 1:20，之后统一静音。",tone:"折中方案",d:[10,9,8,18],feedback:"你把“能不能继续做”改成了“怎么继续做”，关系和执行都稳住了。",clause:"熄灯后默认关大灯，需要赶工时改用台灯和耳机，并约定最晚静音时间。"},{label:"明天有人考试，今晚谁都别再弄了，立刻睡。",tone:"强压处理",d:[-9,4,10,6],feedback:"短期很安静，但对方会觉得自己被直接掐断，后续更容易翻旧账。",clause:"考试周优先照顾睡眠，但不能只靠临时发火，需要提前一天同步需求。"},{label:"算了，你继续吧，我戴耳塞硬撑。",tone:"被动退让",d:[-4,-8,-10,2],feedback:"表面平静，实际是在透支舒适值。",clause:"如果必须临时退让，也要补上第二天的统一复盘。"}]},
+        {tag:"空调",title:"一人怕冷要 26 度，一人热得睡不着，坚持 22 度开整夜。",body:"有效回应要把争论从感觉转回规则和时间。",rules:["先谈时段。","给双方都留缓冲。","规则具体到温度和时间。"],choices:[{label:"前半夜 24 度 + 风速自动，后半夜可加薄毯，不再随手改。",tone:"分时协商",d:[8,11,7,19],feedback:"你把抽象偏好拆成了时段规则，执行感很强。",clause:"空调争议按时段处理：先设中间温度，夜里不频繁改动，需要加衣物或薄毯补充。"},{label:"最怕热的人说了算，其他人忍一下。",tone:"单边让渡",d:[-8,2,-7,4],feedback:"这不是规则，是默认某个人更有发言权。",clause:"不能默认某一方长期占优，温度争议必须有全宿舍都能执行的标准。"},{label:"不然今晚别开空调，大家都公平。",tone:"情绪对冲",d:[-6,-6,-10,1],feedback:"看起来公平，实际谁都没被照顾。",clause:"避免情绪化对冲，宿舍规则以降低总痛苦为目标。"}]},
+        {tag:"卫生",title:"垃圾桶已经满到溢出，但总有人默认“下一个看到的人会倒”。",body:"你要让责任从“大家都懂”变成“今天是谁”。",rules:["任务落到具体人。","频率要轻。","话术重点是解决。"],choices:[{label:"今天我先倒，顺手定一个轮值顺序，周日晚上在群里提醒。",tone:"先解再定",d:[9,10,7,18],feedback:"你先把火灭掉，再补制度，最容易被接受。",clause:"垃圾、地面和公共台面采用轮值法，提醒固定在每周固定时间发出。"},{label:"谁制造得最多谁去倒，自己心里没数吗？",tone:"指责开场",d:[-11,3,2,3],feedback:"问题还没解决，关系先掉了。",clause:"指出问题时不按“谁最脏”开场，而是直接给出轮值或截止动作。"},{label:"算了，我再顺手一次，懒得说。",tone:"沉默兜底",d:[-3,-9,-6,2],feedback:"你在替大家兜底，但规则没形成。",clause:"临时兜底不能变成长久默认，必须配套轮值安排。"}]},
+        {tag:"外放",title:"有人深夜刷短视频外放，另一个人明天要答辩，已经第三次被吵醒。",body:"既要立刻止损，也要保证以后不用每次靠爆发解决。",rules:["先止住噪音源。","把习惯切成宿舍规则。","后续动作必须可复用。"],choices:[{label:"先麻烦戴耳机，明晚开始 23:30 后统一不开外放。",tone:"立即止损",d:[7,11,9,19],feedback:"你先处理当前干扰，再顺势定夜间边界。",clause:"23:30 后默认耳机模式，外放内容仅限白天和全员同意的时段。"},{label:"你怎么每次都这么没素质？",tone:"人身攻击",d:[-12,-2,4,0],feedback:"问题描述直接跳到人格评价。",clause:"讨论行为不讨论人格，避免把规则问题升级成人际对抗。"},{label:"我也开音乐，大家都别睡。",tone:"对冲报复",d:[-10,-8,-12,0],feedback:"这是把宿舍直接拖进团灭模式。",clause:"被打扰时禁止报复性制造新噪音，优先执行止损规则。"}]},
+        {tag:"带人回寝",title:"舍友没提前说就带朋友回宿舍聊天，其他人正在换衣服和复习。",body:"关键是把“临时通知”升级成“提前报备”的共识。",rules:["先说影响，再谈边界。","把临时不适说清楚。","规则一定要包含报备时限。"],choices:[{label:"今天先控制到十分钟，之后带人回寝至少提前在群里说一声。",tone:"边界清晰",d:[8,10,8,18],feedback:"你给了台阶，也把报备时限讲明白了。",clause:"带人回寝默认提前在群里报备，涉及换衣或休息时段尽量改去公共区。"},{label:"宿舍又不是你家客厅，以后谁都别带。",tone:"一刀切",d:[-8,5,5,5],feedback:"你确实立了界，但规则太硬。",clause:"涉及来访可以有规则，但不要极端到无法执行。"},{label:"没事没事，下次注意就行。",tone:"模糊提醒",d:[2,-8,-3,4],feedback:"气氛暂时没炸，但也没有明确边界。",clause:"提醒不能只停在“下次注意”，需要说清楚提前多久。"}]},
+        {tag:"作息",title:"有人晨跑 6 点起床吹头发，有人凌晨两点才睡，彼此都觉得自己被冒犯。",body:"你要谈的是缓冲动作和不可碰触线。",rules:["不评价谁更自律。","先划出最敏感时段。","再给各自替代动作。"],choices:[{label:"6:30 前不吹风机，晨跑的提前去洗漱间处理；晚睡的人 0:30 后不开顶灯。",tone:"双向规则",d:[11,10,10,22],feedback:"双方都要调整，规则也足够具体。",clause:"早起和晚睡都要让渡一点便利：敏感时段禁吹风、禁顶灯，尽量去公共区完成高噪音动作。"},{label:"起得早的体谅晚睡的，先别晨跑了。",tone:"偏向一方",d:[-6,1,3,3],feedback:"你把作息差异变成了单边牺牲。",clause:"作息差异不能只让一方完全放弃原习惯，必须做双向让渡。"},{label:"大家各过各的，听天由命。",tone:"放任自流",d:[-5,-10,-8,1],feedback:"没有规则就是默认继续互相打扰。",clause:"作息冲突必须有明确缓冲规则，不能靠忍耐维持。"}]}
+      ],k="campus-dorm-peace-pact-best",s={i:0,trust:60,action:60,comfort:60,score:0,t:18,h:[],timer:null,active:false,best:best()},e=id=>document.getElementById(id),ui={start:e("startBtn"),restart:e("restartBtn"),phase:e("phase"),timer:e("timer"),round:e("round"),score:e("score"),bestScore:e("bestScore"),bestText:e("bestText"),trustBar:e("trustBar"),actionBar:e("actionBar"),comfortBar:e("comfortBar"),trustValue:e("trustValue"),actionValue:e("actionValue"),comfortValue:e("comfortValue"),title:e("title"),tag:e("tag"),body:e("body"),rules:e("rules"),choices:e("choices"),feedback:e("feedback"),log:e("log"),pact:e("pact"),copy:e("copyBtn")};
+      function best(){try{return JSON.parse(localStorage.getItem(k))||{score:0,text:"还没有完成记录。",pact:""}}catch(_){return{score:0,text:"还没有完成记录。",pact:""}}}
+      function save(){try{localStorage.setItem(k,JSON.stringify(s.best))}catch(_){}}
+      function clamp(n){return Math.max(0,Math.min(100,n))}
+      function meter(bar,val,n,good,bad){n=clamp(n);bar.style.width=n+"%";bar.style.backgroundColor=n>=55?good:bad;val.textContent=String(n)}
+      function stats(){meter(ui.trustBar,ui.trustValue,s.trust,"#34d399","#fb7185");meter(ui.actionBar,ui.actionValue,s.action,"#38bdf8","#f59e0b");meter(ui.comfortBar,ui.comfortValue,s.comfort,"#facc15","#ef4444");ui.score.textContent=s.score;ui.round.textContent=s.i+" / "+q.length}
+      function renderBest(){ui.bestScore.textContent=s.best.score||0;ui.bestText.textContent=s.best.text||"还没有完成记录。"}
+      function reset(){clearInterval(s.timer);s={i:0,trust:60,action:60,comfort:60,score:0,t:18,h:[],timer:null,active:false,best:s.best};ui.phase.textContent="待开局";ui.timer.textContent="18";ui.title.textContent="点击“开始这一局”进入宿舍谈判。";ui.tag.textContent="待命中";ui.body.textContent="每个场景都来自大学生宿舍的高频冲突。你要在时间压力下做出更稳妥的回应，而不是单纯赢一嘴。";ui.rules.innerHTML="<li>先说明影响，再提执行动作。</li><li>先给缓冲方案，再设共同规则。</li><li>不要让任何一方只能硬吃。</li>";ui.choices.innerHTML="";ui.feedback.textContent="开局后会显示每次选择的即时反馈。";ui.log.innerHTML='<p class="rounded-2xl border border-dashed border-white/15 p-4">开始后，这里会记录每一轮选择和留下来的风格。</p>';ui.pact.textContent="打完整局后，这里会生成一份可直接复制到宿舍群的公约建议。";stats();renderBest()}
+      function start(){reset();s.active=true;next()}
+      function next(){clearInterval(s.timer);if(s.i>=q.length)return finish();var x=q[s.i];s.i+=1;s.t=18;ui.phase.textContent="第 "+s.i+" 回合";ui.timer.textContent=s.t;ui.title.textContent=x.title;ui.tag.textContent=x.tag;ui.body.textContent=x.body;ui.rules.innerHTML=x.rules.map(v=>"<li>"+v+"</li>").join("");ui.choices.innerHTML="";x.choices.forEach(function(c,n){var b=document.createElement("button");b.type="button";b.className="choice w-full rounded-3xl border border-white/10 bg-black/15 p-4 text-left";b.innerHTML='<div class="flex items-start justify-between gap-3"><div><p class="text-xs uppercase tracking-[0.18em] text-slate-400">'+c.tone+'</p><p class="mt-2 text-sm font-semibold leading-relaxed text-white">'+c.label+'</p></div><span class="mt-1 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-calm">选项 '+(n+1)+"</span></div>";b.onclick=function(){pick(c,false)};ui.choices.appendChild(b)});stats();s.timer=setInterval(function(){s.t-=1;ui.timer.textContent=Math.max(s.t,0);if(s.t<=0){clearInterval(s.timer);pick(q[s.i-1].choices[2],true)}},1000)}
+      function pick(c,auto){if(!s.active)return;clearInterval(s.timer);s.trust=clamp(s.trust+c.d[0]);s.action=clamp(s.action+c.d[1]);s.comfort=clamp(s.comfort+c.d[2]);s.score+=Math.max(0,c.d[3]+Math.round((s.trust+s.action+s.comfort)/45));s.h.push({tag:q[s.i-1].tag,label:c.label,feedback:auto?"超时未选，系统按最保守的拖延处理。":c.feedback,clause:c.clause});ui.feedback.textContent=auto?"超时未选，系统用了最保守但最没效率的处理。":c.feedback;ui.log.innerHTML=s.h.map(function(v,i){return '<article class="rounded-2xl border border-white/10 bg-black/15 p-4"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">Round '+(i+1)+" · "+v.tag+'</p><p class="mt-2 text-sm font-semibold text-white">'+v.label+'</p><p class="mt-2 text-sm leading-relaxed text-slate-300">'+v.feedback+"</p></article>"}).join("");Array.from(ui.choices.querySelectorAll("button")).forEach(function(b){b.disabled=true;b.classList.add("opacity-60")});stats();setTimeout(next,900)}
+      function pact(){var intro=s.trust>=70?"我们想把宿舍住得更舒服一些，下面这版先试跑三天。":"最近有几件小事容易反复卡住，先提一版可执行规则，大家看看能不能一起试。";var hint=s.comfort>=72?"这版规则会优先保护睡眠、温度和安静时段。":"这版规则更强调把矛盾说开，避免一直靠忍。";var end=s.action>=75?"如果三天后发现哪条不好执行，就在群里直接改，不靠猜。":"先别追求一次定死，能跑起来比说得漂亮更重要。";var clauses=s.h.map(v=>v.clause);var text=["宿舍公约试运行版",intro,hint,"","建议规则："].concat(clauses.map((v,i)=>(i+1)+". "+v)).concat(["","补充：临时需要调整时，先在群里说影响和时段，再给替代方案。",end]).join("\n");var html='<div class="space-y-3"><p class="text-xs uppercase tracking-[0.18em] text-calm">可复制到宿舍群</p><p class="text-sm leading-relaxed text-white">'+intro+'</p><p class="text-sm leading-relaxed text-slate-300">'+hint+'</p><ol class="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-slate-100">'+clauses.map(v=>"<li>"+v+"</li>").join("")+'</ol><p class="text-sm leading-relaxed text-slate-300">补充：临时需要调整时，先在群里说影响和时段，再给替代方案。</p><p class="text-sm leading-relaxed text-calm">'+end+"</p></div>";return{html:html,text:text,summary:"最佳战绩："+s.score+" 分，偏向"+(s.trust>=s.action?"关系稳定型":"执行推进型")+"协商风格。"}}
+      function finish(){s.active=false;clearInterval(s.timer);ui.phase.textContent="公约生成完成";ui.timer.textContent="0";ui.title.textContent="这一局结束，你已经拿到一份可以直接开聊的宿舍公约。";ui.tag.textContent="结果页";ui.body.textContent="真正有用的宿舍协商不是谁赢了，而是有没有留下能继续住下去的规则。";ui.rules.innerHTML="<li>把规则限定到具体时段和动作。</li><li>每条约定都尽量让双方都让一点。</li><li>先试运行，再在群里复盘调整。</li>";ui.choices.innerHTML='<div class="rounded-3xl border border-emerald-300/30 bg-emerald-400/10 p-5 text-sm leading-relaxed text-emerald-50">本局得分 '+s.score+"。你可以复制右侧公约，也可以直接重开一局。</div>";var p=pact();ui.pact.innerHTML=p.html;if(s.score>(s.best.score||0)){s.best={score:s.score,text:p.summary,pact:p.text};save();renderBest()}}
+      function copy(){var text=s.best.pact;if(!text&&s.h.length===q.length)text=pact().text;if(!text){ui.copy.textContent="先完成一局再复制";return setTimeout(function(){ui.copy.textContent="复制公约草案"},1200)}navigator.clipboard.writeText(text).then(function(){ui.copy.textContent="已复制到剪贴板";setTimeout(function(){ui.copy.textContent="复制公约草案"},1400)}).catch(function(){ui.copy.textContent="复制失败，请手动复制";setTimeout(function(){ui.copy.textContent="复制公约草案"},1400)})}
+      ui.start.onclick=start;ui.restart.onclick=start;ui.copy.onclick=copy;renderBest();reset();
+    })();
+  </script>
+</body>
+</html>

@@ -304,6 +304,42 @@ window.FALLBACK_DATA = {
       devOnly: true
     },
     {
+      id: "campus-proof-vault",
+      platform: "产品方向",
+      title: "大学生成果证据仓",
+      description: "把奖学金、综测、保研、实习和简历里会反复用到的成果证据收进本地账本，自动整理可提交清单和缺件提醒。",
+      storyLine: "很多大学生不是没成果，而是成果散在聊天记录、邮箱、网盘和相册里，真正要申报时才发现证据链断掉了。",
+      result: "把学生成果整理做成可运行的轻量证据仓，并用 localStorage + JSON 导入导出保存每轮申报状态。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-proof-vault-source.html?mode=preview",
+      url: "portfolio-items/campus-proof-vault.html",
+      devOnly: true
+    },
+    {
+      id: "campus-interview-trip-kit",
+      platform: "产品方向",
+      title: "大学生异地面试出发台",
+      description: "输入面试城市、时间和通勤信息后，自动结合天气预测生成出发时刻、打包清单、天气风险和确认文案。",
+      storyLine: "很多大学生第一次去异地面试时，真正失控的不是面试题，而是迟到、下雨、着装和材料遗漏同时发生。",
+      result: "把求职出发前一晚的混乱做成可运行的前端工具，并用公开天气 API + localStorage 快照保存每轮方案。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-interview-trip-kit-source.html?mode=preview",
+      url: "portfolio-items/campus-interview-trip-kit.html",
+      devOnly: true
+    },
+    {
+      id: "campus-group-sync-board",
+      platform: "产品方向",
+      title: "大学生小组作业对齐板",
+      description: "输入课程、成员、截止时间和协作氛围后，自动生成分工 sticky、检查点时间线、群聊催办文案与本地快照。",
+      storyLine: "很多大学生不是不会做作业，而是小组协作里总有人潜水、资料太散、PPT 最后一天才合并，最后一晚一起爆炸。",
+      result: "把小组作业协作做成可运行的前端战情板，并用 localStorage + JSON 导入导出沉淀每次分工方案。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-group-sync-board-source.html?mode=preview",
+      url: "portfolio-items/campus-group-sync-board.html",
+      devOnly: true
+    },
+    {
       id: "shipinhao-thesis-workflow",
       platform: "视频号",
       title: "AI工具实战：论文提纲 20 分钟重构",

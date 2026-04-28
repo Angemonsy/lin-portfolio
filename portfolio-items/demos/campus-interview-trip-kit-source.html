@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生异地面试出发台 Demo</title>
+  <style>
+    :root { --ink:#10213a; --muted:#5f6f86; --line:#d6e2f7; --blue:#2563eb; --teal:#0f766e; --panel:#ffffffd9; --bg:#edf4ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif; color:var(--ink); background:radial-gradient(circle at 12% 12%, rgba(37,99,235,.18), transparent 20%), radial-gradient(circle at 88% 16%, rgba(15,118,110,.18), transparent 22%), linear-gradient(180deg, #f4f8ff 0%, #eefaf8 100%); }
+    button, input, select { font:inherit; }
+    button { cursor:pointer; }
+    .app { width:min(1320px, calc(100% - 28px)); margin:0 auto; padding:24px 0 40px; }
+    .hero { display:grid; grid-template-columns:1.08fr .92fr; gap:18px; align-items:stretch; }
+    .workspace { display:grid; grid-template-columns:360px minmax(0, 1fr); gap:18px; margin-top:18px; align-items:start; }
+    .panel { border:1px solid rgba(148,163,184,.22); border-radius:30px; background:var(--panel); box-shadow:0 22px 60px rgba(15,23,42,.08); backdrop-filter:blur(12px); }
+    .pad { padding:22px; }
+    .eyebrow { margin:0; color:var(--blue); font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:12px 0 0; font-size:clamp(34px, 5vw, 66px); line-height:.96; letter-spacing:-.06em; }
+    .lead { margin:16px 0 0; max-width:58ch; color:var(--muted); font-size:16px; line-height:1.8; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .chip { border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.12); padding:9px 12px; font-size:12px; font-weight:800; letter-spacing:.04em; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .btn { border:1px solid #dbe7fb; border-radius:18px; background:#fff; padding:12px 15px; color:#334155; font-weight:800; }
+    .btn.primary { border-color:transparent; background:linear-gradient(135deg, var(--blue), var(--teal)); color:#fff; box-shadow:0 18px 34px rgba(37,99,235,.2); }
+    .poster { position:relative; overflow:hidden; min-height:390px; color:#eff6ff; background:linear-gradient(145deg, #142c5d 0%, #2563eb 45%, #0f766e 100%); }
+    .poster::after { content:""; position:absolute; inset:18px; border-radius:28px; border:1px solid rgba(255,255,255,.16); pointer-events:none; }
+    .poster-grid { position:absolute; inset:auto 22px 22px 22px; display:grid; gap:10px; }
+    .poster-note { border-radius:22px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.12); padding:14px 16px; font-size:14px; line-height:1.7; }
+    .poster-note strong { display:block; margin-bottom:4px; font-size:13px; letter-spacing:.04em; }
+    .label { display:block; margin-top:14px; font-size:13px; font-weight:800; color:#1e293b; }
+    input, select { width:100%; margin-top:7px; border:1px solid #d6e2f7; border-radius:16px; background:#fff; padding:12px 13px; color:var(--ink); }
+    .inline { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .status { margin-top:14px; border-radius:18px; border:1px solid #bfdbfe; background:#eff6ff; padding:13px 14px; color:#1d4ed8; font-size:13px; line-height:1.7; }
+    .metrics { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric { border-radius:22px; border:1px solid #dbe7fb; background:#fff; padding:16px; }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .section-head h2 { margin:8px 0 0; font-size:24px; line-height:1.2; }
+    .muted { color:var(--muted); font-size:13px; line-height:1.7; }
+    .divider { height:1px; margin:14px 0; background:linear-gradient(90deg, rgba(37,99,235,.18), rgba(15,118,110,.04)); }
+    .plan-stack { display:grid; gap:12px; margin-top:16px; }
+    .plan-card { border-radius:24px; border:1px solid #dce9fa; background:linear-gradient(180deg, #fff, #f7fbff); padding:16px; }
+    .plan-card h3 { margin:0; font-size:15px; }
+    .plan-card p, .plan-card li { color:#3f4f66; font-size:14px; line-height:1.8; }
+    .plan-card ul { margin:10px 0 0; padding-left:18px; }
+    .weather-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:12px; }
+    .weather-stat { border-radius:20px; border:1px solid #dce9fa; background:#fff; padding:14px; }
+    .weather-stat span { display:block; color:var(--muted); font-size:12px; font-weight:700; }
+    .weather-stat strong { display:block; margin-top:8px; font-size:22px; letter-spacing:-.04em; }
+    .saved-list { display:grid; gap:10px; }
+    .saved { display:flex; align-items:center; justify-content:space-between; gap:12px; border-radius:22px; border:1px solid #dce9fa; background:#fff; padding:14px 16px; }
+    .saved strong { display:block; font-size:15px; }
+    .saved span { display:block; margin-top:6px; color:var(--muted); font-size:12px; line-height:1.7; }
+    .pill { display:inline-flex; align-items:center; border-radius:999px; background:#dbeafe; color:#1d4ed8; padding:8px 12px; font-size:12px; font-weight:800; }
+    .full-only { display:block; }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero, body[data-mode="preview"] .workspace, body[data-mode="preview"] .metrics, body[data-mode="preview"] .weather-row { grid-template-columns:1fr; }
+    @media (max-width: 1080px) { .hero, .workspace, .metrics, .weather-row, .inline { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="app">
+    <section class="hero">
+      <div class="panel pad">
+        <p class="eyebrow">Interview Trip Kit</p>
+        <h1>大学生异地面试出发台</h1>
+        <p class="lead">把城市天气、通勤缓冲、着装风险和材料准备放到一张出发板里。你只需要确定去哪、几点、走多久，系统会用公开天气 API 给出本轮出发建议，并把方案存成可复用快照。</p>
+        <div class="chips">
+          <span class="chip">Open-Meteo 地理编码</span>
+          <span class="chip">Open-Meteo 天气预测</span>
+          <span class="chip">localStorage 快照</span>
+        </div>
+        <div class="actions full-only">
+          <button id="sampleBtn" class="btn" type="button">加载样例面试</button>
+          <button id="searchBtn" class="btn" type="button">搜索城市</button>
+          <button id="planBtn" class="btn primary" type="button">生成出发方案</button>
+        </div>
+      </div>
+      <div class="panel poster pad">
+        <p class="eyebrow" style="color:#bfdbfe;">Night Before</p>
+        <h2 style="margin:10px 0 0; max-width:10ch; font-size:clamp(30px, 4.8vw, 56px); line-height:1; letter-spacing:-.05em;">把出发前的慌，提前拆成清单。</h2>
+        <div class="chips">
+          <span class="chip">面试日天气</span>
+          <span class="chip">通勤缓冲</span>
+          <span class="chip">材料打包</span>
+          <span class="chip">确认文案</span>
+        </div>
+        <div class="poster-grid">
+          <div class="poster-note"><strong>风险 01</strong>第一次去异地面试时，真正会拖垮状态的，常常是迟到、淋雨、着装失误和材料遗漏，而不是答题本身。</div>
+          <div class="poster-note"><strong>风险 02</strong>通勤越长、天气越差、场地越陌生，越需要把出发时间和备用动作提前算出来。</div>
+          <div class="poster-note"><strong>风险 03</strong>如果天气接口暂时失败，页面会回退到样例方案，保证你仍然能跑通一轮准备流程。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel pad full-only">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Trip Input</p>
+            <h2>配置这次面试</h2>
+          </div>
+        </div>
+        <p class="muted">建议把日期设为未来 7 天内，这样天气预测更稳。城市搜索会优先走接口，失败时回退到本地样例城市。</p>
+        <label class="label">面试城市<input id="cityInput" value="上海"></label>
+        <label class="label">候选城市<select id="citySelect"><option value="">先点击“搜索城市”</option></select></label>
+        <div class="inline">
+          <label class="label">面试日期<input id="dateInput" type="date"></label>
+          <label class="label">面试时段<select id="hourInput"><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="14:00" selected>14:00</option><option value="15:00">15:00</option><option value="19:00">19:00</option></select></label>
+        </div>
+        <div class="inline">
+          <label class="label">面试类型<select id="typeInput"><option selected>线下面试</option><option>线上面试</option><option>宣讲会 + 初筛</option></select></label>
+          <label class="label">着装要求<select id="dressInput"><option>宽松</option><option selected>商务休闲</option><option>偏正式</option></select></label>
+        </div>
+        <div class="inline">
+          <label class="label">单程通勤（分钟）<input id="commuteInput" type="number" min="0" value="55"></label>
+          <label class="label">携带物<select id="bagInput"><option selected>电脑 + 简历夹</option><option>仅简历夹</option><option>轻装到场</option></select></label>
+        </div>
+        <label class="label">地点备注<input id="locationInput" value="张江科学城 · 地铁出站后步行 12 分钟"></label>
+        <div class="actions">
+          <button id="saveBtn" class="btn" type="button">保存这次快照</button>
+          <button id="clearBtn" class="btn" type="button">清空快照</button>
+        </div>
+        <div id="statusBox" class="status">先搜索城市，再生成出发方案。系统会结合天气和通勤时长给你一个更稳的到场策略。</div>
+      </aside>
+
+      <section>
+        <div class="metrics">
+          <article class="metric"><p>天气风险</p><strong id="riskMetric">-</strong></article>
+          <article class="metric"><p>建议出发</p><strong id="leaveMetric">-</strong></article>
+          <article class="metric"><p>降雨概率</p><strong id="rainMetric">-</strong></article>
+          <article class="metric"><p>需打包项</p><strong id="packMetric">-</strong></article>
+        </div>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Departure Board</p>
+              <h2>本轮出发方案</h2>
+            </div>
+            <span id="sourcePill" class="pill">等待生成</span>
+          </div>
+          <div class="divider"></div>
+          <div class="weather-row">
+            <article class="weather-stat"><span>面试时温度</span><strong id="tempValue">-</strong></article>
+            <article class="weather-stat"><span>体感 / 风速</span><strong id="feelValue">-</strong></article>
+            <article class="weather-stat"><span>天气概况</span><strong id="weatherValue">-</strong></article>
+          </div>
+          <div id="planStack" class="plan-stack"></div>
+        </section>
+
+        <section class="panel pad full-only" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Saved Runs</p>
+              <h2>本地出发快照</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="savedList" class="saved-list"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var weatherCodeMap = { 0: "晴", 1: "大体晴", 2: "间歇多云", 3: "阴", 45: "雾", 48: "雾凇", 51: "毛毛雨", 53: "小雨", 55: "中雨", 61: "阵雨", 63: "降雨", 65: "强降雨", 71: "小雪", 73: "中雪", 75: "大雪", 80: "短时阵雨", 81: "持续阵雨", 82: "暴雨风险", 95: "雷暴" };
+      var fallbackCities = [
+        { name: "上海", admin1: "上海", country: "中国", latitude: 31.23, longitude: 121.47 },
+        { name: "杭州", admin1: "浙江", country: "中国", latitude: 30.27, longitude: 120.15 },
+        { name: "广州", admin1: "广东", country: "中国", latitude: 23.13, longitude: 113.26 },
+        { name: "北京", admin1: "北京", country: "中国", latitude: 39.91, longitude: 116.41 }
+      ];
+      var sampleWeather = { temperature: 22, apparent: 23, rain: 35, wind: 14, code: 2, source: "样例" };
+      var planKey = "campus_interview_trip_kit_runs_v1";
+      var latestKey = "campus_interview_trip_latest_v1";
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        cityInput: $("cityInput"), citySelect: $("citySelect"), dateInput: $("dateInput"), hourInput: $("hourInput"),
+        typeInput: $("typeInput"), dressInput: $("dressInput"), commuteInput: $("commuteInput"), bagInput: $("bagInput"),
+        locationInput: $("locationInput"), statusBox: $("statusBox"), riskMetric: $("riskMetric"), leaveMetric: $("leaveMetric"),
+        rainMetric: $("rainMetric"), packMetric: $("packMetric"), tempValue: $("tempValue"), feelValue: $("feelValue"),
+        weatherValue: $("weatherValue"), sourcePill: $("sourcePill"), planStack: $("planStack"), savedList: $("savedList")
+      };
+
+      function read(key, fallback) { try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (err) { return fallback; } }
+      function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (err) {} }
+      function setStatus(text) { if (els.statusBox) els.statusBox.textContent = text; }
+      function formatCity(city) { return city.name + " · " + (city.admin1 || city.country || ""); }
+      function weatherLabel(code) { return weatherCodeMap[code] || "多变天气"; }
+      function pad(num) { return String(num).padStart(2, "0"); }
+      function shiftDate(days) { var base = new Date(); base.setDate(base.getDate() + days); return base.getFullYear() + "-" + pad(base.getMonth() + 1) + "-" + pad(base.getDate()); }
+      function pickDateTime(date, hour, minutesToSubtract) { var base = new Date(date + "T" + hour + ":00"); base.setMinutes(base.getMinutes() - minutesToSubtract); return pad(base.getHours()) + ":" + pad(base.getMinutes()); }
+      function selectedCity() {
+        if (!els.citySelect) return fallbackCities[0];
+        if (els.citySelect.value) {
+          try { return JSON.parse(decodeURIComponent(els.citySelect.value)); } catch (err) {}
+        }
+        return fallbackCities.find(function (item) { return item.name === (els.cityInput && els.cityInput.value.trim()); }) || fallbackCities[0];
+      }
+      function populateCities(list) {
+        if (!els.citySelect) return;
+        els.citySelect.innerHTML = list.map(function (city, index) {
+          var encoded = encodeURIComponent(JSON.stringify(city));
+          return '<option value="' + encoded + '"' + (index === 0 ? " selected" : "") + ">" + formatCity(city) + "</option>";
+        }).join("");
+      }
+      function currentConfig() {
+        return {
+          cityName: els.cityInput ? els.cityInput.value.trim() : "上海",
+          date: els.dateInput ? els.dateInput.value : shiftDate(2),
+          hour: els.hourInput ? els.hourInput.value : "14:00",
+          type: els.typeInput ? els.typeInput.value : "线下面试",
+          dress: els.dressInput ? els.dressInput.value : "商务休闲",
+          commute: Number(els.commuteInput ? els.commuteInput.value : 55) || 0,
+          bag: els.bagInput ? els.bagInput.value : "电脑 + 简历夹",
+          location: els.locationInput ? els.locationInput.value.trim() : ""
+        };
+      }
+      function riskLevel(weather, config) {
+        var score = config.commute >= 60 ? 28 : config.commute >= 35 ? 18 : 10;
+        score += weather.rain >= 60 ? 28 : weather.rain >= 35 ? 18 : 8;
+        score += weather.wind >= 20 ? 18 : weather.wind >= 12 ? 10 : 4;
+        score += weather.temperature <= 8 || weather.temperature >= 31 ? 14 : 6;
+        return score >= 72 ? "高" : score >= 46 ? "中" : "低";
+      }
+      function riskHint(level) { return level === "高" ? "至少提前 35 分钟进站，准备雨具与备用路线。" : level === "中" ? "把迟到风险提前拆掉，出门前再看一眼实时路况。" : "风险可控，重点检查材料和精神状态。"; }
+      function buildPacking(weather, config) {
+        var list = ["身份证", "手机满电 + 充电线"];
+        if (config.bag !== "轻装到场") list.push("纸质简历 2-3 份");
+        if (config.bag === "电脑 + 简历夹") list.push("电脑 + 电源适配器");
+        if (weather.rain >= 35) list.push("折叠伞或轻便雨衣");
+        if (weather.temperature <= 12) list.push("外套/薄羽绒");
+        if (weather.temperature >= 28) list.push("吸汗内搭或备用 T 恤");
+        if (config.dress === "偏正式") list.push("皮鞋/正装裤提前熨平");
+        if (config.type === "线上面试") list.push("安静背景 + 耳机 + 网速复核");
+        return list;
+      }
+      function buildPlan(weather, config, city, source) {
+        var extra = weather.rain >= 35 ? 25 : weather.wind >= 18 ? 18 : 12;
+        var arriveAhead = config.type === "宣讲会 + 初筛" ? 35 : 25;
+        var departAt = pickDateTime(config.date, config.hour, config.commute + extra + arriveAhead);
+        var risk = riskLevel(weather, config);
+        var packing = buildPacking(weather, config);
+        var confirmText = "你好，我是明天 " + config.hour + " 参加" + config.type + "的候选人，已确认到场路线，预计会提前 " + arriveAhead + " 分钟到达" + (config.location ? "（" + config.location + "）" : "") + "。如现场入口有变化，麻烦提前告知，谢谢。";
+        return {
+          cityLabel: formatCity(city),
+          source: source,
+          risk: risk,
+          departAt: departAt,
+          rain: weather.rain,
+          packing: packing,
+          weather: weather,
+          cards: [
+            { title: "天气判断", items: ["面试时段约 " + weather.temperature + "°C，体感 " + weather.apparent + "°C。", "天气：" + weatherLabel(weather.code) + "，降雨概率 " + weather.rain + "%，风速 " + weather.wind + " km/h。", weather.rain >= 35 ? "建议把鞋和裤脚防水放进考虑，不要只顾面试题。" : "天气相对稳，重点放在着装整洁与到场缓冲。"] },
+            { title: "出发建议", items: ["建议最晚 " + departAt + " 出发。", "通勤 " + config.commute + " 分钟，系统额外加了 " + extra + " 分钟天气/迷路缓冲。", riskHint(risk)] },
+            { title: "打包清单", items: packing },
+            { title: "确认文案", items: [confirmText] }
+          ],
+          summary: config.cityName + "｜" + config.date + " " + config.hour + "｜风险" + risk
+        };
+      }
+      function mockWeatherFor(city) {
+        var base = city.name === "广州" ? { temperature: 29, apparent: 31, rain: 58, wind: 12, code: 61 } : city.name === "北京" ? { temperature: 18, apparent: 17, rain: 18, wind: 20, code: 1 } : city.name === "杭州" ? { temperature: 24, apparent: 25, rain: 48, wind: 15, code: 53 } : sampleWeather;
+        return Object.assign({ source: "样例" }, base);
+      }
+      async function searchCities() {
+        var keyword = (els.cityInput && els.cityInput.value.trim()) || "上海";
+        try {
+          var response = await fetch("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(keyword) + "&count=5&language=zh&format=json");
+          if (!response.ok) throw new Error("geocoding failed");
+          var data = await response.json();
+          var cities = Array.isArray(data.results) && data.results.length ? data.results.map(function (item) {
+            return { name: item.name, admin1: item.admin1, country: item.country, latitude: item.latitude, longitude: item.longitude };
+          }) : fallbackCities.filter(function (city) { return city.name.indexOf(keyword) !== -1; });
+          if (!cities.length) cities = fallbackCities;
+          populateCities(cities);
+          setStatus("已更新候选城市。接着点“生成出发方案”即可。");
+          return cities;
+        } catch (err) {
+          var fallback = fallbackCities.filter(function (city) { return city.name.indexOf(keyword) !== -1; });
+          populateCities(fallback.length ? fallback : fallbackCities);
+          setStatus("城市接口暂时不可用，已回退到本地样例城市。");
+          return fallback.length ? fallback : fallbackCities;
+        }
+      }
+      async function fetchWeather(city, config) {
+        var hour = Number(config.hour.split(":")[0]);
+        try {
+          var url = "https://api.open-meteo.com/v1/forecast?latitude=" + city.latitude + "&longitude=" + city.longitude + "&hourly=temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,weather_code&timezone=Asia%2FShanghai&forecast_days=16";
+          var response = await fetch(url);
+          if (!response.ok) throw new Error("forecast failed");
+          var data = await response.json();
+          var times = data.hourly && data.hourly.time ? data.hourly.time : [];
+          var targetPrefix = config.date + "T" + pad(hour) + ":00";
+          var index = times.indexOf(targetPrefix);
+          if (index === -1) index = times.findIndex(function (item) { return item.indexOf(config.date + "T") === 0; });
+          if (index === -1) throw new Error("date out of range");
+          return {
+            temperature: Math.round(data.hourly.temperature_2m[index]),
+            apparent: Math.round(data.hourly.apparent_temperature[index]),
+            rain: Math.round(data.hourly.precipitation_probability[index]),
+            wind: Math.round(data.hourly.wind_speed_10m[index]),
+            code: Number(data.hourly.weather_code[index]),
+            source: "实时接口"
+          };
+        } catch (err) {
+          setStatus("天气接口暂时不可用，已切换到样例天气继续生成方案。");
+          return mockWeatherFor(city);
+        }
+      }
+      function renderPlan(plan) {
+        els.riskMetric.textContent = plan.risk;
+        els.leaveMetric.textContent = plan.departAt;
+        els.rainMetric.textContent = plan.rain + "%";
+        els.packMetric.textContent = String(plan.packing.length);
+        els.tempValue.textContent = plan.weather.temperature + "°C";
+        els.feelValue.textContent = plan.weather.apparent + "°C / " + plan.weather.wind + "km/h";
+        els.weatherValue.textContent = weatherLabel(plan.weather.code);
+        els.sourcePill.textContent = plan.source;
+        els.planStack.innerHTML = plan.cards.map(function (card) {
+          return '<article class="plan-card"><h3>' + card.title + '</h3><ul>' + card.items.map(function (item) { return "<li>" + item + "</li>"; }).join("") + "</ul></article>";
+        }).join("");
+      }
+      function renderSaved() {
+        if (!els.savedList) return;
+        var list = read(planKey, []);
+        els.savedList.innerHTML = list.length ? list.map(function (item, index) {
+          return '<article class="saved"><div><strong>' + item.summary + '</strong><span>' + item.savedAt + "｜" + item.cityLabel + "｜最晚 " + item.departAt + " 出发</span></div><button class=\"btn\" data-drop=\"" + index + "\" type=\"button\">删除</button></article>";
+        }).join("") : '<article class="saved"><div><strong>还没有保存的出发快照</strong><span>每次生成方案后可以保存，后续不同城市和岗位的出发策略就能复用。</span></div></article>';
+      }
+      async function generatePlan() {
+        var config = currentConfig();
+        if (!config.cityName) return setStatus("请先输入面试城市。");
+        if (!config.date) return setStatus("请先选择面试日期。");
+        if (!els.citySelect || !els.citySelect.value) await searchCities();
+        var city = selectedCity();
+        var weather = await fetchWeather(city, config);
+        var plan = buildPlan(weather, config, city, weather.source);
+        renderPlan(plan);
+        write(latestKey, Object.assign({ savedAt: new Date().toLocaleString("zh-CN") }, plan));
+        setStatus("出发方案已生成。先看最晚出发时间，再核对材料和天气风险。");
+      }
+      function savePlan() {
+        var latest = read(latestKey, null);
+        if (!latest) return setStatus("先生成一轮出发方案，再保存快照。");
+        var list = read(planKey, []);
+        list.unshift(latest);
+        write(planKey, list.slice(0, 8));
+        renderSaved();
+        setStatus("这次出发方案已保存为本地快照。");
+      }
+      function clearPlans() { write(planKey, []); renderSaved(); setStatus("本地快照已清空。"); }
+      function loadSample() {
+        if (els.cityInput) els.cityInput.value = "上海";
+        if (els.dateInput) els.dateInput.value = shiftDate(2);
+        if (els.hourInput) els.hourInput.value = "14:00";
+        if (els.typeInput) els.typeInput.value = "线下面试";
+        if (els.dressInput) els.dressInput.value = "商务休闲";
+        if (els.commuteInput) els.commuteInput.value = "55";
+        if (els.bagInput) els.bagInput.value = "电脑 + 简历夹";
+        if (els.locationInput) els.locationInput.value = "张江科学城 · 地铁出站后步行 12 分钟";
+        populateCities(fallbackCities);
+        setStatus("已加载样例面试。现在可以直接生成出发方案。");
+      }
+
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target.id === "sampleBtn") loadSample();
+        if (target.id === "searchBtn") searchCities();
+        if (target.id === "planBtn") generatePlan();
+        if (target.id === "saveBtn") savePlan();
+        if (target.id === "clearBtn") clearPlans();
+        if (target.hasAttribute("data-drop")) {
+          var list = read(planKey, []);
+          list.splice(Number(target.getAttribute("data-drop")), 1);
+          write(planKey, list);
+          renderSaved();
+          setStatus("已删除一个旧快照。");
+        }
+      });
+
+      if (els.dateInput) els.dateInput.value = shiftDate(2);
+      loadSample();
+      renderSaved();
+      if (mode === "preview") generatePlan();
+    })();
+  </script>
+</body>
+</html>
