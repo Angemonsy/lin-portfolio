@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Meilong Atelier is a cross-border jewelry brand and wholesale platform based on the Meilong silver jewelry industrial cluster in Haifeng, Shanwei.">
   <title>Meilong Atelier | Cross-border Jewelry</title>
-  <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -189,11 +188,29 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(25, 22, 17, 0.86), rgba(25, 22, 17, 0.5) 46%, rgba(25, 22, 17, 0.1)),
-        linear-gradient(0deg, rgba(25, 22, 17, 0.45), rgba(25, 22, 17, 0.08)),
-        url("https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2200&q=84") center / cover;
-      transform: scale(1.04);
+        radial-gradient(circle at 78% 28%, rgba(244, 209, 141, 0.34), transparent 18%),
+        radial-gradient(circle at 70% 54%, rgba(217, 221, 224, 0.4), transparent 24%),
+        linear-gradient(90deg, rgba(25, 22, 17, 0.94), rgba(25, 22, 17, 0.68) 48%, rgba(25, 22, 17, 0.2)),
+        linear-gradient(135deg, #191611, #403426 58%, #c8b998);
+      transform: scale(1.02);
       animation: heroImageIn 1.3s ease forwards;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: max(5vw, 44px);
+      top: 19svh;
+      width: min(42vw, 560px);
+      aspect-ratio: 1;
+      border: clamp(22px, 4vw, 46px) solid rgba(230, 234, 235, 0.72);
+      border-radius: 50%;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 250, 242, 0.5),
+        0 0 0 34px rgba(244, 209, 141, 0.1),
+        0 42px 90px rgba(0, 0, 0, 0.26);
+      opacity: 0.78;
+      transform: rotate(-20deg);
     }
 
     .hero-inner {
@@ -401,8 +418,35 @@
 
     .products {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 18px;
+    }
+
+    .collection-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: -16px 0 26px;
+    }
+
+    .category-button {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 250, 242, 0.72);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .category-button:hover,
+    .category-button.is-active {
+      color: var(--dark);
+      background: #f4d18d;
+      transform: translateY(-1px);
     }
 
     .product {
@@ -418,10 +462,136 @@
       box-shadow: 0 18px 38px rgba(72, 60, 44, 0.14);
     }
 
-    .product img {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
+    .product-visual {
+      position: relative;
+      display: grid;
+      min-height: 270px;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 26% 18%, rgba(255, 250, 242, 0.96), transparent 18%),
+        linear-gradient(135deg, #efe6d7, #fffaf2 58%, #d8c7ad);
+    }
+
+    .product-visual::before,
+    .product-visual::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .product-visual::before {
+      width: 44%;
+      aspect-ratio: 1;
+      border: 16px solid rgba(216, 219, 220, 0.95);
+      border-radius: 50%;
+      box-shadow: 0 22px 46px rgba(72, 60, 44, 0.18), inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+      transform: rotate(-18deg);
+    }
+
+    .product-visual::after {
+      width: 64%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(168, 120, 56, 0.58), transparent);
+      transform: translateY(82px) rotate(-7deg);
+    }
+
+    .product-visual[data-visual="necklace"]::before,
+    .product-visual[data-visual="pendant"]::before {
+      width: 52%;
+      border-width: 8px;
+      border-color: rgba(217, 221, 224, 0.92);
+    }
+
+    .product-visual[data-visual="necklace"] .jewel,
+    .product-visual[data-visual="pendant"] .jewel {
+      width: 44px;
+      height: 56px;
+      border-radius: 50% 50% 46% 46%;
+      background: linear-gradient(145deg, #f6f7f7, #bec5c8);
+    }
+
+    .product-visual[data-visual="gem-ring"] .jewel {
+      width: 70px;
+      height: 70px;
+      border-radius: 48% 52% 50% 50%;
+      background: radial-gradient(circle at 32% 28%, #d8fff7, #24706a 68%, #153f3b);
+    }
+
+    .product-visual[data-visual="gift-set"]::before {
+      width: 58%;
+      border-radius: 8px;
+      border-width: 2px;
+      border-color: rgba(168, 120, 56, 0.42);
+      background: rgba(255, 250, 242, 0.72);
+    }
+
+    .product-visual[data-visual="gift-set"] .jewel {
+      width: 88px;
+      height: 42px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d9dde0, #f4d18d, #d9dde0);
+    }
+
+    .product-visual[data-visual="earrings"] .jewel,
+    .product-visual[data-visual="bracelet"] .jewel {
+      width: 88px;
+      height: 88px;
+      border: 12px solid #d9dde0;
+      border-radius: 50%;
+      background: radial-gradient(circle, transparent 40%, rgba(244, 209, 141, 0.24));
+    }
+
+    .product-visual[data-visual="bracelet"] .jewel {
+      border-color: #d7b06c;
+      width: 116px;
+      height: 68px;
+    }
+
+    .product-visual[data-visual="sample-box"]::before {
+      width: 62%;
+      border-radius: 8px;
+      border-width: 2px;
+      background:
+        linear-gradient(90deg, rgba(217, 221, 224, 0.5) 1px, transparent 1px),
+        linear-gradient(rgba(217, 221, 224, 0.5) 1px, transparent 1px),
+        rgba(255, 250, 242, 0.72);
+      background-size: 44px 44px;
+    }
+
+    .product-visual[data-visual="sample-box"] .jewel {
+      width: 118px;
+      height: 58px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #c9ced1, #f4d18d, #24706a);
+    }
+
+    .product-visual[data-visual="hairpin"] .jewel {
+      width: 170px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d9dde0, #f4d18d);
+      transform: rotate(-18deg);
+    }
+
+    .jewel {
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 20px 46px rgba(72, 60, 44, 0.2), inset 0 1px 12px rgba(255, 255, 255, 0.7);
+    }
+
+    .visual-label {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      z-index: 2;
+      padding: 7px 9px;
+      border-radius: 8px;
+      color: rgba(25, 22, 17, 0.68);
+      background: rgba(255, 250, 242, 0.74);
+      font-size: 12px;
+      font-weight: 800;
+      backdrop-filter: blur(12px);
     }
 
     .product-body {
@@ -489,6 +659,10 @@
       background: #f4d18d;
     }
 
+    .ghost-button {
+      background: transparent;
+    }
+
     .origin-layout {
       display: grid;
       grid-template-columns: 0.85fr 1.15fr;
@@ -501,7 +675,10 @@
       min-height: 620px;
       border-radius: 8px;
       overflow: hidden;
-      background: url("https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=1300&q=84") center / cover;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(244, 209, 141, 0.32), transparent 18%),
+        radial-gradient(circle at 68% 52%, rgba(217, 221, 224, 0.42), transparent 24%),
+        linear-gradient(135deg, #2a241d, #675743 55%, #d5c4a8);
     }
 
     .origin-caption {
@@ -649,7 +826,148 @@
     .compliance {
       background:
         linear-gradient(90deg, rgba(247, 242, 234, 0.96), rgba(247, 242, 234, 0.8)),
-        url("https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1800&q=84") center / cover;
+        repeating-linear-gradient(135deg, rgba(168, 120, 56, 0.1) 0 1px, transparent 1px 22px),
+        linear-gradient(135deg, #f7f2ea, #e3d7c4);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(25, 22, 17, 0.72);
+      backdrop-filter: blur(16px);
+    }
+
+    .modal-overlay.is-open {
+      display: flex;
+    }
+
+    .product-modal {
+      width: min(1080px, 100%);
+      max-height: min(860px, calc(100svh - 48px));
+      overflow: auto;
+      border: 1px solid rgba(255, 250, 242, 0.22);
+      border-radius: 8px;
+      background: var(--porcelain);
+      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.34);
+    }
+
+    .modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-top strong {
+      font-size: 14px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .modal-close {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: transparent;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 0;
+    }
+
+    .modal-gallery {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      border-right: 1px solid var(--line);
+    }
+
+    .modal-gallery-main {
+      min-height: 430px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .modal-gallery-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .modal-gallery-thumbs .product-visual {
+      min-height: 130px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .modal-info {
+      padding: 26px;
+    }
+
+    .modal-info h3 {
+      margin-bottom: 10px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1;
+    }
+
+    .modal-price {
+      margin-bottom: 16px;
+      color: var(--gold);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .modal-story {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .detail-pill {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(247, 242, 234, 0.62);
+    }
+
+    .detail-pill span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .detail-pill strong {
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .modal-bullets {
+      margin: 0 0 22px;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
     .report-table {
@@ -798,6 +1116,15 @@
         grid-template-columns: 1fr 1fr;
       }
 
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-gallery {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
       .origin-layout,
       .wholesale-callout {
         grid-template-columns: 1fr;
@@ -850,6 +1177,20 @@
       .timeline-row {
         grid-template-columns: 1fr;
         gap: 10px;
+      }
+
+      .collection-toolbar {
+        margin-top: -8px;
+      }
+
+      .product-visual,
+      .modal-gallery-main {
+        min-height: 260px;
+      }
+
+      .detail-grid,
+      .modal-gallery-thumbs {
+        grid-template-columns: 1fr;
       }
 
       .footer-inner {
@@ -946,59 +1287,8 @@
       <p class="section-kicker reveal" data-i18n="products.kicker">Products</p>
       <h2 class="section-title reveal" data-i18n="products.title">A focused first collection instead of endless low-price listings.</h2>
       <p class="section-lede reveal" data-i18n="products.lede">The store starts with 30-50 SKUs, then tests demand through short video traffic and platform data. These are the first hero categories for global buyers.</p>
-      <div class="products">
-        <article class="product reveal">
-          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=82" alt="Sterling silver necklace on marble">
-          <div class="product-body">
-            <div class="product-meta"><span data-i18n="product1.meta">Everyday Silver</span><span>$29-$49</span></div>
-            <h3 data-i18n="product1.title">Tide Line Necklace</h3>
-            <p data-i18n="product1.desc">Minimal 925 sterling silver necklace for daily wear, built for repeat purchase and gift bundles.</p>
-            <div class="specs">
-              <span data-i18n="product1.spec1">Material: 925 sterling silver</span>
-              <span data-i18n="product1.spec2">Target: Southeast Asia and North America</span>
-              <span data-i18n="product1.spec3">Use case: birthday, graduation, everyday wear</span>
-            </div>
-            <div class="product-actions">
-              <button class="small-button" type="button" data-add-inquiry="Tide Line Necklace" data-i18n="products.addInquiry">Add to Inquiry</button>
-              <a class="small-button" href="#compliance" data-i18n="products.viewCompliance">View Compliance</a>
-            </div>
-          </div>
-        </article>
-        <article class="product reveal">
-          <img src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=900&q=82" alt="Gemstone ring detail">
-          <div class="product-body">
-            <div class="product-meta"><span data-i18n="product2.meta">Silver + Gemstone</span><span>$49-$129</span></div>
-            <h3 data-i18n="product2.title">Shan Hai Gem Ring</h3>
-            <p data-i18n="product2.desc">Silver-set gemstone ring inspired by coastal and mythic motifs, designed for story-led product pages.</p>
-            <div class="specs">
-              <span data-i18n="product2.spec1">Material: silver setting, semi-precious gemstone</span>
-              <span data-i18n="product2.spec2">Target: gift buyers and boutique stores</span>
-              <span data-i18n="product2.spec3">Use case: cultural gift, fashion styling</span>
-            </div>
-            <div class="product-actions">
-              <button class="small-button" type="button" data-add-inquiry="Shan Hai Gem Ring" data-i18n="products.addInquiry">Add to Inquiry</button>
-              <a class="small-button" href="#compliance" data-i18n="products.viewCompliance">View Compliance</a>
-            </div>
-          </div>
-        </article>
-        <article class="product reveal">
-          <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=82" alt="Gold and silver jewelry gift set">
-          <div class="product-body">
-            <div class="product-meta"><span data-i18n="product3.meta">Festival Gifts</span><span>$69-$159</span></div>
-            <h3 data-i18n="product3.title">Meilong Gift Set</h3>
-            <p data-i18n="product3.desc">Bundled earrings, necklace, greeting card, and packaging for weddings, Lunar New Year, and family gifts.</p>
-            <div class="specs">
-              <span data-i18n="product3.spec1">Material: sterling silver or gold vermeil option</span>
-              <span data-i18n="product3.spec2">Target: overseas Chinese and wedding buyers</span>
-              <span data-i18n="product3.spec3">Use case: seasonal campaign and wholesale sample box</span>
-            </div>
-            <div class="product-actions">
-              <button class="small-button" type="button" data-add-inquiry="Meilong Gift Set" data-i18n="products.addInquiry">Add to Inquiry</button>
-              <a class="small-button" href="#compliance" data-i18n="products.viewCompliance">View Compliance</a>
-            </div>
-          </div>
-        </article>
-      </div>
+      <div class="collection-toolbar reveal" data-category-filter></div>
+      <div class="products" data-product-grid></div>
     </section>
 
     <section id="origin" class="section dark-band" aria-label="Industry story page">
@@ -1169,6 +1459,40 @@
     </section>
   </main>
 
+  <div class="modal-overlay" data-product-modal aria-hidden="true">
+    <div class="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-product-title">
+      <div class="modal-top">
+        <strong data-modal-category>Collection</strong>
+        <button class="modal-close" type="button" data-modal-close aria-label="Close product details">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-gallery">
+          <div class="product-visual modal-gallery-main" data-modal-visual data-visual="necklace">
+            <span class="jewel"></span>
+            <span class="visual-label" data-modal-shot-label>Studio shot</span>
+          </div>
+          <div class="modal-gallery-thumbs" data-modal-thumbs></div>
+        </div>
+        <div class="modal-info">
+          <h3 id="modal-product-title" data-modal-title>Product</h3>
+          <div class="modal-price" data-modal-price>$39</div>
+          <p class="modal-story" data-modal-story></p>
+          <div class="detail-grid">
+            <div class="detail-pill"><span data-i18n="detail.material">Material</span><strong data-modal-material></strong></div>
+            <div class="detail-pill"><span data-i18n="detail.size">Size</span><strong data-modal-size></strong></div>
+            <div class="detail-pill"><span data-i18n="detail.moq">MOQ</span><strong data-modal-moq></strong></div>
+            <div class="detail-pill"><span data-i18n="detail.leadTime">Lead Time</span><strong data-modal-lead></strong></div>
+          </div>
+          <ul class="modal-bullets" data-modal-bullets></ul>
+          <div class="product-actions">
+            <button class="button dark" type="button" data-modal-add data-i18n="detail.addInquiry">Add to Inquiry</button>
+            <a class="button light" href="#wholesale" data-modal-wholesale data-i18n="detail.wholesale">Wholesale Inquiry</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <a class="personal-gate" href="personal-home-20260507.html" aria-label="Open Lin Kunki personal homepage" title="Personal homepage">K</a>
 
   <footer class="site-footer">
@@ -1215,6 +1539,21 @@
           "products.lede": "The store starts with 30-50 SKUs, then tests demand through short video traffic and platform data. These are the first hero categories for global buyers.",
           "products.addInquiry": "Add to Inquiry",
           "products.viewCompliance": "View Compliance",
+          "products.viewDetails": "View Details",
+          "products.all": "All",
+          "products.everyday": "Everyday Silver",
+          "products.gemstone": "Gemstone",
+          "products.gifts": "Gifts",
+          "products.wholesale": "Wholesale",
+          "detail.material": "Material",
+          "detail.size": "Size",
+          "detail.moq": "MOQ",
+          "detail.leadTime": "Lead Time",
+          "detail.addInquiry": "Add to Inquiry",
+          "detail.wholesale": "Wholesale Inquiry",
+          "detail.studio": "Studio shot",
+          "detail.worn": "Worn view",
+          "detail.packaging": "Packaging",
           "product1.meta": "Everyday Silver",
           "product1.title": "Tide Line Necklace",
           "product1.desc": "Minimal 925 sterling silver necklace for daily wear, built for repeat purchase and gift bundles.",
@@ -1340,6 +1679,21 @@
           "products.lede": "网站首批规划 30-50 个 SKU，通过短视频流量和平台数据验证需求，再逐步扩大款式。",
           "products.addInquiry": "加入询盘",
           "products.viewCompliance": "查看合规",
+          "products.viewDetails": "查看详情",
+          "products.all": "全部",
+          "products.everyday": "日常银饰",
+          "products.gemstone": "银镶彩宝",
+          "products.gifts": "节庆礼盒",
+          "products.wholesale": "批发样品",
+          "detail.material": "材质",
+          "detail.size": "尺寸",
+          "detail.moq": "起订量",
+          "detail.leadTime": "交期",
+          "detail.addInquiry": "加入询盘",
+          "detail.wholesale": "批发询盘",
+          "detail.studio": "棚拍图",
+          "detail.worn": "佩戴图",
+          "detail.packaging": "包装图",
           "product1.meta": "日常银饰",
           "product1.title": "海潮线条项链",
           "product1.desc": "极简 925 银项链，适合日常佩戴、礼品组合和复购场景。",
@@ -1441,6 +1795,400 @@
         }
       };
 
+      var productCategories = [
+        { key: "all", labelKey: "products.all" },
+        { key: "everyday", labelKey: "products.everyday" },
+        { key: "gemstone", labelKey: "products.gemstone" },
+        { key: "gifts", labelKey: "products.gifts" },
+        { key: "wholesale", labelKey: "products.wholesale" }
+      ];
+
+      var productData = [
+        {
+          id: "tide-line-necklace",
+          category: "everyday",
+          visual: "necklace",
+          price: "$39",
+          en: {
+            category: "Everyday Silver",
+            name: "Tide Line Necklace",
+            summary: "Minimal 925 sterling silver necklace for daily wear, built for repeat purchase and gift bundles.",
+            material: "925 sterling silver, anti-tarnish finish",
+            size: "40+5 cm adjustable chain",
+            moq: "30 pcs / style",
+            lead: "7-12 days after sample approval",
+            market: "Southeast Asia and North America",
+            story: "A clean wave-line pendant for daily styling. It is light enough for impulse gift orders and simple enough to localize through packaging or engraving.",
+            bullets: ["Skin-contact material statement prepared for product pages", "Works as single SKU or two-piece gift bundle", "Suitable for TikTok Shop, Etsy, and boutique wholesale"],
+            shots: ["Studio shot", "Worn view", "Packaging"]
+          },
+          zh: {
+            category: "日常银饰",
+            name: "海潮线条项链",
+            summary: "极简 925 银项链，适合日常佩戴、礼品组合和复购场景。",
+            material: "925 纯银，抗氧化处理",
+            size: "40+5 cm 可调节链长",
+            moq: "30 件 / 款",
+            lead: "样品确认后 7-12 天",
+            market: "东南亚与北美",
+            story: "以海潮线条为灵感的日常项链，轻量、好搭配，适合做入门款、礼盒款和刻字定制款。",
+            bullets: ["商品页可清晰展示皮肤接触材质说明", "可单卖，也可组合成双件礼盒", "适合 TikTok Shop、Etsy 和精品店批发"],
+            shots: ["棚拍图", "佩戴图", "包装图"]
+          }
+        },
+        {
+          id: "shan-hai-gem-ring",
+          category: "gemstone",
+          visual: "gem-ring",
+          price: "$89",
+          en: {
+            category: "Silver + Gemstone",
+            name: "Shan Hai Gem Ring",
+            summary: "Silver-set gemstone ring inspired by coastal and mythic motifs, designed for story-led product pages.",
+            material: "925 silver setting, lab-tested semi-precious stone",
+            size: "US 5-9, resizable sample available",
+            moq: "20 pcs / stone color",
+            lead: "12-18 days",
+            market: "Gift buyers, boutique stores",
+            story: "A colored stone center makes the product visually stronger for content. The design can be localized through different stones for different markets.",
+            bullets: ["Color variants support A/B testing", "Higher perceived value than plain silver", "Good fit for Pinterest and boutique display"],
+            shots: ["Gem detail", "Worn view", "Gift box"]
+          },
+          zh: {
+            category: "银饰 + 彩宝",
+            name: "山海彩宝戒指",
+            summary: "银镶半宝石戒指，以海岸与东方神话纹样为灵感，适合故事型商品页。",
+            material: "925 银托，半宝石可检测批次",
+            size: "美码 5-9，可提供可调节样品",
+            moq: "20 件 / 宝石色",
+            lead: "12-18 天",
+            market: "礼品买家、海外精品店",
+            story: "彩色主石让商品更适合短视频和图片种草，不同市场可用不同石色做本地化测试。",
+            bullets: ["颜色变体适合做 A/B 测试", "比基础银饰有更高感知价值", "适合 Pinterest 内容和精品店陈列"],
+            shots: ["宝石细节", "佩戴图", "礼盒图"]
+          }
+        },
+        {
+          id: "meilong-gift-set",
+          category: "gifts",
+          visual: "gift-set",
+          price: "$129",
+          en: {
+            category: "Festival Gifts",
+            name: "Meilong Gift Set",
+            summary: "Bundled earrings, necklace, greeting card, and packaging for weddings, Lunar New Year, and family gifts.",
+            material: "Sterling silver or gold vermeil option",
+            size: "Necklace + earrings + card + gift box",
+            moq: "50 sets",
+            lead: "15-21 days",
+            market: "Overseas Chinese, wedding buyers",
+            story: "A seasonal gift bundle that raises average order value and gives the brand a clear campaign product for holidays and wedding seasons.",
+            bullets: ["Packaging can carry boutique or studio branding", "Good for Chinese New Year and wedding campaigns", "Higher AOV than single-item silver jewelry"],
+            shots: ["Gift set", "Box opening", "Card detail"]
+          },
+          zh: {
+            category: "节庆礼盒",
+            name: "梅陇礼品套装",
+            summary: "耳环、项链、贺卡与包装组合，服务婚礼、新年和家庭礼赠场景。",
+            material: "925 银或镀金银可选",
+            size: "项链 + 耳环 + 贺卡 + 礼盒",
+            moq: "50 套",
+            lead: "15-21 天",
+            market: "海外华人、婚礼买家",
+            story: "节庆礼盒能提高客单价，也让品牌拥有明确的节日营销主推款。",
+            bullets: ["包装可加入精品店或婚庆工作室品牌元素", "适合春节、婚礼季和母亲节营销", "比单件银饰更容易提高客单价"],
+            shots: ["礼盒图", "开箱图", "贺卡细节"]
+          }
+        },
+        {
+          id: "pearl-tide-earrings",
+          category: "everyday",
+          visual: "earrings",
+          price: "$46",
+          en: {
+            category: "Pearl Silver",
+            name: "Pearl Tide Earrings",
+            summary: "Freshwater pearl earrings with a soft coastal profile for everyday and office styling.",
+            material: "925 silver needle, freshwater pearl",
+            size: "18 mm drop length",
+            moq: "40 pairs",
+            lead: "8-14 days",
+            market: "Office wear, gift retail",
+            story: "Pearl earrings are familiar enough to convert quickly, while the Meilong origin story gives them a stronger sourcing narrative.",
+            bullets: ["Good entry product for sensitive-ear claims", "Pairs naturally with necklace upsell", "Small and light for cross-border parcels"],
+            shots: ["Studio shot", "Ear close-up", "Care card"]
+          },
+          zh: {
+            category: "珍珠银饰",
+            name: "海珠耳环",
+            summary: "淡水珍珠耳环，轮廓柔和，适合日常通勤与礼赠。",
+            material: "925 银针，淡水珍珠",
+            size: "约 18 mm 垂坠长度",
+            moq: "40 对",
+            lead: "8-14 天",
+            market: "通勤佩戴、礼品零售",
+            story: "珍珠耳环认知门槛低，转化更快；叠加梅陇供应链故事后，更容易形成品牌感。",
+            bullets: ["适合强调银针与敏感耳友好", "可与项链做加购组合", "体积小，适合跨境小包"],
+            shots: ["棚拍图", "耳部特写", "保养卡"]
+          }
+        },
+        {
+          id: "plum-vermeil-bracelet",
+          category: "gifts",
+          visual: "bracelet",
+          price: "$76",
+          en: {
+            category: "Gold Vermeil",
+            name: "Plum Vermeil Bracelet",
+            summary: "Gold vermeil bracelet inspired by plum blossoms, positioned for festival and family gifting.",
+            material: "925 silver base, gold vermeil finish",
+            size: "15+4 cm adjustable",
+            moq: "30 pcs",
+            lead: "12-16 days",
+            market: "Festival gifts, family gifting",
+            story: "A warm gold-tone piece for customers who want the look of gold jewelry without the cost and logistics risk of solid gold.",
+            bullets: ["Clear vermeil wording avoids misleading gold claims", "Works well in red and cream packaging", "Good fit for Lunar New Year campaigns"],
+            shots: ["Studio shot", "Wrist view", "Gift sleeve"]
+          },
+          zh: {
+            category: "镀金银饰",
+            name: "梅影镀金银手链",
+            summary: "以梅花意象为灵感的镀金银手链，适合节庆与家庭礼赠。",
+            material: "925 银底，镀金工艺",
+            size: "15+4 cm 可调节",
+            moq: "30 件",
+            lead: "12-16 天",
+            market: "节庆礼赠、家庭礼物",
+            story: "适合想要金色质感但不想承担足金成本和物流风险的海外消费者。",
+            bullets: ["清楚标注 vermeil / 镀金银，避免误导", "适合红色与米白礼盒包装", "适合春节礼赠活动"],
+            shots: ["棚拍图", "腕部佩戴", "礼品封套"]
+          }
+        },
+        {
+          id: "custom-name-pendant",
+          category: "everyday",
+          visual: "pendant",
+          price: "$58",
+          en: {
+            category: "Custom Silver",
+            name: "Custom Name Pendant",
+            summary: "Personalized sterling silver pendant for names, initials, dates, and small family-gift batches.",
+            material: "925 sterling silver, optional gold vermeil",
+            size: "Pendant width 18-28 mm",
+            moq: "1 pc retail / 30 pcs wholesale",
+            lead: "5-10 days per custom batch",
+            market: "Personalized gifts, creator stores",
+            story: "Light customization gives the website a reason to collect buyer information and makes the product harder to compare only by price.",
+            bullets: ["Supports name, initial, or date engraving", "Good for influencer codes and repeat gifting", "Clear production lead time reduces after-sales risk"],
+            shots: ["Name sample", "Worn view", "Order card"]
+          },
+          zh: {
+            category: "定制银饰",
+            name: "定制姓名吊坠",
+            summary: "支持姓名、首字母、日期等轻定制，适合个人礼品与小批量定制。",
+            material: "925 银，可选镀金银",
+            size: "吊坠宽 18-28 mm",
+            moq: "零售 1 件 / 批发 30 件",
+            lead: "每批定制 5-10 天",
+            market: "个性化礼品、达人店铺",
+            story: "轻定制让独立站更有收集买家需求的理由，也让产品不容易陷入纯价格比较。",
+            bullets: ["支持姓名、首字母或日期刻字", "适合达人折扣码和复购礼品", "明确生产周期，降低售后风险"],
+            shots: ["姓名样品", "佩戴图", "订单卡"]
+          }
+        },
+        {
+          id: "boutique-sample-box",
+          category: "wholesale",
+          visual: "sample-box",
+          price: "$299",
+          en: {
+            category: "Wholesale Sample",
+            name: "Boutique Sample Box",
+            summary: "A curated 12-piece sample box for overseas boutiques to test Meilong silver and gemstone lines.",
+            material: "Mixed 925 silver, pearl, gemstone, vermeil samples",
+            size: "12 SKUs with material cards",
+            moq: "1 sample box",
+            lead: "Ready in 5-7 days",
+            market: "Boutiques, distributors, wedding studios",
+            story: "The sample box turns unknown supply capacity into something buyers can inspect, photograph, and reorder from.",
+            bullets: ["Includes material cards and wholesale price ranges", "Designed for B2B conversion after first contact", "Can be customized by market segment"],
+            shots: ["Box layout", "Material cards", "SKU tray"]
+          },
+          zh: {
+            category: "批发样品",
+            name: "精品店样品盒",
+            summary: "为海外精品店准备的 12 件样品盒，用于测试梅陇银饰与彩宝系列。",
+            material: "925 银、珍珠、彩宝、镀金银混合样品",
+            size: "12 个 SKU，配材质卡",
+            moq: "1 盒起",
+            lead: "5-7 天备好",
+            market: "精品店、分销商、婚庆工作室",
+            story: "样品盒把抽象的供应链能力变成买家能触摸、拍摄和复购的具体产品。",
+            bullets: ["包含材质卡和批发价格区间", "用于首次接触后的 B2B 转化", "可按目标市场定制组合"],
+            shots: ["盒内陈列", "材质卡", "SKU 托盘"]
+          }
+        },
+        {
+          id: "bridal-hairpin-set",
+          category: "gifts",
+          visual: "hairpin",
+          price: "$118",
+          en: {
+            category: "Wedding Jewelry",
+            name: "Bridal Hairpin Set",
+            summary: "Silver-tone bridal hairpins for Southeast Asian wedding studios and ceremonial styling.",
+            material: "Silver-plated copper or 925 silver upgrade",
+            size: "3-piece set, 8-12 cm",
+            moq: "30 sets",
+            lead: "14-20 days",
+            market: "Wedding studios, cultural ceremonies",
+            story: "A ceremony-focused product lets the business enter wedding studios where buyers need repeat supply and customized packaging.",
+            bullets: ["Two material tiers for different budgets", "Strong fit for wedding photography content", "Wholesale packaging can be localized"],
+            shots: ["Studio shot", "Hair styling", "Set packaging"]
+          },
+          zh: {
+            category: "婚庆首饰",
+            name: "新娘发簪套装",
+            summary: "面向东南亚婚庆工作室和仪式造型的银色发簪套装。",
+            material: "镀银铜，可升级 925 银",
+            size: "3 件套，8-12 cm",
+            moq: "30 套",
+            lead: "14-20 天",
+            market: "婚庆工作室、文化仪式造型",
+            story: "婚庆产品能进入需要复购和包装定制的工作室渠道，比普通零售更适合 B2B 关系。",
+            bullets: ["两档材质适配不同预算", "适合婚纱摄影内容展示", "批发包装可做本地化"],
+            shots: ["棚拍图", "发型佩戴", "套装包装"]
+          }
+        }
+      ];
+
+      var activeCategory = "all";
+      var activeProductId = productData[0].id;
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, function (char) {
+          return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[char];
+        });
+      }
+
+      function getLang() {
+        return document.documentElement.getAttribute("data-lang") === "zh" ? "zh" : "en";
+      }
+
+      function getProductText(product) {
+        return product[getLang()] || product.en;
+      }
+
+      function visualHtml(product, label, extraClass) {
+        return [
+          '<div class="product-visual ' + (extraClass || "") + '" data-visual="' + escapeHtml(product.visual) + '">',
+          '  <span class="jewel"></span>',
+          '  <span class="visual-label">' + escapeHtml(label || getProductText(product).category) + "</span>",
+          "</div>"
+        ].join("");
+      }
+
+      function renderCategories() {
+        var toolbar = document.querySelector("[data-category-filter]");
+        if (!toolbar) return;
+        var dict = translations[getLang()] || translations.en;
+        toolbar.innerHTML = productCategories.map(function (category) {
+          return [
+            '<button class="category-button' + (category.key === activeCategory ? " is-active" : "") + '" type="button" data-category="' + category.key + '">',
+            escapeHtml(dict[category.labelKey] || category.key),
+            "</button>"
+          ].join("");
+        }).join("");
+      }
+
+      function renderProducts() {
+        var grid = document.querySelector("[data-product-grid]");
+        if (!grid) return;
+        var dict = translations[getLang()] || translations.en;
+        var visibleProducts = productData.filter(function (product) {
+          return activeCategory === "all" || product.category === activeCategory;
+        });
+        grid.innerHTML = visibleProducts.map(function (product) {
+          var text = getProductText(product);
+          return [
+            '<article class="product reveal is-visible" data-product-card="' + escapeHtml(product.id) + '">',
+            visualHtml(product, text.category),
+            '  <div class="product-body">',
+            '    <div class="product-meta"><span>' + escapeHtml(text.category) + '</span><span>' + escapeHtml(product.price) + '</span></div>',
+            '    <h3>' + escapeHtml(text.name) + '</h3>',
+            '    <p>' + escapeHtml(text.summary) + '</p>',
+            '    <div class="specs">',
+            '      <span>' + escapeHtml(text.material) + '</span>',
+            '      <span>' + escapeHtml(text.market) + '</span>',
+            '      <span>' + escapeHtml(text.moq) + '</span>',
+            "    </div>",
+            '    <div class="product-actions">',
+            '      <button class="small-button" type="button" data-open-product="' + escapeHtml(product.id) + '">' + escapeHtml(dict["products.viewDetails"]) + '</button>',
+            '      <button class="small-button ghost-button" type="button" data-add-inquiry="' + escapeHtml(product.en.name) + '">' + escapeHtml(dict["products.addInquiry"]) + '</button>',
+            "    </div>",
+            "  </div>",
+            "</article>"
+          ].join("");
+        }).join("");
+      }
+
+      function renderProductModal(productId) {
+        var product = productData.find(function (item) { return item.id === productId; }) || productData[0];
+        var text = getProductText(product);
+        var visual = document.querySelector("[data-modal-visual]");
+        var thumbs = document.querySelector("[data-modal-thumbs]");
+        var bullets = document.querySelector("[data-modal-bullets]");
+        activeProductId = product.id;
+
+        document.querySelector("[data-modal-category]").textContent = text.category;
+        document.querySelector("[data-modal-title]").textContent = text.name;
+        document.querySelector("[data-modal-price]").textContent = product.price;
+        document.querySelector("[data-modal-story]").textContent = text.story;
+        document.querySelector("[data-modal-material]").textContent = text.material;
+        document.querySelector("[data-modal-size]").textContent = text.size;
+        document.querySelector("[data-modal-moq]").textContent = text.moq;
+        document.querySelector("[data-modal-lead]").textContent = text.lead;
+        document.querySelector("[data-modal-add]").setAttribute("data-add-inquiry", product.en.name);
+
+        if (visual) {
+          visual.setAttribute("data-visual", product.visual);
+          visual.querySelector("[data-modal-shot-label]").textContent = text.shots[0];
+        }
+        if (thumbs) {
+          thumbs.innerHTML = text.shots.map(function (shot) {
+            return visualHtml(product, shot);
+          }).join("");
+        }
+        if (bullets) {
+          bullets.innerHTML = text.bullets.map(function (item) {
+            return "<li>" + escapeHtml(item) + "</li>";
+          }).join("");
+        }
+      }
+
+      function openProductModal(productId) {
+        var modal = document.querySelector("[data-product-modal]");
+        renderProductModal(productId);
+        if (!modal) return;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeProductModal() {
+        var modal = document.querySelector("[data-product-modal]");
+        if (!modal) return;
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
       function applyLanguage(lang) {
         var dict = translations[lang] || translations.en;
         document.documentElement.setAttribute("data-lang", lang);
@@ -1456,6 +2204,9 @@
         try {
           window.localStorage.setItem("meilongLang", lang);
         } catch (error) {}
+        renderCategories();
+        renderProducts();
+        renderProductModal(activeProductId);
       }
 
       document.querySelectorAll("[data-lang-set]").forEach(function (button) {
@@ -1510,12 +2261,55 @@
         saveInquiryDraft({ details: details.value, products: selectedProducts });
       }
 
-      document.querySelectorAll("[data-add-inquiry]").forEach(function (button) {
-        button.addEventListener("click", function () {
-          updateDetailsWithProduct(button.getAttribute("data-add-inquiry"));
+      document.addEventListener("click", function (event) {
+        var categoryButton = event.target.closest("[data-category]");
+        if (categoryButton) {
+          activeCategory = categoryButton.getAttribute("data-category") || "all";
+          renderCategories();
+          renderProducts();
+          return;
+        }
+
+        var detailButton = event.target.closest("[data-open-product]");
+        if (detailButton) {
+          openProductModal(detailButton.getAttribute("data-open-product"));
+          return;
+        }
+
+        var galleryThumb = event.target.closest(".modal-gallery-thumbs .product-visual");
+        if (galleryThumb) {
+          var modalVisual = document.querySelector("[data-modal-visual]");
+          var label = galleryThumb.querySelector(".visual-label");
+          if (modalVisual && label) {
+            modalVisual.setAttribute("data-visual", galleryThumb.getAttribute("data-visual"));
+            modalVisual.querySelector("[data-modal-shot-label]").textContent = label.textContent;
+          }
+          return;
+        }
+
+        var addButton = event.target.closest("[data-add-inquiry]");
+        if (addButton) {
+          updateDetailsWithProduct(addButton.getAttribute("data-add-inquiry"));
+          closeProductModal();
           document.getElementById("wholesale").scrollIntoView({ behavior: "smooth", block: "start" });
           setInquiryStatus(currentDict()["form.added"]);
+          return;
+        }
+
+        if (event.target.closest("[data-modal-close]")) {
+          closeProductModal();
+        }
+      });
+
+      var productModal = document.querySelector("[data-product-modal]");
+      if (productModal) {
+        productModal.addEventListener("click", function (event) {
+          if (event.target === productModal) closeProductModal();
         });
+      }
+
+      window.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeProductModal();
       });
 
       if (inquiryForm) {
