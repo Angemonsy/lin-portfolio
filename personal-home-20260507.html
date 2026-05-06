@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我是林kunki | 首页</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandFrom: "#3b82f6",
+            brandTo: "#6366f1",
+            softBg: "#f8fafc"
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="antialiased">
+  <!-- 全站导航栏（当前标签页跳转） -->
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="assets/avatar-kunki.jpg" alt="我是林kunki Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">我是林kunki</span></a>
+
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">
+          菜单
+        </button>
+
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文案</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="about.html">关于我</a>
+        </div>
+      </div>
+
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文案</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div class="scroll-progress" aria-hidden="true">
+    <div class="scroll-progress__bar" data-scroll-progress></div>
+  </div>
+
+  <main class="pt-16">
+    <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 py-16 sm:px-6 lg:px-8"></section>
+    <!-- Hero 区 -->
+    <section class="site-static scroll-hero relative overflow-hidden" data-scroll-hero>
+      <div class="hero-grid absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-slate-50" data-parallax="grid"></div>
+      <div class="pointer-events-none absolute -top-28 right-0 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" data-parallax="orb-fast"></div>
+      <div class="pointer-events-none absolute -bottom-24 left-8 h-72 w-72 rounded-full bg-indigo-200/35 blur-3xl" data-parallax="orb-slow"></div>
+      <div class="liquid-grain" data-parallax="grain" aria-hidden="true"></div>
+
+      <div class="scroll-hero__content relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28" data-parallax="content">
+        <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
+          <div class="reveal lg:col-span-6">
+            <p class="inline-flex items-center rounded-full border border-blue-100 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-blue-700">
+              我是林kunki · 个人知识库 / 文案 / 数字资产门户
+            </p>
+            <h1 class="mt-5 text-4xl font-extrabold leading-tight text-slate-900 md:text-5xl xl:text-6xl lg:whitespace-nowrap">Hey，我是 Kunki</h1>
+            <p class="mt-5 text-lg leading-relaxed text-slate-600 md:text-xl lg:whitespace-nowrap">一个普通文科生，正在用 AI 把大学内外的每一步都走得更值</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="blog.html" class="inline-flex items-center rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-200 transition hover:opacity-95">
+                开始阅读
+              </a>
+              <a href="services.html" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-7 py-3.5 text-base font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">
+                看合作服务
+              </a>
+            </div>
+            <div class="mt-8 space-y-2">
+              <h2 class="text-lg font-semibold text-slate-900 md:text-xl">我主要记录四件事：</h2>
+              <p class="text-lg font-medium text-slate-600 md:text-xl">大学结果 · AI工具 · 一人公司实践 · 成长实验</p>
+            </div>
+            <div class="mt-6 rounded-2xl border border-blue-100 bg-white/85 p-4 shadow-sm">
+              <p class="text-sm font-semibold text-blue-700">如果你想找我合作，先看这三件事</p>
+              <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+                <li>我主要接 AI 学习提效、内容承接和轻量工具落地。</li>
+                <li>AI 自动项目统一先进 <span class="font-semibold text-slate-800">autonomous-ai-lab</span>，验证稳定后再考虑进入首页或作品集。</li>
+                <li>最直接的下一步是先看服务页，再通过微信确认需求边界。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="reveal rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-6 lg:p-6" data-flow-card>
+            <p class="text-base leading-relaxed text-slate-600">
+              我来自广东外语外贸大学，学的是国际经济与贸易，没有技术背景，也没有很强硬的家庭资源，起点和大多数人一样普通。
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-slate-600">
+              大学这几年，我做了一件事：想清楚自己要什么结果，然后用最性价比的方式拿到它。<span class="font-semibold text-blue-700">绩点rank1、SCI论文发表、获得国家奖学金、跨专业保研准备</span>——这些不是因为我比别人聪明，而是因为我比较早地学会了“不在低效的事情上死磕”。后来我把同样的思路带到了校外。接触AI应用、做内容、搭私域、尝试一个人跑通商业闭环。踩了很多坑，见了一些厉害的人，也慢慢开始拿到一些小结果。
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-slate-600">
+              这个网站是我的实践故事。不是教你怎么做，是把我正在做的事、正在踩的坑、正在验证的方法，原原本本地记录下来。<span class="font-semibold text-blue-700">如果你也追求卓越，渴望拿到结果，欢迎找我扩列交流呀~</span>也希望这里的某一篇，刚好能帮你少走一段弯路，加油我们一起进步！
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 过渡标签 -->
+    <section class="site-static transition-highlights">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="transition-highlights__inner reveal">
+          <div class="transition-highlights__scroller">
+            <div class="transition-highlights__row">
+              <span class="transition-highlights__pill border border-blue-200 bg-blue-50/85 text-blue-700">GPA: 3.98/4</span>
+              <span class="transition-highlights__pill border border-indigo-200 bg-indigo-50/85 text-indigo-700">SCI二区论文发表</span>
+              <span class="transition-highlights__pill border border-amber-200 bg-amber-50/90 text-amber-700">国家奖学金</span>
+              <span class="transition-highlights__pill border border-slate-300 bg-slate-100/92 text-slate-700">AI MCN签约</span>
+              <span class="transition-highlights__pill border border-emerald-200 bg-emerald-50/90 text-emerald-700">大学生AI商业博主</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 快速导航 -->
+    <section class="site-static mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">五类核心入口</h2>
+        <p class="mt-2 text-sm text-slate-500">从文案、知识库和实验室快速进入你最关心的主题。</p>
+      </div>
+      <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <a href="blog.html?tab=%E5%A4%A7%E5%AD%A6%E7%BB%93%E6%9E%9C" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">大学结果</h3>
+          <p class="mt-2 text-sm text-slate-600">绩点方法、论文写作、竞赛复盘、保研路径与大学决策思考。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="blog.html?tab=AI%E5%B7%A5%E5%85%B7" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">AI工具</h3>
+          <p class="mt-2 text-sm text-slate-600">只写实战用过的工具、工作流和Prompt，聚焦可复用结果。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="blog.html?tab=%E4%B8%80%E4%BA%BA%E5%85%AC%E5%8F%B8" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">一人公司实践</h3>
+          <p class="mt-2 text-sm text-slate-600">围绕内容、私域、产品与成交，记录从0到1的轻商业实验。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="blog.html?tab=%E6%88%90%E9%95%BF%E5%AE%9E%E9%AA%8C" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">成长实验</h3>
+          <p class="mt-2 text-sm text-slate-600">把健身、表达、社交与自律当作长期项目，持续做复盘。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="portfolio-items/autonomous-ai-lab.html" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">AI 实验室</h3>
+          <p class="mt-2 text-sm text-slate-600">AI 自动项目先在这里验证可玩性、转发率和复玩率，成熟后再晋级到公开作品集。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">先看实验室 →</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="site-static ai-era-block">
+      <div class="ai-era-hero" id="ai-era-top">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+          <div class="ai-era-hero__content" data-ai-observe>
+            <h2 class="ai-era-hero__title">AI 时代，我们到底应该学什么？</h2>
+            <p class="ai-era-hero__subtitle">不是学更多工具，不是追更多热点，而是训练那些<span>真正能让你拿到结果</span>的现实能力。</p>
+            <p class="ai-era-hero__desc">这里记录的，是一个普通背景大学生从高考志愿填报开始，如何用 AI 和结构化系统，在校内外持续拿结果的完整路径。不是鸡汤，不是理论，是正在发生的真实实验。</p>
+          </div>
+
+          <div class="ai-era-rule-card mx-auto mt-10 max-w-4xl rounded-3xl border border-blue-200 bg-white/80 p-6 text-center shadow-xl shadow-blue-100/70 backdrop-blur md:p-8" data-ai-observe>
+            <p class="text-sm font-bold uppercase tracking-[0.28em] text-blue-600">540法则总纲</p>
+            <h3 class="mt-3 text-2xl font-extrabold text-slate-900 md:text-3xl">540学生法则</h3>
+            <p class="mt-3 text-base font-semibold leading-relaxed text-blue-700 md:text-lg">课内用AI高效拿结果，课外做540——3个100搭系统，4个60练能力。</p>
+            <p class="mt-4 text-sm leading-8 text-slate-600 md:text-base">540 = 3×100 + 4×60。3个100是底层系统构建，解决方向和认知问题；4个60是现实能力训练场，解决执行和结果问题。这不是鸡汤口号，是一个普通文科大学生正在跑通的完整自救路径。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8" id="ai-era-main">
+        <div class="ai-era-lines">
+          <article class="ai-era-line-card" data-ai-observe>
+            <div class="ai-era-line-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 18C6.5 13.5 10 10 14 8L19 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                <circle cx="5" cy="18" r="2" fill="currentColor"></circle>
+                <circle cx="14" cy="8" r="2" fill="currentColor"></circle>
+                <circle cx="19" cy="6" r="2" fill="currentColor"></circle>
+              </svg>
+            </div>
+            <h3>真实路径，不是成功学</h3>
+            <p>起点普通，方法真实，结果可验证。不卖逆袭神话，只拆解每一步到底怎么走的。</p>
+          </article>
+
+          <article class="ai-era-line-card" data-ai-observe>
+            <div class="ai-era-line-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M10 3H14L15 6.2C15.6 6.4 16.2 6.7 16.7 7.1L20 6L22 10L19.2 12C19.2 12.3 19.2 12.7 19.2 13L22 15L20 19L16.7 17.9C16.2 18.3 15.6 18.6 15 18.8L14 22H10L9 18.8C8.4 18.6 7.8 18.3 7.3 17.9L4 19L2 15L4.8 13C4.8 12.7 4.8 12.3 4.8 12L2 10L4 6L7.3 7.1C7.8 6.7 8.4 6.4 9 6.2L10 3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path>
+                <circle cx="12" cy="12.5" r="2.8" stroke="currentColor" stroke-width="1.6"></circle>
+              </svg>
+            </div>
+            <h3>AI + 系统，不是鸡血</h3>
+            <p>不靠意志力硬撑，靠工具、流程和系统化迭代。把AI从聊天玩具变成真正的结果杠杆。</p>
+          </article>
+
+          <article class="ai-era-line-card" data-ai-observe>
+            <div class="ai-era-line-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="7" width="18" height="12" rx="2.5" stroke="currentColor" stroke-width="1.8"></rect>
+                <path d="M8 7V5.5C8 4.7 8.7 4 9.5 4H14.5C15.3 4 16 4.7 16 5.5V7M8.5 12H15.5M12 9.5V14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <h3>可复用，不是只能看</h3>
+            <p>所有内容都指向一个目标：给你一套能拿走、能执行、能根据自己情况调整的行动框架。</p>
+          </article>
+        </div>
+
+        <section class="ai-era-vision" data-ai-observe>
+          <h3>光有方向不够，540帮你落到每一天。</h3>
+          <p>3个100解决"知道该往哪走"的问题——用AI搭效率系统、集中投入核心目标、持续输入优质信息。4个60解决"怎么真正动起来"的问题——健身练底盘、社交练链接、内容练杠杆、成交练闭环。</p>
+
+          <div class="ai-era-radial overflow-hidden bg-gradient-to-br from-white via-blue-50/60 to-slate-50" data-ai-radial>
+            <div class="pointer-events-none absolute inset-4 rounded-[1.4rem] border border-blue-100 bg-white/55 shadow-inner"></div>
+            <div class="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-blue-200 bg-white/90 px-4 py-2 text-xs font-bold tracking-wide text-blue-700 shadow-sm">3个100 · 先搭底层系统</div>
+            <div class="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-bold tracking-wide text-slate-700 shadow-sm">4个60 · 再进现实训练场</div>
+            <svg class="ai-era-radial__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="21" y1="30" x2="50" y2="50"></line>
+              <line x1="50" y1="30" x2="50" y2="50"></line>
+              <line x1="79" y1="30" x2="50" y2="50"></line>
+              <line x1="50" y1="50" x2="20" y2="76"></line>
+              <line x1="50" y1="50" x2="40" y2="76"></line>
+              <line x1="50" y1="50" x2="60" y2="76"></line>
+              <line x1="50" y1="50" x2="80" y2="76"></line>
+              <line x1="21" y1="30" x2="50" y2="30"></line>
+              <line x1="50" y1="30" x2="79" y2="30"></line>
+              <line x1="20" y1="76" x2="40" y2="76"></line>
+              <line x1="40" y1="76" x2="60" y2="76"></line>
+              <line x1="60" y1="76" x2="80" y2="76"></line>
+            </svg>
+            <div class="ai-era-radial__center flex h-24 w-24 flex-col items-center justify-center rounded-full text-center" style="left:50%;top:50%;padding:0;">
+              <span class="text-2xl font-black leading-none text-blue-700">540</span>
+              <span class="mt-1 text-[11px] font-bold text-slate-500">学生法则</span>
+            </div>
+            <div class="ai-era-radial__node ai-era-radial__node--ai-tools text-center leading-snug" style="left:21%;top:30%;width:clamp(6.4rem,18vw,10rem);white-space:normal;background:#e0f2fe;border:1px solid #7dd3fc;color:#075985;transition-delay:0.05s;">100小时<br>AI工具使用</div>
+            <div class="ai-era-radial__node ai-era-radial__node--target text-center leading-snug" style="left:50%;top:30%;width:clamp(6.4rem,18vw,10rem);white-space:normal;background:#eef2ff;border:1px solid #a5b4fc;color:#3730a3;transition-delay:0.12s;">100小时<br>目标试错与推进</div>
+            <div class="ai-era-radial__node ai-era-radial__node--input text-center leading-snug" style="left:79%;top:30%;width:clamp(6.4rem,18vw,10rem);white-space:normal;background:#ecfeff;border:1px solid #67e8f9;color:#155e75;transition-delay:0.19s;">100小时<br>优质信息输入</div>
+            <div class="ai-era-radial__node ai-era-radial__node--fitness text-center leading-snug" style="left:20%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>健身</div>
+            <div class="ai-era-radial__node ai-era-radial__node--social text-center leading-snug" style="left:40%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>社交表达</div>
+            <div class="ai-era-radial__node ai-era-radial__node--content text-center leading-snug" style="left:60%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>内容输出</div>
+            <div class="ai-era-radial__node ai-era-radial__node--sales text-center leading-snug" style="left:80%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>销售与成交</div>
+          </div>
+        </section>
+
+        <section class="ai-era-actions">
+          <div class="ai-era-action-group rounded-2xl border border-blue-100 bg-blue-50/70 p-5" data-ai-observe>
+            <h3 class="text-xl font-extrabold text-slate-900">3个100 · 底层系统构建</h3>
+            <p class="mt-2 text-sm leading-7 text-slate-600">每个100小时都在解决一个根本问题：方向、工具、认知。</p>
+          </div>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-content-fallback.svg';" width="400" height="300" alt="AI工具使用" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">01</span>
+              <h4>把AI从聊天对象变成效率操作系统</h4>
+              <p>不学理论，不看测评，真刀真枪用AI解决真实问题——写论文、做PPT、搭工作流、建知识库、做调研、做内容。100小时下来，AI就是你的核心杠杆。每天1小时，100天完成。</p>
+              <p class="ai-era-tags">论文写作 / 工作流搭建 / 知识库构建</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow ai-era-action-card--reverse" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-social-fallback.svg';" width="400" height="300" alt="目标学习推进" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">02</span>
+              <h4>锁定方向，集中投入，拿一个可验证的结果</h4>
+              <p>大学生最大的问题不是不努力，是方向模糊、精力分散、什么都做一点什么都没结果。锁定你最重要的方向——绩点冲刺、论文产出、竞赛拿奖、保研准备、实习求职——然后投入100小时去试错、去推进。</p>
+              <p class="ai-era-tags">目标锁定 / 集中突破 / 结果验证</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-content-fallback.svg';" width="400" height="300" alt="优质信息输入" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">03</span>
+              <h4>停止低质量刷屏，开始刻意输入</h4>
+              <p>不是随便刷抖音刷小红书，而是想清楚自己需要输入什么，然后去优质渠道获取——X、公众号、即刻、B站、YouTube、播客、深度文章、行业报告。100小时的刻意输入，让你的认知水平远超同龄人。</p>
+              <p class="ai-era-tags">信息筛选 / 认知升级 / 刻意输入</p>
+            </div>
+          </article>
+
+          <div class="ai-era-action-group rounded-2xl border border-slate-200 bg-white p-5" data-ai-observe>
+            <h3 class="text-xl font-extrabold text-slate-900">4个60 · 现实能力训练场</h3>
+            <p class="mt-2 text-sm leading-7 text-slate-600">每个60天都在锻炼一种学校不教、但真实世界决定胜负的能力。</p>
+          </div>
+
+          <article class="ai-era-action-card glass-flow ai-era-action-card--reverse" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-fitness-fallback.svg';" width="400" height="300" alt="健身训练" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">04</span>
+              <h4>训练身体资本与抗压能力</h4>
+              <p>规律训练不只是练肌肉，是在训练自律、耐受力、执行力和承载高强度输出的身体底盘。你的形象、精力、抗压阈值，全部从这里开始。</p>
+              <p class="ai-era-tags">形象提升 / 精力管理 / 抗压训练</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-social-fallback.svg';" width="400" height="300" alt="社交表达训练" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">05</span>
+              <h4>训练链接力与价值传递</h4>
+              <p>从"不敢开口"到"敢于连接"。训练的不只是说话，是你能不能在30秒内让对方感受到你的价值和真诚——这决定了你能链接什么层次的人、能打开什么样的圈子。</p>
+              <p class="ai-era-tags">语言表达 / 价值传递 / 人脉破圈</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow ai-era-action-card--reverse" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-content-fallback.svg';" width="400" height="300" alt="短视频与写作输出" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">06</span>
+              <h4>训练内容杠杆与系统思维</h4>
+              <p>普通人能接触到的最低成本创业方式，就是内容。把输入转化为可传播的内容，形成选题、表达、复盘、迭代的飞轮，让能力可见、可放大、可积累。</p>
+              <p class="ai-era-tags">内容生产 / 系统搭建 / 流量获客</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-sales-fallback.svg';" width="400" height="300" alt="销售与成交实践" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">07</span>
+              <h4>训练商业理解与结果闭环</h4>
+              <p>有流量没成交，等于零。学会发现需求、建立信任、完成成交，把"有价值"变成"有结果"。销售不是套路，是和真实世界交换价值的能力。</p>
+              <p class="ai-era-tags">需求洞察 / 信任建立 / 成交闭环</p>
+            </div>
+          </article>
+        </section>
+
+        <section class="ai-era-bridge" data-ai-observe>
+          <h3>540不是课外附加项，是和课内学习并入同一系统</h3>
+          <p>课内用AI和结构化方法高效拿结果（绩点、论文、奖学金），课外用540的3个100和4个60训练底层能力，最后在保研、实习、求职中验证成果。</p>
+          <div class="ai-era-bridge__grid">
+            <article>
+              <h4>课内学习 · AI高效执行</h4>
+              <p>用AI工具和结构化方法做时间预算，以最低投入完成课程、绩点、论文、奖学金等关键任务。这是540体系里"100小时AI工具使用"的课内应用。</p>
+            </article>
+            <article>
+              <h4>课外主线 · 540能力训练</h4>
+              <p>3个100搭建底层系统（AI工具、目标推进、信息输入），4个60训练现实能力（健身、社交、内容、成交），长期积累可迁移的竞争力。</p>
+            </article>
+            <article>
+              <h4>结果验证 · 升学与就业</h4>
+              <p>把540训练出的能力投射到保研材料、实习项目、面试表达与真实成交场景，形成可验证的结果闭环。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="ai-era-timeline-wrap" data-ai-observe>
+          <h3>从愿景到行动的递进路径</h3>
+          <div class="ai-era-timeline" data-ai-timeline>
+            <svg class="ai-era-timeline-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="12" y1="82" x2="88" y2="18"></line>
+            </svg>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s1">
+              <h4>宏观方向</h4>
+              <p>AI时代，课内高效拿结果，课外训练真正决定胜负的现实能力</p>
+            </article>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s2">
+              <h4>3个100 · 搭系统</h4>
+              <p>100小时AI工具 / 100小时目标推进 / 100小时优质输入</p>
+            </article>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s3">
+              <h4>4个60 · 练能力</h4>
+              <p>60天健身 / 60天社交 / 60天内容 / 60天成交</p>
+            </article>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s4">
+              <h4>结果验证</h4>
+              <p>用保研、实习、求职与真实项目结果倒推方法是否有效，持续迭代</p>
+            </article>
+          </div>
+          <p class="ai-era-timeline-end">不是等准备好了再开始，是从今天能做的最小一步开始。</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- 精选文案预览 -->
+    <section class="site-static mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">最新思考</h2>
+        <p class="mt-2 text-sm text-slate-500">点击文案卡片会在新标签页打开，方便你保留当前浏览位置。</p>
+      </div>
+      <div id="featured-posts" class="mt-8 grid gap-6 md:grid-cols-3"></div>
+    </section>
+  </main>
+
+  <!-- 全站 Footer：平台入口改为二维码弹窗按钮 -->
+  <footer class="border-t border-slate-200 bg-white/95">
+    <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-5 md:flex-row md:items-center md:justify-between md:gap-8">
+        <p class="text-base font-semibold text-slate-700 md:text-xl">用 AI 和结构化系统，在校内外持续拿结果。</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="platform-btn platform-btn--footer" data-qr-platform="wechat" type="button">微信</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="shipinhao" type="button">视频号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="xiaohongshu" type="button">小红书</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="gongzhonghao" type="button">公众号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="douyin" type="button">抖音</button>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-slate-200/80">
+      <div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-4 text-center text-sm text-slate-600 sm:px-6 lg:px-8">
+        <p>© 2026 我是林kunki</p>
+        <p class="text-xs text-slate-500"><a data-icp-record href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="transition hover:text-blue-600 hover:underline">工信部备案号：粤ICP备2026039646号</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/data-fallback.js"></script>
+  <script src="assets/site-common.js"></script>
+  <script>
+    // 首页文案动态渲染：优先 fetch，失败自动兜底
+    (function () {
+      function initScrollDynamics() {
+        var progressBar = document.querySelector("[data-scroll-progress]");
+        var hero = document.querySelector("[data-scroll-hero]");
+        var root = document.documentElement;
+        var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var ticking = false;
+
+        function clamp(value, min, max) {
+          return Math.min(Math.max(value, min), max);
+        }
+
+        function updateProgressBar() {
+          if (!progressBar) return;
+          var doc = document.documentElement;
+          var total = Math.max(doc.scrollHeight - window.innerHeight, 0);
+          var ratio = total > 0 ? clamp(window.scrollY / total, 0, 1) : 0;
+          progressBar.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+          root.style.setProperty("--page-progress", ratio.toFixed(4));
+        }
+
+        function updateHeroParallax() {
+          if (!hero) return;
+          if (prefersReduced) {
+            hero.style.setProperty("--hero-progress", "0");
+            return;
+          }
+          var rect = hero.getBoundingClientRect();
+          var heroHeight = Math.max(rect.height, 1);
+          var ratio = clamp(-rect.top / heroHeight, 0, 1);
+          hero.style.setProperty("--hero-progress", ratio.toFixed(4));
+        }
+
+        function updateFlowCards() {
+          var cards = document.querySelectorAll("[data-flow-card]");
+          if (!cards.length) return;
+
+          cards.forEach(function (card) {
+            if (prefersReduced) {
+              card.style.setProperty("--flow-shift", "0");
+              card.style.setProperty("--flow-tilt", "0");
+              card.style.setProperty("--flow-sheen", "0.14");
+              return;
+            }
+
+            var rect = card.getBoundingClientRect();
+            var viewHeight = Math.max(window.innerHeight, 1);
+            var center = rect.top + rect.height / 2;
+            var normalized = clamp((center - viewHeight * 0.52) / (viewHeight * 0.72), -1, 1);
+            var intensity = 1 - Math.abs(normalized);
+            var shift = intensity * 18;
+            var tilt = -normalized * 5.5;
+            var sheen = 0.12 + intensity * 0.24;
+            card.style.setProperty("--flow-shift", shift.toFixed(3));
+            card.style.setProperty("--flow-tilt", tilt.toFixed(3));
+            card.style.setProperty("--flow-sheen", sheen.toFixed(3));
+          });
+        }
+
+        function run() {
+          updateProgressBar();
+          updateHeroParallax();
+          updateFlowCards();
+        }
+
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(function () {
+            run();
+            ticking = false;
+          });
+        }
+
+        run();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+      }
+
+      function initAiEraMotion() {
+        var section = document.querySelector(".ai-era-block");
+        if (!section || section.dataset.motionBound === "1") return;
+        section.dataset.motionBound = "1";
+
+        var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var observeNodes = section.querySelectorAll("[data-ai-observe]");
+
+        if (prefersReduced) {
+          observeNodes.forEach(function (node) { node.classList.add("is-visible"); });
+          var radialStatic = section.querySelector("[data-ai-radial]");
+          if (radialStatic) radialStatic.classList.add("is-active");
+          section.querySelectorAll(".ai-era-timeline-node").forEach(function (node) { node.classList.add("is-active"); });
+          return;
+        }
+
+        var revealObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.18 });
+
+        observeNodes.forEach(function (node) { revealObserver.observe(node); });
+
+        var radial = section.querySelector("[data-ai-radial]");
+        if (radial) {
+          var radialObserver = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              radial.classList.add("is-active");
+              observer.unobserve(entry.target);
+            });
+          }, { threshold: 0.25 });
+          radialObserver.observe(radial);
+        }
+
+        var timeline = section.querySelector("[data-ai-timeline]");
+        if (timeline) {
+          var nodes = timeline.querySelectorAll(".ai-era-timeline-node");
+          var timelineObserver = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              nodes.forEach(function (node, index) {
+                window.setTimeout(function () { node.classList.add("is-active"); }, index * 180);
+              });
+              observer.unobserve(entry.target);
+            });
+          }, { threshold: 0.3 });
+          timelineObserver.observe(timeline);
+        }
+      }
+
+      SiteCommon.initNav({ currentKey: "index" });
+      SiteCommon.initQrModal({ assetPrefix: "" });
+      SiteCommon.renderPageOverride({
+        pageId: "index",
+        containerId: "dynamic-page-content",
+        staticSelector: ".site-static",
+        dataPath: "data/site-pages.json",
+        fallbackKey: "sitePages"
+      });
+
+      var container = document.getElementById("featured-posts");
+      SiteCommon.fetchWithFallback("data/articles.json", "articles").then(function (articles) {
+        var top3 = SiteCommon.uniqueByTitle(SiteCommon.sortByDateDesc(articles)).slice(0, 3);
+        container.innerHTML = top3.map(function (item) {
+          var tagLabel = item.category || "文案";
+          if (Array.isArray(item.tags) && item.tags.length > 0) {
+            tagLabel = item.tags[0];
+          } else if (typeof item.tags === "string" && item.tags.trim()) {
+            tagLabel = item.tags.trim();
+          }
+          return [
+            '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(item.url, "") + '" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>',
+            '  <p class="text-xs font-semibold uppercase tracking-wide text-blue-600">' + tagLabel + '</p>',
+            '  <h3 class="mt-3 text-lg font-semibold text-slate-900">' + item.title + '</h3>',
+            '  <p class="mt-3 text-sm leading-relaxed text-slate-600">' + item.description + '</p>',
+            '  <p class="mt-4 text-xs text-slate-400">' + item.date + '</p>',
+            '</a>'
+          ].join("");
+        }).join("");
+        SiteCommon.initReveal(document);
+        window.requestAnimationFrame(function () {
+          window.dispatchEvent(new Event("scroll"));
+        });
+      });
+
+      SiteCommon.initReveal(document);
+      initScrollDynamics();
+      initAiEraMotion();
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
