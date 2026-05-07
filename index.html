@@ -471,6 +471,27 @@
       background:
         radial-gradient(circle at 26% 18%, rgba(255, 250, 242, 0.96), transparent 18%),
         linear-gradient(135deg, #efe6d7, #fffaf2 58%, #d8c7ad);
+      background-position: center;
+      background-size: cover;
+    }
+
+    .product-visual.has-photo {
+      align-items: end;
+      justify-items: start;
+      background-color: #efe6d7;
+    }
+
+    .product-visual.has-photo::before {
+      display: none;
+    }
+
+    .product-visual.has-photo::after {
+      inset: auto 0 0 0;
+      z-index: 1;
+      width: 100%;
+      height: 48%;
+      background: linear-gradient(0deg, rgba(25, 22, 17, 0.5), transparent);
+      transform: none;
     }
 
     .product-visual::before,
@@ -580,6 +601,10 @@
       box-shadow: 0 20px 46px rgba(72, 60, 44, 0.2), inset 0 1px 12px rgba(255, 255, 255, 0.7);
     }
 
+    .product-visual.has-photo .jewel {
+      display: none;
+    }
+
     .visual-label {
       position: absolute;
       left: 16px;
@@ -592,6 +617,11 @@
       font-size: 12px;
       font-weight: 800;
       backdrop-filter: blur(12px);
+    }
+
+    .product-visual.has-photo .visual-label {
+      color: #fffaf2;
+      background: rgba(25, 22, 17, 0.58);
     }
 
     .product-body {
@@ -678,6 +708,8 @@
       background:
         radial-gradient(circle at 34% 28%, rgba(244, 209, 141, 0.32), transparent 18%),
         radial-gradient(circle at 68% 52%, rgba(217, 221, 224, 0.42), transparent 24%),
+        linear-gradient(0deg, rgba(25, 22, 17, 0.18), rgba(25, 22, 17, 0.18)),
+        url("assets/meilong-products/origin-workshop.jpg") center / cover,
         linear-gradient(135deg, #2a241d, #675743 55%, #d5c4a8);
     }
 
@@ -827,6 +859,7 @@
       background:
         linear-gradient(90deg, rgba(247, 242, 234, 0.96), rgba(247, 242, 234, 0.8)),
         repeating-linear-gradient(135deg, rgba(168, 120, 56, 0.1) 0 1px, transparent 1px 22px),
+        url("assets/meilong-products/compliance-detail.jpg") right center / min(46vw, 720px) auto no-repeat,
         linear-gradient(135deg, #f7f2ea, #e3d7c4);
     }
 
@@ -1809,6 +1842,8 @@
           category: "everyday",
           visual: "necklace",
           price: "$39",
+          image: "assets/meilong-products/tide-line-necklace.jpg",
+          photoPositions: ["center", "50% 32%", "50% 72%"],
           en: {
             category: "Everyday Silver",
             name: "Tide Line Necklace",
@@ -1841,6 +1876,8 @@
           category: "gemstone",
           visual: "gem-ring",
           price: "$89",
+          image: "assets/meilong-products/shan-hai-gem-ring.jpg",
+          photoPositions: ["center", "50% 28%", "50% 68%"],
           en: {
             category: "Silver + Gemstone",
             name: "Shan Hai Gem Ring",
@@ -1873,6 +1910,8 @@
           category: "gifts",
           visual: "gift-set",
           price: "$129",
+          image: "assets/meilong-products/meilong-gift-set.jpg",
+          photoPositions: ["center", "50% 30%", "50% 72%"],
           en: {
             category: "Festival Gifts",
             name: "Meilong Gift Set",
@@ -1905,6 +1944,8 @@
           category: "everyday",
           visual: "earrings",
           price: "$46",
+          image: "assets/meilong-products/pearl-tide-earrings.jpg",
+          photoPositions: ["center", "45% 28%", "55% 70%"],
           en: {
             category: "Pearl Silver",
             name: "Pearl Tide Earrings",
@@ -1937,6 +1978,8 @@
           category: "gifts",
           visual: "bracelet",
           price: "$76",
+          image: "assets/meilong-products/plum-vermeil-bracelet.jpg",
+          photoPositions: ["center", "55% 25%", "45% 70%"],
           en: {
             category: "Gold Vermeil",
             name: "Plum Vermeil Bracelet",
@@ -1969,6 +2012,8 @@
           category: "everyday",
           visual: "pendant",
           price: "$58",
+          image: "assets/meilong-products/custom-name-pendant.jpg",
+          photoPositions: ["center", "50% 30%", "50% 74%"],
           en: {
             category: "Custom Silver",
             name: "Custom Name Pendant",
@@ -2001,6 +2046,8 @@
           category: "wholesale",
           visual: "sample-box",
           price: "$299",
+          image: "assets/meilong-products/boutique-sample-box.jpg",
+          photoPositions: ["center", "50% 26%", "50% 72%"],
           en: {
             category: "Wholesale Sample",
             name: "Boutique Sample Box",
@@ -2033,6 +2080,8 @@
           category: "gifts",
           visual: "hairpin",
           price: "$118",
+          image: "assets/meilong-products/bridal-hairpin-set.jpg",
+          photoPositions: ["center", "50% 30%", "50% 72%"],
           en: {
             category: "Wedding Jewelry",
             name: "Bridal Hairpin Set",
@@ -2085,9 +2134,12 @@
         return product[getLang()] || product.en;
       }
 
-      function visualHtml(product, label, extraClass) {
+      function visualHtml(product, label, extraClass, shotIndex) {
+        var positions = product.photoPositions || ["center", "center"];
+        var position = positions[shotIndex || 0] || "center";
+        var imageStyle = product.image ? ' style="background-image: linear-gradient(0deg, rgba(25, 22, 17, 0.04), rgba(25, 22, 17, 0.04)), url(\'' + product.image + '\'); background-position: ' + escapeHtml(position) + ';"' : "";
         return [
-          '<div class="product-visual ' + (extraClass || "") + '" data-visual="' + escapeHtml(product.visual) + '">',
+          '<div class="product-visual ' + (product.image ? "has-photo " : "") + (extraClass || "") + '" data-visual="' + escapeHtml(product.visual) + '" data-shot-index="' + (shotIndex || 0) + '"' + imageStyle + '>',
           '  <span class="jewel"></span>',
           '  <span class="visual-label">' + escapeHtml(label || getProductText(product).category) + "</span>",
           "</div>"
@@ -2158,11 +2210,13 @@
 
         if (visual) {
           visual.setAttribute("data-visual", product.visual);
+          visual.setAttribute("style", "background-image: linear-gradient(0deg, rgba(25, 22, 17, 0.04), rgba(25, 22, 17, 0.04)), url('" + product.image + "'); background-position: " + (product.photoPositions && product.photoPositions[0] || "center") + ";");
+          visual.classList.add("has-photo");
           visual.querySelector("[data-modal-shot-label]").textContent = text.shots[0];
         }
         if (thumbs) {
-          thumbs.innerHTML = text.shots.map(function (shot) {
-            return visualHtml(product, shot);
+          thumbs.innerHTML = text.shots.map(function (shot, index) {
+            return visualHtml(product, shot, "", index);
           }).join("");
         }
         if (bullets) {
@@ -2282,6 +2336,8 @@
           var label = galleryThumb.querySelector(".visual-label");
           if (modalVisual && label) {
             modalVisual.setAttribute("data-visual", galleryThumb.getAttribute("data-visual"));
+            modalVisual.setAttribute("style", galleryThumb.getAttribute("style") || "");
+            modalVisual.classList.add("has-photo");
             modalVisual.querySelector("[data-modal-shot-label]").textContent = label.textContent;
           }
           return;
