@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇绩怪谈AIQ | kunki输出归档规则-GitHub主库版</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandFrom: "#3b82f6",
+            brandTo: "#6366f1",
+            softBg: "#f8fafc"
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="antialiased">
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="../index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="../assets/avatar-kunki.jpg" alt="奇绩怪谈AIQ Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">奇绩怪谈AIQ</span></a>
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="../index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="../services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="../about.html">关于我</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-24 pb-16">
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <article class="reveal rounded-3xl border border-slate-200 bg-white p-6 md:p-10">
+        <header class="mx-auto max-w-[720px]">
+          <p class="text-sm font-semibold text-blue-600">AI工具</p>
+          <h1 class="mt-3 text-3xl font-extrabold leading-tight text-slate-900 md:text-4xl">kunki输出归档规则-GitHub主库版</h1>
+          <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+            <span>发布时间：2026-05-23</span>
+            <span class="inline-flex rounded-full bg-blue-50 px-3 py-1 text-blue-700">AI工具</span>
+          </div>
+        </header>
+
+        <div class="article-content mt-8">
+<h2>飞书 kunki输入 / kunki输出 使用规则</h2>
+<blockquote class="my-4 rounded-xl border-l-4 border-blue-300 bg-blue-50 px-4 py-3 text-slate-700">更新日期：2026-05-17</blockquote>
+<p>定位：飞书是轻工作台，GitHub/Obsidian 是唯一主库。</p>
+<hr class="my-8 border-slate-200">
+<h2>1. kunki输入：只放任务入口和临时素材</h2>
+<h3 class="mt-6 text-xl font-bold text-slate-900">适合放入</h3>
+<ul class="my-4 list-disc space-y-2 pl-6 text-slate-700">
+<li>林总当天临时任务</li>
+<li>待处理链接、录音、素材、想法</li>
+<li>需要AI员工处理的明确指令</li>
+<li>需要协作查看的短期输入</li>
+</ul>
+<h3 class="mt-6 text-xl font-bold text-slate-900">不适合放入</h3>
+<ul class="my-4 list-disc space-y-2 pl-6 text-slate-700">
+<li>长期记忆最终版</li>
+<li>完整知识库镜像</li>
+<li>已经归档到GitHub的旧内容重复副本</li>
+<li>多个版本混在一起的旧文档</li>
+</ul>
+<h3 class="mt-6 text-xl font-bold text-slate-900">输入处理后归档到哪里</h3>
+<p>&lt;lark-table rows=&quot;6&quot; cols=&quot;2&quot; column-widths=&quot;365,365&quot;&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>输入类型</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>GitHub/Obsidian归档位置</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>临时碎片</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">00_Inbox/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>每日思考</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">C-记忆核心/02-每日输入/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>长期洞见</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">C-记忆核心/01-个人上下文/A03-MEMORY.md</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>内容素材</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">D-内容创作/03-素材库/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>合作信息</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">E-产出交付/05-合作管理/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;/lark-table&gt;</p>
+<hr class="my-8 border-slate-200">
+<h2>2. kunki输出：只放任务结果摘要和待归档产物</h2>
+<h3 class="mt-6 text-xl font-bold text-slate-900">适合放入</h3>
+<ul class="my-4 list-disc space-y-2 pl-6 text-slate-700">
+<li>AI员工当天产出的任务结果</li>
+<li>选题Top3、日报摘要、复盘摘要</li>
+<li>需要林总确认的草稿</li>
+<li>暂时无法直接push GitHub的产物</li>
+</ul>
+<h3 class="mt-6 text-xl font-bold text-slate-900">不适合放入</h3>
+<ul class="my-4 list-disc space-y-2 pl-6 text-slate-700">
+<li>已归档到GitHub后的全文重复堆积</li>
+<li>无推荐归档路径的散乱输出</li>
+<li>过期任务结果长期堆积</li>
+</ul>
+<h3 class="mt-6 text-xl font-bold text-slate-900">输出处理后归档到哪里</h3>
+<p>&lt;lark-table rows=&quot;8&quot; cols=&quot;2&quot; column-widths=&quot;365,365&quot;&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>输出类型</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>GitHub/Obsidian归档位置</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>选题推荐</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">D-内容创作/02-选题决策/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>内容草稿</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">E-产出交付/01-已发文案/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>复盘沉淀</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">C-记忆核心/03-经验沉淀/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>数据记录</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">E-产出交付/03-数据反馈/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>产品方案</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">D-内容创作/06-产品管理/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>合作方案</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">E-产出交付/05-合作管理/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;lark-tr&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p>临时文件</p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;lark-td&gt;</p>
+<p><code class="rounded bg-slate-100 px-1 py-0.5 text-[0.92em]">E-产出交付/06-临时文件/</code></p>
+<p>&lt;/lark-td&gt;</p>
+<p>&lt;/lark-tr&gt;</p>
+<p>&lt;/lark-table&gt;</p>
+<hr class="my-8 border-slate-200">
+<h2>3. AI员工强制格式</h2>
+<p>AI员工写入 kunki输出 时，文档开头必须包含：</p>
+<p>```plaintext</p>
+<p>任务名称：</p>
+<p>执行日期：</p>
+<p>负责AI员工：</p>
+<p>推荐归档路径：</p>
+<p>是否已写入GitHub：是/否</p>
+<p>下一步动作：</p>
+<p>```</p>
+<p>如果“是否已写入GitHub=否”，则该任务只算临时完成，不算闭环完成。</p>
+<hr class="my-8 border-slate-200">
+<h2>4. 一句话原则</h2>
+<blockquote class="my-4 rounded-xl border-l-4 border-blue-300 bg-blue-50 px-4 py-3 text-slate-700">飞书负责接任务、放结果、给人看；GitHub/Obsidian负责真正记住一切。</blockquote>
+        </div>
+      </article>
+
+      <div class="mt-8">
+        <a href="../blog.html" class="reveal inline-flex items-center rounded-xl border border-blue-200 bg-blue-50 px-5 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100">返回文章列表</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white/90">
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-slate-600 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <p>© 2026 奇绩怪谈AIQ</p>
+      <p class="text-slate-500">把自己点亮，世界才会靠近。</p>
+      <div class="flex items-center gap-2">
+        <button class="platform-btn" data-qr-platform="shipinhao" type="button">视频号</button>
+        <button class="platform-btn" data-qr-platform="xiaohongshu" type="button">小红书</button>
+        <button class="platform-btn" data-qr-platform="gongzhonghao" type="button">公众号</button>
+        <button class="platform-btn" data-qr-platform="douyin" type="button">抖音</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/data-fallback.js"></script>
+  <script src="../assets/site-common.js"></script>
+  <script>
+    (function () {
+      SiteCommon.initNav({ currentKey: "blog" });
+      SiteCommon.initQrModal({ assetPrefix: "../" });
+      SiteCommon.initReveal(document);
+    })();
+  </script>
+</body>
+</html>
