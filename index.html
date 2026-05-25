@@ -1,2463 +1,766 @@
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Meilong Atelier is a cross-border jewelry brand and wholesale platform based on the Meilong silver jewelry industrial cluster in Haifeng, Shanwei.">
-  <title>Meilong Atelier | Cross-border Jewelry</title>
+  <title>我是林kunki | 首页</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandFrom: "#3b82f6",
+            brandTo: "#6366f1",
+            softBg: "#f8fafc"
+          }
+        }
+      }
+    };
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/kunki-companion.css">
-  <style>
-    :root {
-      --ink: #171411;
-      --muted: #655d52;
-      --line: rgba(72, 60, 44, 0.18);
-      --paper: #f7f2ea;
-      --porcelain: #fffaf2;
-      --silver: #d9dde0;
-      --gold: #a87838;
-      --jade: #24706a;
-      --dark: #191611;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      color: var(--ink);
-      background: var(--paper);
-      font-family: Inter, "Noto Sans SC", sans-serif;
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .topbar {
-      position: fixed;
-      inset: 0 0 auto 0;
-      z-index: 30;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(25, 22, 17, 0.72);
-      color: #fffaf2;
-      backdrop-filter: blur(16px);
-    }
-
-    .nav {
-      width: min(1160px, calc(100% - 32px));
-      height: 64px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border: 1px solid rgba(255, 250, 242, 0.55);
-      border-radius: 50%;
-      color: var(--dark);
-      background: var(--silver);
-      font-family: Georgia, serif;
-      font-weight: 700;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .nav-links a {
-      padding: 10px 11px;
-      border-radius: 8px;
-      color: rgba(255, 250, 242, 0.78);
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .menu-button {
-      display: none;
-      padding: 10px 12px;
-      border: 1px solid rgba(255, 250, 242, 0.34);
-      border-radius: 8px;
-      color: #fffaf2;
-      background: transparent;
-      font: inherit;
-      font-weight: 700;
-    }
-
-    .lang-switch {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      padding: 3px;
-      border: 1px solid rgba(255, 250, 242, 0.3);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .lang-switch button {
-      min-width: 38px;
-      padding: 7px 9px;
-      border: 0;
-      border-radius: 6px;
-      color: rgba(255, 250, 242, 0.72);
-      background: transparent;
-      font: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    html[data-lang="en"] .lang-switch button[data-lang-set="en"],
-    html[data-lang="zh"] .lang-switch button[data-lang-set="zh"] {
-      color: var(--dark);
-      background: #f4d18d;
-    }
-
-    .nav-tools {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .mobile-panel {
-      display: none;
-      width: min(1160px, calc(100% - 32px));
-      margin: 0 auto 12px;
-      padding: 8px;
-      border: 1px solid rgba(255, 250, 242, 0.18);
-      border-radius: 8px;
-      background: rgba(25, 22, 17, 0.9);
-    }
-
-    .mobile-panel a {
-      display: block;
-      padding: 11px 12px;
-      border-radius: 8px;
-      color: rgba(255, 250, 242, 0.82);
-      font-weight: 700;
-    }
-
-    .mobile-panel a:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .hero {
-      position: relative;
-      min-height: 100svh;
-      overflow: hidden;
-      color: #fffaf2;
-      background: #191611;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 78% 28%, rgba(244, 209, 141, 0.34), transparent 18%),
-        radial-gradient(circle at 70% 54%, rgba(217, 221, 224, 0.4), transparent 24%),
-        linear-gradient(90deg, rgba(25, 22, 17, 0.94), rgba(25, 22, 17, 0.68) 48%, rgba(25, 22, 17, 0.2)),
-        linear-gradient(135deg, #191611, #403426 58%, #c8b998);
-      transform: scale(1.02);
-      animation: heroImageIn 1.3s ease forwards;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: max(5vw, 44px);
-      top: 19svh;
-      width: min(42vw, 560px);
-      aspect-ratio: 1;
-      border: clamp(22px, 4vw, 46px) solid rgba(230, 234, 235, 0.72);
-      border-radius: 50%;
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 250, 242, 0.5),
-        0 0 0 34px rgba(244, 209, 141, 0.1),
-        0 42px 90px rgba(0, 0, 0, 0.26);
-      opacity: 0.78;
-      transform: rotate(-20deg);
-    }
-
-    .hero-inner {
-      position: relative;
-      width: min(1160px, calc(100% - 32px));
-      min-height: 100svh;
-      margin: 0 auto;
-      padding: 112px 0 44px;
-      display: grid;
-      align-items: end;
-    }
-
-    .hero-copy {
-      width: min(690px, 100%);
-      padding-bottom: 7vh;
-      animation: copyIn 0.8s ease 0.12s both;
-    }
-
-    .eyebrow {
-      margin: 0 0 18px;
-      color: rgba(255, 250, 242, 0.78);
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    h1,
-    h2,
-    h3,
-    p {
-      margin-top: 0;
-    }
-
-    h1 {
-      margin-bottom: 22px;
-      font-size: clamp(54px, 10vw, 132px);
-      line-height: 0.86;
-      font-weight: 800;
-    }
-
-    .hero-copy > p:not(.eyebrow) {
-      width: min(580px, 100%);
-      margin-bottom: 30px;
-      color: rgba(255, 250, 242, 0.86);
-      font-size: clamp(18px, 2.1vw, 25px);
-      line-height: 1.45;
-    }
-
-    .hero-actions,
-    .section-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 13px 18px;
-      border: 1px solid transparent;
-      border-radius: 8px;
-      font-weight: 800;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-
-    .button:hover {
-      transform: translateY(-2px);
-    }
-
-    .button.primary {
-      color: var(--dark);
-      background: #f4d18d;
-    }
-
-    .button.secondary {
-      color: #fffaf2;
-      border-color: rgba(255, 250, 242, 0.45);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .button.dark {
-      color: #fffaf2;
-      background: var(--dark);
-    }
-
-    .button.light {
-      color: var(--dark);
-      border-color: var(--line);
-      background: var(--porcelain);
-    }
-
-    .hero-facts {
-      position: absolute;
-      right: 0;
-      bottom: 44px;
-      display: grid;
-      width: min(430px, 42vw);
-      grid-template-columns: repeat(3, 1fr);
-      border: 1px solid rgba(255, 250, 242, 0.26);
-      border-radius: 8px;
-      overflow: hidden;
-      background: rgba(25, 22, 17, 0.58);
-      backdrop-filter: blur(18px);
-      animation: copyIn 0.8s ease 0.34s both;
-    }
-
-    .hero-fact {
-      padding: 18px 16px;
-      border-right: 1px solid rgba(255, 250, 242, 0.2);
-    }
-
-    .hero-fact:last-child {
-      border-right: 0;
-    }
-
-    .hero-fact strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 22px;
-    }
-
-    .hero-fact span {
-      color: rgba(255, 250, 242, 0.72);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-
-    .section {
-      width: min(1160px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 94px 0;
-    }
-
-    .section.dark-band {
-      width: 100%;
-      color: #fffaf2;
-      background: var(--dark);
-    }
-
-    .section.dark-band > .band-inner {
-      width: min(1160px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 94px 0;
-    }
-
-    .section-kicker {
-      margin-bottom: 14px;
-      color: var(--gold);
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .section-title {
-      max-width: 780px;
-      margin-bottom: 22px;
-      font-size: clamp(34px, 5.5vw, 68px);
-      line-height: 1;
-      font-weight: 800;
-    }
-
-    .section-lede {
-      max-width: 760px;
-      margin-bottom: 42px;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.65;
-    }
-
-    .dark-band .section-lede {
-      color: rgba(255, 250, 242, 0.7);
-    }
-
-    .proof-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .proof-item {
-      padding: 28px 24px;
-      border-right: 1px solid var(--line);
-    }
-
-    .proof-item:last-child {
-      border-right: 0;
-    }
-
-    .proof-item strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 30px;
-      color: var(--jade);
-    }
-
-    .proof-item span {
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
-
-    .collection-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: -16px 0 26px;
-    }
-
-    .category-button {
-      padding: 10px 13px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      color: var(--muted);
-      background: rgba(255, 250, 242, 0.72);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-    }
-
-    .category-button:hover,
-    .category-button.is-active {
-      color: var(--dark);
-      background: #f4d18d;
-      transform: translateY(-1px);
-    }
-
-    .product {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-      background: var(--porcelain);
-      transition: transform 0.22s ease, box-shadow 0.22s ease;
-    }
-
-    .product:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 18px 38px rgba(72, 60, 44, 0.14);
-    }
-
-    .product-visual {
-      position: relative;
-      display: grid;
-      min-height: 270px;
-      place-items: center;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 26% 18%, rgba(255, 250, 242, 0.96), transparent 18%),
-        linear-gradient(135deg, #efe6d7, #fffaf2 58%, #d8c7ad);
-      background-position: center;
-      background-size: cover;
-    }
-
-    .product-visual.has-photo {
-      align-items: end;
-      justify-items: start;
-      background-color: #efe6d7;
-    }
-
-    .product-visual.has-photo::before {
-      display: none;
-    }
-
-    .product-visual.has-photo::after {
-      inset: auto 0 0 0;
-      z-index: 1;
-      width: 100%;
-      height: 48%;
-      background: linear-gradient(0deg, rgba(25, 22, 17, 0.5), transparent);
-      transform: none;
-    }
-
-    .product-visual::before,
-    .product-visual::after {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .product-visual::before {
-      width: 44%;
-      aspect-ratio: 1;
-      border: 16px solid rgba(216, 219, 220, 0.95);
-      border-radius: 50%;
-      box-shadow: 0 22px 46px rgba(72, 60, 44, 0.18), inset 0 0 0 2px rgba(255, 255, 255, 0.7);
-      transform: rotate(-18deg);
-    }
-
-    .product-visual::after {
-      width: 64%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(168, 120, 56, 0.58), transparent);
-      transform: translateY(82px) rotate(-7deg);
-    }
-
-    .product-visual[data-visual="necklace"]::before,
-    .product-visual[data-visual="pendant"]::before {
-      width: 52%;
-      border-width: 8px;
-      border-color: rgba(217, 221, 224, 0.92);
-    }
-
-    .product-visual[data-visual="necklace"] .jewel,
-    .product-visual[data-visual="pendant"] .jewel {
-      width: 44px;
-      height: 56px;
-      border-radius: 50% 50% 46% 46%;
-      background: linear-gradient(145deg, #f6f7f7, #bec5c8);
-    }
-
-    .product-visual[data-visual="gem-ring"] .jewel {
-      width: 70px;
-      height: 70px;
-      border-radius: 48% 52% 50% 50%;
-      background: radial-gradient(circle at 32% 28%, #d8fff7, #24706a 68%, #153f3b);
-    }
-
-    .product-visual[data-visual="gift-set"]::before {
-      width: 58%;
-      border-radius: 8px;
-      border-width: 2px;
-      border-color: rgba(168, 120, 56, 0.42);
-      background: rgba(255, 250, 242, 0.72);
-    }
-
-    .product-visual[data-visual="gift-set"] .jewel {
-      width: 88px;
-      height: 42px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #d9dde0, #f4d18d, #d9dde0);
-    }
-
-    .product-visual[data-visual="earrings"] .jewel,
-    .product-visual[data-visual="bracelet"] .jewel {
-      width: 88px;
-      height: 88px;
-      border: 12px solid #d9dde0;
-      border-radius: 50%;
-      background: radial-gradient(circle, transparent 40%, rgba(244, 209, 141, 0.24));
-    }
-
-    .product-visual[data-visual="bracelet"] .jewel {
-      border-color: #d7b06c;
-      width: 116px;
-      height: 68px;
-    }
-
-    .product-visual[data-visual="sample-box"]::before {
-      width: 62%;
-      border-radius: 8px;
-      border-width: 2px;
-      background:
-        linear-gradient(90deg, rgba(217, 221, 224, 0.5) 1px, transparent 1px),
-        linear-gradient(rgba(217, 221, 224, 0.5) 1px, transparent 1px),
-        rgba(255, 250, 242, 0.72);
-      background-size: 44px 44px;
-    }
-
-    .product-visual[data-visual="sample-box"] .jewel {
-      width: 118px;
-      height: 58px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #c9ced1, #f4d18d, #24706a);
-    }
-
-    .product-visual[data-visual="hairpin"] .jewel {
-      width: 170px;
-      height: 12px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #d9dde0, #f4d18d);
-      transform: rotate(-18deg);
-    }
-
-    .jewel {
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 20px 46px rgba(72, 60, 44, 0.2), inset 0 1px 12px rgba(255, 255, 255, 0.7);
-    }
-
-    .product-visual.has-photo .jewel {
-      display: none;
-    }
-
-    .visual-label {
-      position: absolute;
-      left: 16px;
-      bottom: 14px;
-      z-index: 2;
-      padding: 7px 9px;
-      border-radius: 8px;
-      color: rgba(25, 22, 17, 0.68);
-      background: rgba(255, 250, 242, 0.74);
-      font-size: 12px;
-      font-weight: 800;
-      backdrop-filter: blur(12px);
-    }
-
-    .product-visual.has-photo .visual-label {
-      color: #fffaf2;
-      background: rgba(25, 22, 17, 0.58);
-    }
-
-    .product-body {
-      padding: 20px;
-    }
-
-    .product-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-      color: var(--gold);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .product h3 {
-      margin-bottom: 8px;
-      font-size: 21px;
-    }
-
-    .product p {
-      margin-bottom: 18px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .specs {
-      display: grid;
-      gap: 7px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-      color: #3e382f;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .product-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .small-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 9px 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      color: var(--dark);
-      background: rgba(255, 250, 242, 0.72);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .small-button:hover {
-      transform: translateY(-2px);
-      background: #f4d18d;
-    }
-
-    .ghost-button {
-      background: transparent;
-    }
-
-    .origin-layout {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .origin-image {
-      position: relative;
-      min-height: 620px;
-      border-radius: 8px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(244, 209, 141, 0.32), transparent 18%),
-        radial-gradient(circle at 68% 52%, rgba(217, 221, 224, 0.42), transparent 24%),
-        linear-gradient(0deg, rgba(25, 22, 17, 0.18), rgba(25, 22, 17, 0.18)),
-        url("assets/meilong-products/origin-workshop.jpg") center / cover,
-        linear-gradient(135deg, #2a241d, #675743 55%, #d5c4a8);
-    }
-
-    .origin-caption {
-      position: absolute;
-      inset: auto 18px 18px 18px;
-      padding: 16px;
-      border-radius: 8px;
-      color: #fffaf2;
-      background: rgba(25, 22, 17, 0.72);
-      backdrop-filter: blur(16px);
-    }
-
-    .timeline {
-      display: grid;
-      gap: 0;
-      border-top: 1px solid rgba(255, 250, 242, 0.18);
-    }
-
-    .timeline-row {
-      display: grid;
-      grid-template-columns: 150px 1fr;
-      gap: 32px;
-      padding: 26px 0;
-      border-bottom: 1px solid rgba(255, 250, 242, 0.18);
-    }
-
-    .timeline-row strong {
-      color: #f4d18d;
-      font-size: 15px;
-    }
-
-    .timeline-row h3 {
-      margin-bottom: 6px;
-      font-size: 24px;
-    }
-
-    .timeline-row p {
-      margin-bottom: 0;
-      color: rgba(255, 250, 242, 0.7);
-      line-height: 1.65;
-    }
-
-    .wholesale-grid,
-    .compliance-grid,
-    .report-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .panel {
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--porcelain);
-    }
-
-    .panel h3 {
-      margin-bottom: 12px;
-      font-size: 22px;
-    }
-
-    .panel p,
-    .panel li {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .panel ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .wholesale-callout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      align-items: center;
-      margin-top: 28px;
-      padding: 34px;
-      border-radius: 8px;
-      color: #fffaf2;
-      background: var(--jade);
-    }
-
-    .wholesale-callout h3 {
-      margin-bottom: 10px;
-      font-size: clamp(28px, 4vw, 48px);
-      line-height: 1.02;
-    }
-
-    .wholesale-callout p {
-      color: rgba(255, 250, 242, 0.8);
-      line-height: 1.65;
-    }
-
-    .inquiry-form {
-      display: grid;
-      gap: 10px;
-    }
-
-    .inquiry-form input,
-    .inquiry-form textarea,
-    .inquiry-form select {
-      width: 100%;
-      min-height: 44px;
-      padding: 12px;
-      border: 1px solid rgba(255, 250, 242, 0.28);
-      border-radius: 8px;
-      color: #fffaf2;
-      background: rgba(255, 255, 255, 0.08);
-      font: inherit;
-    }
-
-    .inquiry-form textarea {
-      min-height: 92px;
-      resize: vertical;
-    }
-
-    .inquiry-form ::placeholder {
-      color: rgba(255, 250, 242, 0.62);
-    }
-
-    .inquiry-status {
-      display: none;
-      padding: 14px;
-      border: 1px solid rgba(255, 250, 242, 0.26);
-      border-radius: 8px;
-      color: #fffaf2;
-      background: rgba(25, 22, 17, 0.24);
-      font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .inquiry-status.is-open {
-      display: block;
-    }
-
-    .inquiry-status a {
-      color: #f4d18d;
-      font-weight: 800;
-      text-decoration: underline;
-    }
-
-    .compliance {
-      background:
-        linear-gradient(90deg, rgba(247, 242, 234, 0.96), rgba(247, 242, 234, 0.8)),
-        repeating-linear-gradient(135deg, rgba(168, 120, 56, 0.1) 0 1px, transparent 1px 22px),
-        url("assets/meilong-products/compliance-detail.jpg") right center / min(46vw, 720px) auto no-repeat,
-        linear-gradient(135deg, #f7f2ea, #e3d7c4);
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 80;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: rgba(25, 22, 17, 0.72);
-      backdrop-filter: blur(16px);
-    }
-
-    .modal-overlay.is-open {
-      display: flex;
-    }
-
-    .product-modal {
-      width: min(1080px, 100%);
-      max-height: min(860px, calc(100svh - 48px));
-      overflow: auto;
-      border: 1px solid rgba(255, 250, 242, 0.22);
-      border-radius: 8px;
-      background: var(--porcelain);
-      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.34);
-    }
-
-    .modal-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .modal-top strong {
-      font-size: 14px;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-
-    .modal-close {
-      width: 38px;
-      height: 38px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: transparent;
-      font-size: 22px;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 0;
-    }
-
-    .modal-gallery {
-      display: grid;
-      gap: 12px;
-      padding: 20px;
-      border-right: 1px solid var(--line);
-    }
-
-    .modal-gallery-main {
-      min-height: 430px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-    }
-
-    .modal-gallery-thumbs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .modal-gallery-thumbs .product-visual {
-      min-height: 130px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .modal-info {
-      padding: 26px;
-    }
-
-    .modal-info h3 {
-      margin-bottom: 10px;
-      font-size: clamp(30px, 4vw, 52px);
-      line-height: 1;
-    }
-
-    .modal-price {
-      margin-bottom: 16px;
-      color: var(--gold);
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .modal-story {
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .detail-pill {
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(247, 242, 234, 0.62);
-    }
-
-    .detail-pill span {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--gold);
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-
-    .detail-pill strong {
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    .modal-bullets {
-      margin: 0 0 22px;
-      padding-left: 18px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .report-table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
-      border-collapse: collapse;
-      margin-top: 26px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--porcelain);
-    }
-
-    .report-table th,
-    .report-table td {
-      padding: 16px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .report-table th {
-      color: var(--dark);
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-
-    .report-table td {
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .site-footer {
-      padding: 40px 0 0;
-      color: rgba(255, 250, 242, 0.72);
-      background: var(--dark);
-    }
-
-    .footer-inner {
-      width: min(1160px, calc(100% - 32px));
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      padding-bottom: 34px;
-    }
-
-    .footer-inner strong {
-      display: block;
-      margin-bottom: 8px;
-      color: #fffaf2;
-      font-size: 24px;
-    }
-
-    .icp {
-      border-top: 1px solid rgba(255, 250, 242, 0.12);
-      padding: 14px 16px;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .personal-gate {
-      position: fixed;
-      left: 14px;
-      bottom: 14px;
-      z-index: 40;
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border: 1px solid rgba(25, 22, 17, 0.16);
-      border-radius: 50%;
-      color: rgba(25, 22, 17, 0.58);
-      background: rgba(255, 250, 242, 0.76);
-      font-size: 12px;
-      font-weight: 900;
-      backdrop-filter: blur(14px);
-      transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
-    }
-
-    .personal-gate:hover {
-      transform: translateY(-2px);
-      color: var(--dark);
-      background: #f4d18d;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @keyframes heroImageIn {
-      from {
-        transform: scale(1.09);
-      }
-      to {
-        transform: scale(1.04);
-      }
-    }
-
-    @keyframes copyIn {
-      from {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 940px) {
-      .nav-links {
-        display: none;
-      }
-
-      .menu-button {
-        display: inline-flex;
-      }
-
-      .mobile-panel.is-open {
-        display: block;
-      }
-
-      .hero-facts {
-        position: relative;
-        right: auto;
-        bottom: auto;
-        width: 100%;
-        margin-top: -86px;
-        margin-bottom: 28px;
-      }
-
-      .proof-row,
-      .products,
-      .wholesale-grid,
-      .compliance-grid,
-      .report-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .modal-body {
-        grid-template-columns: 1fr;
-      }
-
-      .modal-gallery {
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .origin-layout,
-      .wholesale-callout {
-        grid-template-columns: 1fr;
-      }
-
-      .origin-image {
-        min-height: 440px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .hero-inner {
-        padding-top: 96px;
-        align-items: start;
-      }
-
-      .hero-copy {
-        padding-bottom: 140px;
-      }
-
-      .hero-facts,
-      .proof-row,
-      .products,
-      .wholesale-grid,
-      .compliance-grid,
-      .report-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-fact,
-      .proof-item {
-        border-right: 0;
-        border-bottom: 1px solid rgba(255, 250, 242, 0.18);
-      }
-
-      .proof-item {
-        border-bottom-color: var(--line);
-      }
-
-      .hero-fact:last-child,
-      .proof-item:last-child {
-        border-bottom: 0;
-      }
-
-      .section,
-      .section.dark-band > .band-inner {
-        padding: 70px 0;
-      }
-
-      .timeline-row {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .collection-toolbar {
-        margin-top: -8px;
-      }
-
-      .product-visual,
-      .modal-gallery-main {
-        min-height: 260px;
-      }
-
-      .detail-grid,
-      .modal-gallery-thumbs {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
-  <header class="topbar">
-    <nav class="nav" aria-label="Site navigation">
-      <a class="brand" href="#home" aria-label="Meilong Atelier home">
-        <span class="brand-mark">M</span>
-        <span>Meilong Atelier</span>
-      </a>
-      <div class="nav-links">
-        <a href="#shop" data-i18n="nav.products">Products</a>
-        <a href="#origin" data-i18n="nav.origin">Origin</a>
-        <a href="#wholesale" data-i18n="nav.wholesale">Wholesale</a>
-        <a href="#compliance" data-i18n="nav.compliance">Logistics & Compliance</a>
-        <a href="#operations" data-i18n="nav.operations">Operations</a>
-      </div>
-      <div class="nav-tools">
-        <div class="lang-switch" aria-label="Language switcher">
-          <button type="button" data-lang-set="en">EN</button>
-          <button type="button" data-lang-set="zh">中</button>
+<body class="antialiased">
+  <!-- 全站导航栏（当前标签页跳转） -->
+  <header class="fixed inset-x-0 top-0 z-50">
+    <nav data-nav class="nav-glass">
+      <div class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="index.html" class="inline-flex items-center gap-2 text-base font-bold tracking-tight md:text-lg"><img src="assets/avatar-kunki.jpg" alt="我是林kunki Logo" class="h-8 w-8 rounded-full border border-slate-200 object-cover"><span class="brand-gradient">我是林kunki</span></a>
+
+        <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">
+          菜单
+        </button>
+
+        <div class="hidden items-center gap-1 text-sm md:flex">
+          <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文案</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link rounded-lg px-3 py-2" href="about.html">关于我</a>
         </div>
-        <button class="menu-button" type="button" data-menu-button aria-expanded="false" data-i18n="nav.menu">Menu</button>
+      </div>
+
+      <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
+          <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="index.html">首页</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文案</a>
+          <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
+          <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
+          <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="services.html">服务</a>
+          <a data-nav-link data-nav-key="about" class="nav-link block rounded-lg px-3 py-2" href="about.html">关于我</a>
+        </div>
       </div>
     </nav>
-    <div class="mobile-panel" data-mobile-panel>
-      <a href="#shop" data-i18n="nav.products">Products</a>
-      <a href="#origin" data-i18n="nav.origin">Origin</a>
-      <a href="#wholesale" data-i18n="nav.wholesale">Wholesale</a>
-      <a href="#compliance" data-i18n="nav.compliance">Logistics & Compliance</a>
-      <a href="#operations" data-i18n="nav.operations">Operations</a>
-    </div>
   </header>
+  <div class="scroll-progress" aria-hidden="true">
+    <div class="scroll-progress__bar" data-scroll-progress></div>
+  </div>
+  <div class="kunki-companion" data-kunki-companion aria-live="polite">
+    <div class="kunki-companion__bubble" data-kunki-bubble>点我一下，我可以带你逛这个站。</div>
+    <button class="kunki-companion__person" data-kunki-person type="button" aria-label="和 Kunki 小助手说话">
+      <span class="kunki-companion__shadow" aria-hidden="true"></span>
+      <span class="kunki-companion__figure" aria-hidden="true">
+        <span class="kunki-companion__head">
+          <span class="kunki-companion__hair"></span>
+          <span class="kunki-companion__face"><span></span><span></span></span>
+        </span>
+        <span class="kunki-companion__body"><span class="kunki-companion__strap"></span></span>
+        <span class="kunki-companion__arm kunki-companion__arm--left"></span>
+        <span class="kunki-companion__arm kunki-companion__arm--right"></span>
+        <span class="kunki-companion__leg kunki-companion__leg--left"></span>
+        <span class="kunki-companion__leg kunki-companion__leg--right"></span>
+      </span>
+    </button>
+  </div>
 
-  <main id="home">
-    <section class="hero" aria-label="Meilong Atelier brand homepage">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <p class="eyebrow" data-i18n="hero.eyebrow">Meilong-origin cross-border jewelry</p>
-          <h1>Meilong Atelier</h1>
-          <p data-i18n="hero.lede">Sterling silver and gemstone jewelry from Meilong, a coastal jewelry town in Haifeng, Shanwei. Built for global retail customers, boutiques, and small-batch buyers who need a clear path to inquiry.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#shop" data-i18n="hero.ctaProducts">View Collection</a>
-            <a class="button secondary" href="services.html" data-i18n="hero.ctaPlan">View Services</a>
-          </div>
-        </div>
-        <div class="hero-facts" aria-label="Market proof">
-          <div class="hero-fact">
-            <strong>10k+</strong>
-            <span data-i18n="hero.fact1">jewelry-related market entities in Haifeng</span>
-          </div>
-          <div class="hero-fact">
-            <strong>350B</strong>
-            <span data-i18n="hero.fact2">RMB estimated annual industrial output</span>
-          </div>
-          <div class="hero-fact">
-            <strong>180+</strong>
-            <span data-i18n="hero.fact3">export destinations reported for local products</span>
-          </div>
-        </div>
-      </div>
-    </section>
+  <main class="pt-16">
+    <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 py-16 sm:px-6 lg:px-8"></section>
+    <!-- Hero 区 -->
+    <section class="site-static scroll-hero relative overflow-hidden" data-scroll-hero>
+      <div class="hero-grid absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-slate-50" data-parallax="grid"></div>
+      <div class="pointer-events-none absolute -top-28 right-0 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" data-parallax="orb-fast"></div>
+      <div class="pointer-events-none absolute -bottom-24 left-8 h-72 w-72 rounded-full bg-indigo-200/35 blur-3xl" data-parallax="orb-slow"></div>
+      <div class="liquid-grain" data-parallax="grain" aria-hidden="true"></div>
 
-    <section class="section reveal" aria-label="Business model">
-      <p class="section-kicker" data-i18n="model.kicker">Business Model</p>
-      <h2 class="section-title" data-i18n="model.title">Guangzhou operations, Meilong manufacturing, global orders.</h2>
-      <p class="section-lede" data-i18n="model.lede">Meilong Atelier turns a real county-level jewelry cluster into a cross-border brand system: bilingual storefront, traceable material claims, small-batch SKU testing, platform traffic, and B2B inquiry conversion.</p>
-      <div class="proof-row">
-        <div class="proof-item">
-          <strong>D2C</strong>
-          <span data-i18n="model.d2c">Retail through the independent site, TikTok Shop, Etsy, Shopee, and Amazon listings.</span>
-        </div>
-        <div class="proof-item">
-          <strong>B2B</strong>
-          <span data-i18n="model.b2b">Small wholesale orders for boutiques, wedding studios, and overseas micro-brands.</span>
-        </div>
-        <div class="proof-item">
-          <strong>MOQ 30</strong>
-          <span data-i18n="model.moq">Low minimum order quantities make Meilong workshops accessible to small buyers.</span>
-        </div>
-        <div class="proof-item">
-          <strong>925</strong>
-          <span data-i18n="model.silver">Clear sterling silver positioning avoids vague material claims and builds trust.</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="shop" class="section" aria-label="Product page">
-      <p class="section-kicker reveal" data-i18n="products.kicker">Products</p>
-      <h2 class="section-title reveal" data-i18n="products.title">A focused first collection instead of endless low-price listings.</h2>
-      <p class="section-lede reveal" data-i18n="products.lede">The store starts with 30-50 SKUs, then tests demand through short video traffic and platform data. These are the first hero categories for global buyers.</p>
-      <div class="collection-toolbar reveal" data-category-filter></div>
-      <div class="products" data-product-grid></div>
-    </section>
-
-    <section id="origin" class="section dark-band" aria-label="Industry story page">
-      <div class="band-inner">
-        <div class="origin-layout">
-          <div class="origin-image reveal">
-            <div class="origin-caption">
-              <strong data-i18n="origin.captionTitle">Our Origin</strong>
-              <p data-i18n="origin.caption">Meilong's advantage is not a single factory. It is a dense network of workshops, accessory suppliers, processing know-how, and fast sampling culture.</p>
+      <div class="scroll-hero__content relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28" data-parallax="content">
+        <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
+          <div class="reveal lg:col-span-6">
+            <p class="inline-flex items-center rounded-full border border-blue-100 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-blue-700">
+              我是林kunki · 个人知识库 / 文案 / 数字资产门户
+            </p>
+            <h1 class="mt-5 text-4xl font-extrabold leading-tight text-slate-900 md:text-5xl xl:text-6xl lg:whitespace-nowrap">Hey，我是 Kunki</h1>
+            <p class="mt-5 text-lg leading-relaxed text-slate-600 md:text-xl lg:whitespace-nowrap">一个普通文科生，正在用 AI 把大学内外的每一步都走得更值</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="blog.html" class="inline-flex items-center rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-blue-200 transition hover:opacity-95">
+                开始阅读
+              </a>
+              <a href="services.html" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-7 py-3.5 text-base font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">
+                看合作服务
+              </a>
+            </div>
+            <div class="mt-8 space-y-2">
+              <h2 class="text-lg font-semibold text-slate-900 md:text-xl">我主要记录四件事：</h2>
+              <p class="text-lg font-medium text-slate-600 md:text-xl">大学结果 · AI工具 · 一人公司实践 · 成长实验</p>
             </div>
           </div>
-          <div>
-            <p class="section-kicker reveal" data-i18n="origin.kicker">Origin</p>
-            <h2 class="section-title reveal" data-i18n="origin.title">From OEM workshops to a visible cross-border brand.</h2>
-            <p class="section-lede reveal" data-i18n="origin.lede">Haifeng's jewelry industry has scale, craft, and cost efficiency. The missing link is often brand language, overseas customer trust, and a clean digital buying path. Meilong Atelier is designed as that bridge.</p>
-            <div class="timeline">
-              <div class="timeline-row reveal">
-                <strong data-i18n="origin.step1">Source</strong>
-                <div>
-                  <h3 data-i18n="origin.step1Title">Partner workshops in Meilong</h3>
-                  <p data-i18n="origin.step1Desc">Select 3-5 reliable suppliers that can support 925 silver, gemstone setting, light customization, stable sampling, and batch quality checks.</p>
-                </div>
-              </div>
-              <div class="timeline-row reveal">
-                <strong data-i18n="origin.step2">Develop</strong>
-                <div>
-                  <h3 data-i18n="origin.step2Title">Short-list SKUs from global demand</h3>
-                  <p data-i18n="origin.step2Desc">Use TikTok, Pinterest, Etsy, Shopee, and search data to choose styles, then translate local manufacturing strengths into export-ready product stories.</p>
-                </div>
-              </div>
-              <div class="timeline-row reveal">
-                <strong data-i18n="origin.step3">Deliver</strong>
-                <div>
-                  <h3 data-i18n="origin.step3Title">Centralized quality, packaging, and shipment</h3>
-                  <p data-i18n="origin.step3Desc">Orders flow through a domestic fulfillment process before cross-border parcel delivery or B2B freight, reducing the burden on individual workshops.</p>
-                </div>
-              </div>
+
+          <div class="reveal rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-6 lg:p-6" data-flow-card>
+            <p class="text-base leading-relaxed text-slate-600">
+              我来自广东外语外贸大学，学国际经济与贸易。没有技术背景，也没有很强硬的家庭资源，很多事都是一边试、一边改、一边把结果慢慢做出来。
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-slate-600">
+              大学这几年，我比较认真地做过几件事：把课内学习做扎实，也把 AI、内容、私域和一人公司当成真实实验场。<span class="font-semibold text-blue-700">绩点 rank1、SCI 论文、国家奖学金、保研准备</span>这些结果，对我来说更像是一套方法被验证过的痕迹。
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-slate-600">
+              这个网站不是用来装成很厉害的人，而是把我正在做的事、踩过的坑、验证过的方法放在这里。<span class="font-semibold text-blue-700">如果你也想把大学、AI 和个人成长走得更清楚一点，欢迎来逛逛，也欢迎找我交流。</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 过渡标签 -->
+    <section class="site-static transition-highlights">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="transition-highlights__inner reveal">
+          <div class="transition-highlights__scroller">
+            <div class="transition-highlights__row">
+              <span class="transition-highlights__pill border border-blue-200 bg-blue-50/85 text-blue-700">GPA: 3.98/4</span>
+              <span class="transition-highlights__pill border border-indigo-200 bg-indigo-50/85 text-indigo-700">SCI二区论文发表</span>
+              <span class="transition-highlights__pill border border-amber-200 bg-amber-50/90 text-amber-700">国家奖学金</span>
+              <span class="transition-highlights__pill border border-slate-300 bg-slate-100/92 text-slate-700">AI MCN签约</span>
+              <span class="transition-highlights__pill border border-emerald-200 bg-emerald-50/90 text-emerald-700">大学生AI商业博主</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="wholesale" class="section" aria-label="Wholesale inquiry page">
-      <p class="section-kicker reveal" data-i18n="wholesale.kicker">Wholesale</p>
-      <h2 class="section-title reveal" data-i18n="wholesale.title">Small-batch wholesale is the strongest reason for an independent website.</h2>
-      <p class="section-lede reveal" data-i18n="wholesale.lede">Platforms can sell traffic products. The website handles higher-trust relationships: overseas boutiques, wedding studios, micro-brands, and buyers who need samples, customization, and supplier communication.</p>
-      <div class="wholesale-grid">
-        <div class="panel reveal">
-          <h3 data-i18n="wholesale.card1Title">Sample Box</h3>
-          <p data-i18n="wholesale.card1Desc">10-20 representative SKUs with material cards, care instructions, and wholesale price ranges.</p>
-        </div>
-        <div class="panel reveal">
-          <h3 data-i18n="wholesale.card2Title">Customization</h3>
-          <p data-i18n="wholesale.card2Desc">Logo cards, packaging, engraving, gemstone replacement, color variants, and style adjustment.</p>
-        </div>
-        <div class="panel reveal">
-          <h3 data-i18n="wholesale.card3Title">Buyer Fit</h3>
-          <p data-i18n="wholesale.card3Desc">Boutiques, gift stores, wedding studios, Etsy sellers, Shopify micro-brands, and Southeast Asian distributors.</p>
-        </div>
+    <!-- 快速导航 -->
+    <section class="site-static mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">五类核心入口</h2>
+        <p class="mt-2 text-sm text-slate-500">从文案、知识库和实验室快速进入你最关心的主题。</p>
       </div>
-      <div class="wholesale-callout reveal">
-        <div>
-          <h3 data-i18n="wholesale.quoteTitle">Request a wholesale quote.</h3>
-          <p data-i18n="wholesale.quoteDesc">Share the target market, quantity, material, and packaging needs. Our sourcing team will map the request to suitable Meilong workshop capacity before sample confirmation and production.</p>
-        </div>
-        <form class="inquiry-form" data-inquiry-form data-contact-email="sales@meilongatelier.com">
-          <input name="buyer" type="text" placeholder="Company / buyer name" aria-label="Company or buyer name" data-i18n-placeholder="form.name" required>
-          <select name="buyerType" aria-label="Buyer type">
-            <option data-i18n="form.option1">Boutique store</option>
-            <option data-i18n="form.option2">Wedding studio</option>
-            <option data-i18n="form.option3">Online jewelry seller</option>
-            <option data-i18n="form.option4">Gift distributor</option>
-          </select>
-          <input name="market" type="text" placeholder="Target market, e.g. Singapore" aria-label="Target market" data-i18n-placeholder="form.market" required>
-          <textarea name="details" placeholder="Desired SKUs, quantity, material, packaging needs" aria-label="Wholesale request details" data-i18n-placeholder="form.details" required></textarea>
-          <button class="button primary" type="submit" data-i18n="form.submit">Submit Inquiry</button>
-          <div class="inquiry-status" data-inquiry-status aria-live="polite"></div>
-        </form>
+      <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <a href="blog.html?tab=%E5%A4%A7%E5%AD%A6%E7%BB%93%E6%9E%9C" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">大学结果</h3>
+          <p class="mt-2 text-sm text-slate-600">绩点方法、论文写作、竞赛复盘、保研路径与大学决策思考。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="blog.html?tab=AI%E5%B7%A5%E5%85%B7" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">AI工具</h3>
+          <p class="mt-2 text-sm text-slate-600">只写实战用过的工具、工作流和Prompt，聚焦可复用结果。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="blog.html?tab=%E4%B8%80%E4%BA%BA%E5%85%AC%E5%8F%B8" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">一人公司实践</h3>
+          <p class="mt-2 text-sm text-slate-600">围绕内容、私域、产品与成交，记录从0到1的轻商业实验。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="blog.html?tab=%E6%88%90%E9%95%BF%E5%AE%9E%E9%AA%8C" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">成长实验</h3>
+          <p class="mt-2 text-sm text-slate-600">把健身、表达、社交与自律当作长期项目，持续做复盘。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">查看相关文案 →</p>
+        </a>
+        <a href="portfolio-items/autonomous-ai-lab.html" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>
+          <h3 class="text-xl font-semibold text-slate-900">AI 实验室</h3>
+          <p class="mt-2 text-sm text-slate-600">AI 自动项目先在这里验证可玩性、转发率和复玩率，成熟后再晋级到公开作品集。</p>
+          <p class="mt-4 text-sm font-semibold text-blue-600">先看实验室 →</p>
+        </a>
       </div>
     </section>
 
-    <section id="compliance" class="section compliance" aria-label="Logistics and compliance page">
-      <p class="section-kicker reveal" data-i18n="compliance.kicker">Logistics & Compliance</p>
-      <h2 class="section-title reveal" data-i18n="compliance.title">The business only works if material claims, delivery promises, and after-sales rules are clear.</h2>
-      <p class="section-lede reveal" data-i18n="compliance.lede">Jewelry cross-border commerce has attractive margins, but trust can collapse quickly. The site therefore turns compliance into product experience, not a hidden footnote.</p>
-      <div class="compliance-grid">
-        <div class="panel reveal">
-          <h3 data-i18n="compliance.card1Title">Material Claims</h3>
-          <ul>
-            <li data-i18n="compliance.card1Li1">Use precise terms: 925 sterling silver, gold vermeil, plated brass, or solid gold.</li>
-            <li data-i18n="compliance.card1Li2">Do not mix plated, filled, vermeil, and solid gold in product copy.</li>
-            <li data-i18n="compliance.card1Li3">Keep supplier batch records and sample inspection notes.</li>
-          </ul>
+    <section class="site-static ai-era-block">
+      <div class="ai-era-hero" id="ai-era-top">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+          <div class="ai-era-hero__content" data-ai-observe>
+            <h2 class="ai-era-hero__title">AI 时代，我们到底应该学什么？</h2>
+            <p class="ai-era-hero__subtitle">不是学更多工具，不是追更多热点，而是训练那些<span>真正能让你拿到结果</span>的现实能力。</p>
+            <p class="ai-era-hero__desc">这里记录的，是一个普通背景大学生从高考志愿填报开始，如何用 AI 和结构化系统，在校内外持续拿结果的完整路径。不是鸡汤，不是理论，是正在发生的真实实验。</p>
+          </div>
+
+          <div class="ai-era-rule-card mx-auto mt-10 max-w-4xl rounded-3xl border border-blue-200 bg-white/80 p-6 text-center shadow-xl shadow-blue-100/70 backdrop-blur md:p-8" data-ai-observe>
+            <p class="text-sm font-bold uppercase tracking-[0.28em] text-blue-600">540法则总纲</p>
+            <h3 class="mt-3 text-2xl font-extrabold text-slate-900 md:text-3xl">540学生法则</h3>
+            <p class="mt-3 text-base font-semibold leading-relaxed text-blue-700 md:text-lg">课内用AI高效拿结果，课外做540——3个100搭系统，4个60练能力。</p>
+            <p class="mt-4 text-sm leading-8 text-slate-600 md:text-base">540 = 3×100 + 4×60。3个100是底层系统构建，解决方向和认知问题；4个60是现实能力训练场，解决执行和结果问题。这不是鸡汤口号，是一个普通文科大学生正在跑通的完整自救路径。</p>
+          </div>
         </div>
-        <div class="panel reveal">
-          <h3 data-i18n="compliance.card2Title">Cross-border Delivery</h3>
-          <ul>
-            <li data-i18n="compliance.card2Li1">D2C parcels use tracked small-packet or dedicated line logistics.</li>
-            <li data-i18n="compliance.card2Li2">B2B orders use sampled production, balance payment, export declaration, then freight delivery.</li>
-            <li data-i18n="compliance.card2Li3">Shipping pages disclose customs, tax responsibility, and estimated delivery windows.</li>
-          </ul>
+      </div>
+
+      <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8" id="ai-era-main">
+        <div class="ai-era-lines">
+          <article class="ai-era-line-card" data-ai-observe>
+            <div class="ai-era-line-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 18C6.5 13.5 10 10 14 8L19 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                <circle cx="5" cy="18" r="2" fill="currentColor"></circle>
+                <circle cx="14" cy="8" r="2" fill="currentColor"></circle>
+                <circle cx="19" cy="6" r="2" fill="currentColor"></circle>
+              </svg>
+            </div>
+            <h3>真实路径，不是成功学</h3>
+            <p>起点普通，方法真实，结果可验证。不卖逆袭神话，只拆解每一步到底怎么走的。</p>
+          </article>
+
+          <article class="ai-era-line-card" data-ai-observe>
+            <div class="ai-era-line-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M10 3H14L15 6.2C15.6 6.4 16.2 6.7 16.7 7.1L20 6L22 10L19.2 12C19.2 12.3 19.2 12.7 19.2 13L22 15L20 19L16.7 17.9C16.2 18.3 15.6 18.6 15 18.8L14 22H10L9 18.8C8.4 18.6 7.8 18.3 7.3 17.9L4 19L2 15L4.8 13C4.8 12.7 4.8 12.3 4.8 12L2 10L4 6L7.3 7.1C7.8 6.7 8.4 6.4 9 6.2L10 3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path>
+                <circle cx="12" cy="12.5" r="2.8" stroke="currentColor" stroke-width="1.6"></circle>
+              </svg>
+            </div>
+            <h3>AI + 系统，不是鸡血</h3>
+            <p>不靠意志力硬撑，靠工具、流程和系统化迭代。把AI从聊天玩具变成真正的结果杠杆。</p>
+          </article>
+
+          <article class="ai-era-line-card" data-ai-observe>
+            <div class="ai-era-line-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="7" width="18" height="12" rx="2.5" stroke="currentColor" stroke-width="1.8"></rect>
+                <path d="M8 7V5.5C8 4.7 8.7 4 9.5 4H14.5C15.3 4 16 4.7 16 5.5V7M8.5 12H15.5M12 9.5V14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+              </svg>
+            </div>
+            <h3>可复用，不是只能看</h3>
+            <p>所有内容都指向一个目标：给你一套能拿走、能执行、能根据自己情况调整的行动框架。</p>
+          </article>
         </div>
-        <div class="panel reveal">
-          <h3 data-i18n="compliance.card3Title">Market Risk</h3>
-          <ul>
-            <li data-i18n="compliance.card3Li1">US pages follow FTC Jewelry Guides for truthful jewelry advertising.</li>
-            <li data-i18n="compliance.card3Li2">EU expansion requires attention to REACH restrictions such as nickel, lead, and cadmium.</li>
-            <li data-i18n="compliance.card3Li3">UK sales may trigger hallmarking rules depending on metal and weight.</li>
-          </ul>
-        </div>
+
+        <section class="ai-era-vision" data-ai-observe>
+          <h3>光有方向不够，540帮你落到每一天。</h3>
+          <p>3个100解决"知道该往哪走"的问题——用AI搭效率系统、集中投入核心目标、持续输入优质信息。4个60解决"怎么真正动起来"的问题——健身练底盘、社交练链接、内容练杠杆、成交练闭环。</p>
+
+          <div class="ai-era-radial overflow-hidden bg-gradient-to-br from-white via-blue-50/60 to-slate-50" data-ai-radial>
+            <div class="pointer-events-none absolute inset-4 rounded-[1.4rem] border border-blue-100 bg-white/55 shadow-inner"></div>
+            <div class="pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-blue-200 bg-white/90 px-4 py-2 text-xs font-bold tracking-wide text-blue-700 shadow-sm">3个100 · 先搭底层系统</div>
+            <div class="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-bold tracking-wide text-slate-700 shadow-sm">4个60 · 再进现实训练场</div>
+            <svg class="ai-era-radial__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="21" y1="30" x2="50" y2="50"></line>
+              <line x1="50" y1="30" x2="50" y2="50"></line>
+              <line x1="79" y1="30" x2="50" y2="50"></line>
+              <line x1="50" y1="50" x2="20" y2="76"></line>
+              <line x1="50" y1="50" x2="40" y2="76"></line>
+              <line x1="50" y1="50" x2="60" y2="76"></line>
+              <line x1="50" y1="50" x2="80" y2="76"></line>
+              <line x1="21" y1="30" x2="50" y2="30"></line>
+              <line x1="50" y1="30" x2="79" y2="30"></line>
+              <line x1="20" y1="76" x2="40" y2="76"></line>
+              <line x1="40" y1="76" x2="60" y2="76"></line>
+              <line x1="60" y1="76" x2="80" y2="76"></line>
+            </svg>
+            <div class="ai-era-radial__center flex h-24 w-24 flex-col items-center justify-center rounded-full text-center" style="left:50%;top:50%;padding:0;">
+              <span class="text-2xl font-black leading-none text-blue-700">540</span>
+              <span class="mt-1 text-[11px] font-bold text-slate-500">学生法则</span>
+            </div>
+            <div class="ai-era-radial__node ai-era-radial__node--ai-tools text-center leading-snug" style="left:21%;top:30%;width:clamp(6.4rem,18vw,10rem);white-space:normal;background:#e0f2fe;border:1px solid #7dd3fc;color:#075985;transition-delay:0.05s;">100小时<br>AI工具使用</div>
+            <div class="ai-era-radial__node ai-era-radial__node--target text-center leading-snug" style="left:50%;top:30%;width:clamp(6.4rem,18vw,10rem);white-space:normal;background:#eef2ff;border:1px solid #a5b4fc;color:#3730a3;transition-delay:0.12s;">100小时<br>目标试错与推进</div>
+            <div class="ai-era-radial__node ai-era-radial__node--input text-center leading-snug" style="left:79%;top:30%;width:clamp(6.4rem,18vw,10rem);white-space:normal;background:#ecfeff;border:1px solid #67e8f9;color:#155e75;transition-delay:0.19s;">100小时<br>优质信息输入</div>
+            <div class="ai-era-radial__node ai-era-radial__node--fitness text-center leading-snug" style="left:20%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>健身</div>
+            <div class="ai-era-radial__node ai-era-radial__node--social text-center leading-snug" style="left:40%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>社交表达</div>
+            <div class="ai-era-radial__node ai-era-radial__node--content text-center leading-snug" style="left:60%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>内容输出</div>
+            <div class="ai-era-radial__node ai-era-radial__node--sales text-center leading-snug" style="left:80%;top:76%;width:clamp(4.8rem,14vw,8rem);white-space:normal;">60天<br>销售与成交</div>
+          </div>
+        </section>
+
+        <section class="ai-era-actions">
+          <div class="ai-era-action-group rounded-2xl border border-blue-100 bg-blue-50/70 p-5" data-ai-observe>
+            <h3 class="text-xl font-extrabold text-slate-900">3个100 · 底层系统构建</h3>
+            <p class="mt-2 text-sm leading-7 text-slate-600">每个100小时都在解决一个根本问题：方向、工具、认知。</p>
+          </div>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-content-fallback.svg';" width="400" height="300" alt="AI工具使用" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">01</span>
+              <h4>把AI从聊天对象变成效率操作系统</h4>
+              <p>不学理论，不看测评，真刀真枪用AI解决真实问题——写论文、做PPT、搭工作流、建知识库、做调研、做内容。100小时下来，AI就是你的核心杠杆。每天1小时，100天完成。</p>
+              <p class="ai-era-tags">论文写作 / 工作流搭建 / 知识库构建</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow ai-era-action-card--reverse" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-social-fallback.svg';" width="400" height="300" alt="目标学习推进" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">02</span>
+              <h4>锁定方向，集中投入，拿一个可验证的结果</h4>
+              <p>大学生最大的问题不是不努力，是方向模糊、精力分散、什么都做一点什么都没结果。锁定你最重要的方向——绩点冲刺、论文产出、竞赛拿奖、保研准备、实习求职——然后投入100小时去试错、去推进。</p>
+              <p class="ai-era-tags">目标锁定 / 集中突破 / 结果验证</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-content-fallback.svg';" width="400" height="300" alt="优质信息输入" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">03</span>
+              <h4>停止低质量刷屏，开始刻意输入</h4>
+              <p>不是随便刷抖音刷小红书，而是想清楚自己需要输入什么，然后去优质渠道获取——X、公众号、即刻、B站、YouTube、播客、深度文章、行业报告。100小时的刻意输入，让你的认知水平远超同龄人。</p>
+              <p class="ai-era-tags">信息筛选 / 认知升级 / 刻意输入</p>
+            </div>
+          </article>
+
+          <div class="ai-era-action-group rounded-2xl border border-slate-200 bg-white p-5" data-ai-observe>
+            <h3 class="text-xl font-extrabold text-slate-900">4个60 · 现实能力训练场</h3>
+            <p class="mt-2 text-sm leading-7 text-slate-600">每个60天都在锻炼一种学校不教、但真实世界决定胜负的能力。</p>
+          </div>
+
+          <article class="ai-era-action-card glass-flow ai-era-action-card--reverse" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-fitness-fallback.svg';" width="400" height="300" alt="健身训练" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">04</span>
+              <h4>训练身体资本与抗压能力</h4>
+              <p>规律训练不只是练肌肉，是在训练自律、耐受力、执行力和承载高强度输出的身体底盘。你的形象、精力、抗压阈值，全部从这里开始。</p>
+              <p class="ai-era-tags">形象提升 / 精力管理 / 抗压训练</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-social-fallback.svg';" width="400" height="300" alt="社交表达训练" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">05</span>
+              <h4>训练链接力与价值传递</h4>
+              <p>从"不敢开口"到"敢于连接"。训练的不只是说话，是你能不能在30秒内让对方感受到你的价值和真诚——这决定了你能链接什么层次的人、能打开什么样的圈子。</p>
+              <p class="ai-era-tags">语言表达 / 价值传递 / 人脉破圈</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow ai-era-action-card--reverse" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-content-fallback.svg';" width="400" height="300" alt="短视频与写作输出" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">06</span>
+              <h4>训练内容杠杆与系统思维</h4>
+              <p>普通人能接触到的最低成本创业方式，就是内容。把输入转化为可传播的内容，形成选题、表达、复盘、迭代的飞轮，让能力可见、可放大、可积累。</p>
+              <p class="ai-era-tags">内容生产 / 系统搭建 / 流量获客</p>
+            </div>
+          </article>
+
+          <article class="ai-era-action-card glass-flow" data-ai-observe data-flow-card>
+            <div class="ai-era-action-card__media">
+              <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80" onerror="this.onerror=null;this.src='assets/ai-sales-fallback.svg';" width="400" height="300" alt="销售与成交实践" loading="lazy">
+            </div>
+            <div class="ai-era-action-card__content">
+              <span class="ai-era-action-card__index">07</span>
+              <h4>训练商业理解与结果闭环</h4>
+              <p>有流量没成交，等于零。学会发现需求、建立信任、完成成交，把"有价值"变成"有结果"。销售不是套路，是和真实世界交换价值的能力。</p>
+              <p class="ai-era-tags">需求洞察 / 信任建立 / 成交闭环</p>
+            </div>
+          </article>
+        </section>
+
+        <section class="ai-era-bridge" data-ai-observe>
+          <h3>540不是课外附加项，是和课内学习并入同一系统</h3>
+          <p>课内用AI和结构化方法高效拿结果（绩点、论文、奖学金），课外用540的3个100和4个60训练底层能力，最后在保研、实习、求职中验证成果。</p>
+          <div class="ai-era-bridge__grid">
+            <article>
+              <h4>课内学习 · AI高效执行</h4>
+              <p>用AI工具和结构化方法做时间预算，以最低投入完成课程、绩点、论文、奖学金等关键任务。这是540体系里"100小时AI工具使用"的课内应用。</p>
+            </article>
+            <article>
+              <h4>课外主线 · 540能力训练</h4>
+              <p>3个100搭建底层系统（AI工具、目标推进、信息输入），4个60训练现实能力（健身、社交、内容、成交），长期积累可迁移的竞争力。</p>
+            </article>
+            <article>
+              <h4>结果验证 · 升学与就业</h4>
+              <p>把540训练出的能力投射到保研材料、实习项目、面试表达与真实成交场景，形成可验证的结果闭环。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="ai-era-timeline-wrap" data-ai-observe>
+          <h3>从愿景到行动的递进路径</h3>
+          <div class="ai-era-timeline" data-ai-timeline>
+            <svg class="ai-era-timeline-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <line x1="12" y1="82" x2="88" y2="18"></line>
+            </svg>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s1">
+              <h4>宏观方向</h4>
+              <p>AI时代，课内高效拿结果，课外训练真正决定胜负的现实能力</p>
+            </article>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s2">
+              <h4>3个100 · 搭系统</h4>
+              <p>100小时AI工具 / 100小时目标推进 / 100小时优质输入</p>
+            </article>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s3">
+              <h4>4个60 · 练能力</h4>
+              <p>60天健身 / 60天社交 / 60天内容 / 60天成交</p>
+            </article>
+            <article class="ai-era-timeline-node ai-era-timeline-node--s4">
+              <h4>结果验证</h4>
+              <p>用保研、实习、求职与真实项目结果倒推方法是否有效，持续迭代</p>
+            </article>
+          </div>
+          <p class="ai-era-timeline-end">不是等准备好了再开始，是从今天能做的最小一步开始。</p>
+        </section>
       </div>
     </section>
 
-    <section id="operations" class="section" aria-label="Operations plan page">
-      <p class="section-kicker reveal" data-i18n="ops.kicker">Operations Plan</p>
-      <h2 class="section-title reveal" data-i18n="ops.title">A full operating model, not just a pretty storefront.</h2>
-      <p class="section-lede reveal" data-i18n="ops.lede">The website connects brand positioning, product selection, supplier coordination, order fulfillment, logistics, compliance, and domain filing into one cross-border business workflow.</p>
-      <div class="report-grid">
-        <div class="panel reveal">
-          <h3 data-i18n="ops.card1Title">Company Setup</h3>
-          <p data-i18n="ops.card1Desc">Operations team in Guangzhou, supply chain base in Meilong, and an export-facing brand structure for retail and wholesale customers.</p>
-        </div>
-        <div class="panel reveal">
-          <h3 data-i18n="ops.card2Title">Website Deployment</h3>
-          <p data-i18n="ops.card2Desc">The business website runs under an ICP-filed domain. For live transactions, company subject filing, payment terms, privacy policy, and consumer protection documents should be completed before launch.</p>
-        </div>
-        <div class="panel reveal">
-          <h3 data-i18n="ops.card3Title">Go-to-market</h3>
-          <p data-i18n="ops.card3Desc">Start with Southeast Asia, validate styles through TikTok/Shopee/Etsy data, then expand North America and B2B wholesale inquiry conversion.</p>
-        </div>
+    <!-- 精选文案预览 -->
+    <section class="site-static mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <h2 class="text-2xl font-bold text-slate-900 md:text-3xl">最新思考</h2>
+        <p class="mt-2 text-sm text-slate-500">点击文案卡片会在新标签页打开，方便你保留当前浏览位置。</p>
       </div>
-      <table class="report-table reveal">
-        <thead>
-          <tr>
-            <th data-i18n="ops.table1">Module</th>
-            <th data-i18n="ops.table2">Website Evidence</th>
-            <th data-i18n="ops.table3">Operating Explanation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-i18n="ops.row1a">Business model</td>
-            <td data-i18n="ops.row1b">D2C product collection plus wholesale inquiry page</td>
-            <td data-i18n="ops.row1c">Retail creates brand and data; B2B converts Meilong industrial capacity into recurring orders.</td>
-          </tr>
-          <tr>
-            <td data-i18n="ops.row2a">Supply chain</td>
-            <td data-i18n="ops.row2b">Origin and process sections</td>
-            <td data-i18n="ops.row2c">Guangzhou handles operations, bilingual content, customer service, and marketing; Meilong handles production.</td>
-          </tr>
-          <tr>
-            <td data-i18n="ops.row3a">Compliance</td>
-            <td data-i18n="ops.row3b">Material, delivery, and market risk modules</td>
-            <td data-i18n="ops.row3c">Jewelry export needs truthful material claims, delivery transparency, and destination-market risk awareness.</td>
-          </tr>
-          <tr>
-            <td data-i18n="ops.row4a">ICP filing and server</td>
-            <td data-i18n="ops.row4b">Business website on an existing ICP-filed domain</td>
-            <td data-i18n="ops.row4c">The filed domain supports brand display and business information. Live payment and transaction functions require matching business qualifications, filing details, payment policy, privacy terms, and consumer protection documents.</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="section-actions reveal" style="margin-top: 26px;">
-        <a class="button dark" href="#wholesale" data-i18n="ops.ctaInquiry">Start Wholesale Inquiry</a>
-        <a class="button light" href="#home" data-i18n="ops.ctaHome">Back to Brand Home</a>
-      </div>
+      <div id="featured-posts" class="mt-8 grid gap-6 md:grid-cols-3"></div>
     </section>
   </main>
 
-  <div class="modal-overlay" data-product-modal aria-hidden="true">
-    <div class="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-product-title">
-      <div class="modal-top">
-        <strong data-modal-category>Collection</strong>
-        <button class="modal-close" type="button" data-modal-close aria-label="Close product details">×</button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-gallery">
-          <div class="product-visual modal-gallery-main" data-modal-visual data-visual="necklace">
-            <span class="jewel"></span>
-            <span class="visual-label" data-modal-shot-label>Studio shot</span>
-          </div>
-          <div class="modal-gallery-thumbs" data-modal-thumbs></div>
-        </div>
-        <div class="modal-info">
-          <h3 id="modal-product-title" data-modal-title>Product</h3>
-          <div class="modal-price" data-modal-price>$39</div>
-          <p class="modal-story" data-modal-story></p>
-          <div class="detail-grid">
-            <div class="detail-pill"><span data-i18n="detail.material">Material</span><strong data-modal-material></strong></div>
-            <div class="detail-pill"><span data-i18n="detail.size">Size</span><strong data-modal-size></strong></div>
-            <div class="detail-pill"><span data-i18n="detail.moq">MOQ</span><strong data-modal-moq></strong></div>
-            <div class="detail-pill"><span data-i18n="detail.leadTime">Lead Time</span><strong data-modal-lead></strong></div>
-          </div>
-          <ul class="modal-bullets" data-modal-bullets></ul>
-          <div class="product-actions">
-            <button class="button dark" type="button" data-modal-add data-i18n="detail.addInquiry">Add to Inquiry</button>
-            <a class="button light" href="#wholesale" data-modal-wholesale data-i18n="detail.wholesale">Wholesale Inquiry</a>
-          </div>
+  <!-- 全站 Footer：平台入口改为二维码弹窗按钮 -->
+  <footer class="border-t border-slate-200 bg-white/95">
+    <div class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-5 md:flex-row md:items-center md:justify-between md:gap-8">
+        <p class="text-base font-semibold text-slate-700 md:text-xl">用 AI 和结构化系统，在校内外持续拿结果。</p>
+        <div class="flex flex-wrap items-center gap-3">
+          <button class="platform-btn platform-btn--footer" data-qr-platform="wechat" type="button">微信</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="shipinhao" type="button">视频号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="xiaohongshu" type="button">小红书</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="gongzhonghao" type="button">公众号</button>
+          <button class="platform-btn platform-btn--footer" data-qr-platform="douyin" type="button">抖音</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <a class="personal-gate" href="personal-home-20260507.html" aria-label="Open Lin Kunki personal homepage" title="Personal homepage">K</a>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div>
-        <strong>Meilong Atelier</strong>
-        <span data-i18n="footer.desc">Cross-border jewelry brand and wholesale platform based on Haifeng Meilong's industrial cluster.</span>
+    <div class="border-t border-slate-200/80">
+      <div class="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-4 text-center text-sm text-slate-600 sm:px-6 lg:px-8">
+        <p>© 2026 我是林kunki</p>
+        <p class="text-xs text-slate-500"><a data-icp-record href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer" class="transition hover:text-blue-600 hover:underline">工信部备案号：粤ICP备2026039646号</a></p>
       </div>
-      <div>
-        <span data-i18n="footer.ops">Guangzhou operations. Meilong supply chain. Global retail and wholesale customers.</span>
-      </div>
-    </div>
-    <div class="icp">
-      <a href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer">工信部备案号：粤ICP备2026039646号</a>
     </div>
   </footer>
 
-  <script src="assets/kunki-companion.js"></script>
+  <script src="assets/data-fallback.js"></script>
+  <script src="assets/site-common.js"></script>
   <script>
+    // 首页文案动态渲染：优先 fetch，失败自动兜底
     (function () {
-      var translations = {
-        en: {
-          "nav.products": "Products",
-          "nav.origin": "Origin",
-          "nav.wholesale": "Wholesale",
-          "nav.compliance": "Logistics & Compliance",
-          "nav.operations": "Operations",
-          "nav.menu": "Menu",
-          "hero.eyebrow": "Meilong-origin cross-border jewelry",
-          "hero.lede": "Sterling silver and gemstone jewelry from Meilong, a coastal jewelry town in Haifeng, Shanwei. Built for global retail customers, boutiques, and small-batch buyers who need a clear path to inquiry.",
-          "hero.ctaProducts": "View Collection",
-          "hero.ctaPlan": "View Services",
-          "hero.fact1": "jewelry-related market entities in Haifeng",
-          "hero.fact2": "RMB estimated annual industrial output",
-          "hero.fact3": "export destinations reported for local products",
-          "model.kicker": "Business Model",
-          "model.title": "Guangzhou operations, Meilong manufacturing, global orders.",
-          "model.lede": "Meilong Atelier turns a real county-level jewelry cluster into a cross-border brand system: bilingual storefront, traceable material claims, small-batch SKU testing, platform traffic, and B2B inquiry conversion.",
-          "model.d2c": "Retail through the independent site, TikTok Shop, Etsy, Shopee, and Amazon listings.",
-          "model.b2b": "Small wholesale orders for boutiques, wedding studios, and overseas micro-brands.",
-          "model.moq": "Low minimum order quantities make Meilong workshops accessible to small buyers.",
-          "model.silver": "Clear sterling silver positioning avoids vague material claims and builds trust.",
-          "products.kicker": "Products",
-          "products.title": "A focused first collection instead of endless low-price listings.",
-          "products.lede": "The store starts with 30-50 SKUs, then tests demand through short video traffic and platform data. These are the first hero categories for global buyers.",
-          "products.addInquiry": "Add to Inquiry",
-          "products.viewCompliance": "View Compliance",
-          "products.viewDetails": "View Details",
-          "products.all": "All",
-          "products.everyday": "Everyday Silver",
-          "products.gemstone": "Gemstone",
-          "products.gifts": "Gifts",
-          "products.wholesale": "Wholesale",
-          "detail.material": "Material",
-          "detail.size": "Size",
-          "detail.moq": "MOQ",
-          "detail.leadTime": "Lead Time",
-          "detail.addInquiry": "Add to Inquiry",
-          "detail.wholesale": "Wholesale Inquiry",
-          "detail.studio": "Studio shot",
-          "detail.worn": "Worn view",
-          "detail.packaging": "Packaging",
-          "product1.meta": "Everyday Silver",
-          "product1.title": "Tide Line Necklace",
-          "product1.desc": "Minimal 925 sterling silver necklace for daily wear, built for repeat purchase and gift bundles.",
-          "product1.spec1": "Material: 925 sterling silver",
-          "product1.spec2": "Target: Southeast Asia and North America",
-          "product1.spec3": "Use case: birthday, graduation, everyday wear",
-          "product2.meta": "Silver + Gemstone",
-          "product2.title": "Shan Hai Gem Ring",
-          "product2.desc": "Silver-set gemstone ring inspired by coastal and mythic motifs, designed for story-led product pages.",
-          "product2.spec1": "Material: silver setting, semi-precious gemstone",
-          "product2.spec2": "Target: gift buyers and boutique stores",
-          "product2.spec3": "Use case: cultural gift, fashion styling",
-          "product3.meta": "Festival Gifts",
-          "product3.title": "Meilong Gift Set",
-          "product3.desc": "Bundled earrings, necklace, greeting card, and packaging for weddings, Lunar New Year, and family gifts.",
-          "product3.spec1": "Material: sterling silver or gold vermeil option",
-          "product3.spec2": "Target: overseas Chinese and wedding buyers",
-          "product3.spec3": "Use case: seasonal campaign and wholesale sample box",
-          "origin.captionTitle": "Our Origin",
-          "origin.caption": "Meilong's advantage is not a single factory. It is a dense network of workshops, accessory suppliers, processing know-how, and fast sampling culture.",
-          "origin.kicker": "Origin",
-          "origin.title": "From OEM workshops to a visible cross-border brand.",
-          "origin.lede": "Haifeng's jewelry industry has scale, craft, and cost efficiency. The missing link is often brand language, overseas customer trust, and a clean digital buying path. Meilong Atelier is designed as that bridge.",
-          "origin.step1": "Source",
-          "origin.step1Title": "Partner workshops in Meilong",
-          "origin.step1Desc": "Select 3-5 reliable suppliers that can support 925 silver, gemstone setting, light customization, stable sampling, and batch quality checks.",
-          "origin.step2": "Develop",
-          "origin.step2Title": "Short-list SKUs from global demand",
-          "origin.step2Desc": "Use TikTok, Pinterest, Etsy, Shopee, and search data to choose styles, then translate local manufacturing strengths into export-ready product stories.",
-          "origin.step3": "Deliver",
-          "origin.step3Title": "Centralized quality, packaging, and shipment",
-          "origin.step3Desc": "Orders flow through a domestic fulfillment process before cross-border parcel delivery or B2B freight, reducing the burden on individual workshops.",
-          "wholesale.kicker": "Wholesale",
-          "wholesale.title": "Small-batch wholesale is the strongest reason for an independent website.",
-          "wholesale.lede": "Platforms can sell traffic products. The website handles higher-trust relationships: overseas boutiques, wedding studios, micro-brands, and buyers who need samples, customization, and supplier communication.",
-          "wholesale.card1Title": "Sample Box",
-          "wholesale.card1Desc": "10-20 representative SKUs with material cards, care instructions, and wholesale price ranges.",
-          "wholesale.card2Title": "Customization",
-          "wholesale.card2Desc": "Logo cards, packaging, engraving, gemstone replacement, color variants, and style adjustment.",
-          "wholesale.card3Title": "Buyer Fit",
-          "wholesale.card3Desc": "Boutiques, gift stores, wedding studios, Etsy sellers, Shopify micro-brands, and Southeast Asian distributors.",
-          "wholesale.quoteTitle": "Request a wholesale quote.",
-          "wholesale.quoteDesc": "Share the target market, quantity, material, and packaging needs. Our sourcing team will map the request to suitable Meilong workshop capacity before sample confirmation and production.",
-          "form.name": "Company / buyer name",
-          "form.option1": "Boutique store",
-          "form.option2": "Wedding studio",
-          "form.option3": "Online jewelry seller",
-          "form.option4": "Gift distributor",
-          "form.market": "Target market, e.g. Singapore",
-          "form.details": "Desired SKUs, quantity, material, packaging needs",
-          "form.submit": "Submit Inquiry",
-          "form.added": "Added to the inquiry draft. The wholesale form has been updated.",
-          "form.required": "Please complete buyer name, target market, and request details.",
-          "form.ready": "Inquiry draft saved locally. You can open an email draft now:",
-          "form.email": "Open email draft",
-          "compliance.kicker": "Logistics & Compliance",
-          "compliance.title": "The business only works if material claims, delivery promises, and after-sales rules are clear.",
-          "compliance.lede": "Jewelry cross-border commerce has attractive margins, but trust can collapse quickly. The site therefore turns compliance into product experience, not a hidden footnote.",
-          "compliance.card1Title": "Material Claims",
-          "compliance.card1Li1": "Use precise terms: 925 sterling silver, gold vermeil, plated brass, or solid gold.",
-          "compliance.card1Li2": "Do not mix plated, filled, vermeil, and solid gold in product copy.",
-          "compliance.card1Li3": "Keep supplier batch records and sample inspection notes.",
-          "compliance.card2Title": "Cross-border Delivery",
-          "compliance.card2Li1": "D2C parcels use tracked small-packet or dedicated line logistics.",
-          "compliance.card2Li2": "B2B orders use sampled production, balance payment, export declaration, then freight delivery.",
-          "compliance.card2Li3": "Shipping pages disclose customs, tax responsibility, and estimated delivery windows.",
-          "compliance.card3Title": "Market Risk",
-          "compliance.card3Li1": "US pages follow FTC Jewelry Guides for truthful jewelry advertising.",
-          "compliance.card3Li2": "EU expansion requires attention to REACH restrictions such as nickel, lead, and cadmium.",
-          "compliance.card3Li3": "UK sales may trigger hallmarking rules depending on metal and weight.",
-          "ops.kicker": "Operations Plan",
-          "ops.title": "A full operating model, not just a pretty storefront.",
-          "ops.lede": "The website connects brand positioning, product selection, supplier coordination, order fulfillment, logistics, compliance, and domain filing into one cross-border business workflow.",
-          "ops.card1Title": "Company Setup",
-          "ops.card1Desc": "Operations team in Guangzhou, supply chain base in Meilong, and an export-facing brand structure for retail and wholesale customers.",
-          "ops.card2Title": "Website Deployment",
-          "ops.card2Desc": "The business website runs under an ICP-filed domain. For live transactions, company subject filing, payment terms, privacy policy, and consumer protection documents should be completed before launch.",
-          "ops.card3Title": "Go-to-market",
-          "ops.card3Desc": "Start with Southeast Asia, validate styles through TikTok/Shopee/Etsy data, then expand North America and B2B wholesale inquiry conversion.",
-          "ops.table1": "Module",
-          "ops.table2": "Website Evidence",
-          "ops.table3": "Operating Explanation",
-          "ops.row1a": "Business model",
-          "ops.row1b": "D2C product collection plus wholesale inquiry page",
-          "ops.row1c": "Retail creates brand and data; B2B converts Meilong industrial capacity into recurring orders.",
-          "ops.row2a": "Supply chain",
-          "ops.row2b": "Origin and process sections",
-          "ops.row2c": "Guangzhou handles operations, bilingual content, customer service, and marketing; Meilong handles production.",
-          "ops.row3a": "Compliance",
-          "ops.row3b": "Material, delivery, and market risk modules",
-          "ops.row3c": "Jewelry export needs truthful material claims, delivery transparency, and destination-market risk awareness.",
-          "ops.row4a": "ICP filing and server",
-          "ops.row4b": "Business website on an existing ICP-filed domain",
-          "ops.row4c": "The filed domain supports brand display and business information. Live payment and transaction functions require matching business qualifications, filing details, payment policy, privacy terms, and consumer protection documents.",
-          "ops.ctaInquiry": "Start Wholesale Inquiry",
-          "ops.ctaHome": "Back to Brand Home",
-          "footer.desc": "Cross-border jewelry brand and wholesale platform based on Haifeng Meilong's industrial cluster.",
-          "footer.ops": "Guangzhou operations. Meilong supply chain. Global retail and wholesale customers."
-        },
-        zh: {
-          "nav.products": "商品系列",
-          "nav.origin": "产业源头",
-          "nav.wholesale": "批发询盘",
-          "nav.compliance": "物流与合规",
-          "nav.operations": "运营方案",
-          "nav.menu": "菜单",
-          "hero.eyebrow": "源自梅陇的跨境首饰品牌",
-          "hero.lede": "来自广东汕尾海丰梅陇的 925 银饰与银镶彩宝，面向全球零售消费者、精品店与小批量采购商，并为询价合作提供清晰入口。",
-          "hero.ctaProducts": "查看商品系列",
-          "hero.ctaPlan": "查看服务",
-          "hero.fact1": "海丰珠宝首饰相关市场主体",
-          "hero.fact2": "人民币年产业产值规模",
-          "hero.fact3": "本地产品出口目的地",
-          "model.kicker": "商业模式",
-          "model.title": "广州运营，梅陇制造，全球订单。",
-          "model.lede": "Meilong Atelier 把真实县域珠宝产业带转化为跨境品牌系统：中英双语网站、可追溯材质说明、小批量 SKU 测试、平台流量承接和 B2B 询盘转化。",
-          "model.d2c": "通过独立站、TikTok Shop、Etsy、Shopee 和 Amazon 等渠道进行零售销售。",
-          "model.b2b": "承接海外精品店、婚庆工作室和小型饰品品牌的小批量批发订单。",
-          "model.moq": "低起订量让海外小买家也能接入梅陇工坊供应链。",
-          "model.silver": "以 925 银饰为核心定位，避免模糊材质表达，建立信任。",
-          "products.kicker": "商品系列",
-          "products.title": "先做聚焦的首批系列，而不是无限低价铺货。",
-          "products.lede": "网站首批规划 30-50 个 SKU，通过短视频流量和平台数据验证需求，再逐步扩大款式。",
-          "products.addInquiry": "加入询盘",
-          "products.viewCompliance": "查看合规",
-          "products.viewDetails": "查看详情",
-          "products.all": "全部",
-          "products.everyday": "日常银饰",
-          "products.gemstone": "银镶彩宝",
-          "products.gifts": "节庆礼盒",
-          "products.wholesale": "批发样品",
-          "detail.material": "材质",
-          "detail.size": "尺寸",
-          "detail.moq": "起订量",
-          "detail.leadTime": "交期",
-          "detail.addInquiry": "加入询盘",
-          "detail.wholesale": "批发询盘",
-          "detail.studio": "棚拍图",
-          "detail.worn": "佩戴图",
-          "detail.packaging": "包装图",
-          "product1.meta": "日常银饰",
-          "product1.title": "海潮线条项链",
-          "product1.desc": "极简 925 银项链，适合日常佩戴、礼品组合和复购场景。",
-          "product1.spec1": "材质：925 纯银",
-          "product1.spec2": "市场：东南亚与北美",
-          "product1.spec3": "场景：生日、毕业、日常佩戴",
-          "product2.meta": "银饰 + 彩宝",
-          "product2.title": "山海彩宝戒指",
-          "product2.desc": "银镶半宝石戒指，以海岸与东方神话纹样为灵感，适合故事型商品页。",
-          "product2.spec1": "材质：银托与半宝石",
-          "product2.spec2": "客户：礼品买家与精品店",
-          "product2.spec3": "场景：文化礼品、穿搭配饰",
-          "product3.meta": "节庆礼盒",
-          "product3.title": "梅陇礼品套装",
-          "product3.desc": "耳环、项链、贺卡与包装组合，服务婚礼、新年和家庭礼赠场景。",
-          "product3.spec1": "材质：925 银或镀金银可选",
-          "product3.spec2": "客户：海外华人与婚礼买家",
-          "product3.spec3": "场景：节日营销与批发样品盒",
-          "origin.captionTitle": "产业源头",
-          "origin.caption": "梅陇的优势不是某一家工厂，而是工坊、配件、加工经验和快速打样能力组成的产业网络。",
-          "origin.kicker": "产业源头",
-          "origin.title": "从代工工坊，到可被全球买家看见的跨境品牌。",
-          "origin.lede": "海丰珠宝产业有规模、工艺和成本效率，短板往往在品牌语言、海外信任和清晰的数字购买路径。Meilong Atelier 要做的就是这座桥。",
-          "origin.step1": "供应",
-          "origin.step1Title": "梅陇合作工坊",
-          "origin.step1Desc": "筛选 3-5 家可靠供应商，支持 925 银、彩宝镶嵌、轻定制、稳定打样和批次质检。",
-          "origin.step2": "开发",
-          "origin.step2Title": "从全球需求反推 SKU",
-          "origin.step2Desc": "参考 TikTok、Pinterest、Etsy、Shopee 和搜索数据选择款式，把本地制造优势翻译成适合出口的商品故事。",
-          "origin.step3": "交付",
-          "origin.step3Title": "统一质检、包装与发货",
-          "origin.step3Desc": "订单先经过国内履约流程，再进行跨境小包派送或 B2B 货运，降低单个工坊的跨境运营负担。",
-          "wholesale.kicker": "批发询盘",
-          "wholesale.title": "小批量批发，是独立站最有价值的业务入口。",
-          "wholesale.lede": "平台适合卖流量款，独立站负责承接更高信任的关系：海外精品店、婚庆工作室、小型品牌，以及需要样品、定制和供应商沟通的买家。",
-          "wholesale.card1Title": "样品盒",
-          "wholesale.card1Desc": "10-20 个代表 SKU，配套材质卡、保养说明和批发价格区间。",
-          "wholesale.card2Title": "轻定制",
-          "wholesale.card2Desc": "支持 Logo 卡片、包装、刻字、宝石替换、颜色变体和款式微调。",
-          "wholesale.card3Title": "适配买家",
-          "wholesale.card3Desc": "精品店、礼品店、婚庆工作室、Etsy 卖家、Shopify 小品牌和东南亚分销商。",
-          "wholesale.quoteTitle": "提交批发询价。",
-          "wholesale.quoteDesc": "填写目标市场、数量、材质和包装需求，运营团队会匹配合适的梅陇工坊产能，再进入样品确认和生产流程。",
-          "form.name": "公司 / 买家名称",
-          "form.option1": "精品店",
-          "form.option2": "婚庆工作室",
-          "form.option3": "线上饰品卖家",
-          "form.option4": "礼品分销商",
-          "form.market": "目标市场，例如 Singapore",
-          "form.details": "目标 SKU、数量、材质、包装需求",
-          "form.submit": "提交询盘",
-          "form.added": "已加入询盘草稿，批发表单已自动更新。",
-          "form.required": "请填写买家名称、目标市场和询盘需求。",
-          "form.ready": "询盘草稿已保存到本地，可以打开邮件草稿：",
-          "form.email": "打开邮件草稿",
-          "compliance.kicker": "物流与合规",
-          "compliance.title": "材质说明、交付承诺和售后规则清楚，业务才跑得稳。",
-          "compliance.lede": "首饰跨境电商有不错的利润空间，但信任很容易因为材质、物流或售后表达不清而坍塌。因此网站把合规变成产品体验的一部分。",
-          "compliance.card1Title": "材质声明",
-          "compliance.card1Li1": "使用准确术语：925 sterling silver、gold vermeil、plated brass 或 solid gold。",
-          "compliance.card1Li2": "商品文案不得混用 plated、filled、vermeil 和 solid gold。",
-          "compliance.card1Li3": "保留供应商批次记录与样品检测说明。",
-          "compliance.card2Title": "跨境交付",
-          "compliance.card2Li1": "D2C 小包使用可追踪跨境小包或专线物流。",
-          "compliance.card2Li2": "B2B 订单采用打样、尾款、出口申报和货运交付流程。",
-          "compliance.card2Li3": "物流页面明确关税责任、税费说明和预计时效。",
-          "compliance.card3Title": "市场风险",
-          "compliance.card3Li1": "美国页面参考 FTC Jewelry Guides，保证珠宝广告表达真实。",
-          "compliance.card3Li2": "欧盟市场需关注 REACH 对镍、铅、镉等物质的限制。",
-          "compliance.card3Li3": "英国销售需根据金属材质和重量判断 hallmarking 要求。",
-          "ops.kicker": "运营方案",
-          "ops.title": "这是完整跨境运营模型，不只是一个好看的门面。",
-          "ops.lede": "网站把品牌定位、选品、供应商协同、订单履约、跨境物流、合规说明和备案服务器安排串成一条业务流程。",
-          "ops.card1Title": "公司设置",
-          "ops.card1Desc": "广州负责运营与客户沟通，梅陇作为供应链基地，形成面向零售与批发客户的出海品牌结构。",
-          "ops.card2Title": "网站部署",
-          "ops.card2Desc": "业务网站运行在已备案域名下。若开放真实交易，需要在上线前补齐公司主体备案、支付条款、隐私政策和消费者保护文件。",
-          "ops.card3Title": "市场进入",
-          "ops.card3Desc": "先从东南亚市场切入，通过 TikTok、Shopee、Etsy 等数据验证款式，再扩展北美和 B2B 批发询盘。",
-          "ops.table1": "模块",
-          "ops.table2": "网站呈现",
-          "ops.table3": "运营说明",
-          "ops.row1a": "商业模式",
-          "ops.row1b": "D2C 商品系列 + 批发询盘页",
-          "ops.row1c": "零售沉淀品牌和数据，B2B 把梅陇产业产能转化为持续订单。",
-          "ops.row2a": "供应链",
-          "ops.row2b": "产业源头与流程区块",
-          "ops.row2c": "广州负责运营、中英内容、客服和营销；梅陇负责生产和工艺支持。",
-          "ops.row3a": "合规",
-          "ops.row3b": "材质、物流和市场风险模块",
-          "ops.row3c": "首饰出口需要真实材质表达、透明物流承诺和目标市场规则意识。",
-          "ops.row4a": "备案与服务器",
-          "ops.row4b": "业务网站部署在已备案域名下",
-          "ops.row4c": "已备案域名可用于品牌展示与业务信息呈现。若启用真实支付和交易功能，需要匹配经营资质、备案信息、支付政策、隐私条款和消费者保护文件。",
-          "ops.ctaInquiry": "发起批发询盘",
-          "ops.ctaHome": "返回品牌首页",
-          "footer.desc": "基于海丰梅陇产业带的跨境首饰品牌与批发平台。",
-          "footer.ops": "广州运营。梅陇供应链。面向全球零售与批发客户。"
-        }
-      };
+      function initScrollDynamics() {
+        var progressBar = document.querySelector("[data-scroll-progress]");
+        var hero = document.querySelector("[data-scroll-hero]");
+        var root = document.documentElement;
+        var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var ticking = false;
 
-      var productCategories = [
-        { key: "all", labelKey: "products.all" },
-        { key: "everyday", labelKey: "products.everyday" },
-        { key: "gemstone", labelKey: "products.gemstone" },
-        { key: "gifts", labelKey: "products.gifts" },
-        { key: "wholesale", labelKey: "products.wholesale" }
-      ];
-
-      var productData = [
-        {
-          id: "tide-line-necklace",
-          category: "everyday",
-          visual: "necklace",
-          price: "$39",
-          image: "assets/meilong-products/tide-line-necklace.jpg",
-          photoPositions: ["center", "50% 32%", "50% 72%"],
-          en: {
-            category: "Everyday Silver",
-            name: "Tide Line Necklace",
-            summary: "Minimal 925 sterling silver necklace for daily wear, built for repeat purchase and gift bundles.",
-            material: "925 sterling silver, anti-tarnish finish",
-            size: "40+5 cm adjustable chain",
-            moq: "30 pcs / style",
-            lead: "7-12 days after sample approval",
-            market: "Southeast Asia and North America",
-            story: "A clean wave-line pendant for daily styling. It is light enough for impulse gift orders and simple enough to localize through packaging or engraving.",
-            bullets: ["Skin-contact material statement prepared for product pages", "Works as single SKU or two-piece gift bundle", "Suitable for TikTok Shop, Etsy, and boutique wholesale"],
-            shots: ["Studio shot", "Worn view", "Packaging"]
-          },
-          zh: {
-            category: "日常银饰",
-            name: "海潮线条项链",
-            summary: "极简 925 银项链，适合日常佩戴、礼品组合和复购场景。",
-            material: "925 纯银，抗氧化处理",
-            size: "40+5 cm 可调节链长",
-            moq: "30 件 / 款",
-            lead: "样品确认后 7-12 天",
-            market: "东南亚与北美",
-            story: "以海潮线条为灵感的日常项链，轻量、好搭配，适合做入门款、礼盒款和刻字定制款。",
-            bullets: ["商品页可清晰展示皮肤接触材质说明", "可单卖，也可组合成双件礼盒", "适合 TikTok Shop、Etsy 和精品店批发"],
-            shots: ["棚拍图", "佩戴图", "包装图"]
-          }
-        },
-        {
-          id: "shan-hai-gem-ring",
-          category: "gemstone",
-          visual: "gem-ring",
-          price: "$89",
-          image: "assets/meilong-products/shan-hai-gem-ring.jpg",
-          photoPositions: ["center", "50% 28%", "50% 68%"],
-          en: {
-            category: "Silver + Gemstone",
-            name: "Shan Hai Gem Ring",
-            summary: "Silver-set gemstone ring inspired by coastal and mythic motifs, designed for story-led product pages.",
-            material: "925 silver setting, lab-tested semi-precious stone",
-            size: "US 5-9, resizable sample available",
-            moq: "20 pcs / stone color",
-            lead: "12-18 days",
-            market: "Gift buyers, boutique stores",
-            story: "A colored stone center makes the product visually stronger for content. The design can be localized through different stones for different markets.",
-            bullets: ["Color variants support A/B testing", "Higher perceived value than plain silver", "Good fit for Pinterest and boutique display"],
-            shots: ["Gem detail", "Worn view", "Gift box"]
-          },
-          zh: {
-            category: "银饰 + 彩宝",
-            name: "山海彩宝戒指",
-            summary: "银镶半宝石戒指，以海岸与东方神话纹样为灵感，适合故事型商品页。",
-            material: "925 银托，半宝石可检测批次",
-            size: "美码 5-9，可提供可调节样品",
-            moq: "20 件 / 宝石色",
-            lead: "12-18 天",
-            market: "礼品买家、海外精品店",
-            story: "彩色主石让商品更适合短视频和图片种草，不同市场可用不同石色做本地化测试。",
-            bullets: ["颜色变体适合做 A/B 测试", "比基础银饰有更高感知价值", "适合 Pinterest 内容和精品店陈列"],
-            shots: ["宝石细节", "佩戴图", "礼盒图"]
-          }
-        },
-        {
-          id: "meilong-gift-set",
-          category: "gifts",
-          visual: "gift-set",
-          price: "$129",
-          image: "assets/meilong-products/meilong-gift-set.jpg",
-          photoPositions: ["center", "50% 30%", "50% 72%"],
-          en: {
-            category: "Festival Gifts",
-            name: "Meilong Gift Set",
-            summary: "Bundled earrings, necklace, greeting card, and packaging for weddings, Lunar New Year, and family gifts.",
-            material: "Sterling silver or gold vermeil option",
-            size: "Necklace + earrings + card + gift box",
-            moq: "50 sets",
-            lead: "15-21 days",
-            market: "Overseas Chinese, wedding buyers",
-            story: "A seasonal gift bundle that raises average order value and gives the brand a clear campaign product for holidays and wedding seasons.",
-            bullets: ["Packaging can carry boutique or studio branding", "Good for Chinese New Year and wedding campaigns", "Higher AOV than single-item silver jewelry"],
-            shots: ["Gift set", "Box opening", "Card detail"]
-          },
-          zh: {
-            category: "节庆礼盒",
-            name: "梅陇礼品套装",
-            summary: "耳环、项链、贺卡与包装组合，服务婚礼、新年和家庭礼赠场景。",
-            material: "925 银或镀金银可选",
-            size: "项链 + 耳环 + 贺卡 + 礼盒",
-            moq: "50 套",
-            lead: "15-21 天",
-            market: "海外华人、婚礼买家",
-            story: "节庆礼盒能提高客单价，也让品牌拥有明确的节日营销主推款。",
-            bullets: ["包装可加入精品店或婚庆工作室品牌元素", "适合春节、婚礼季和母亲节营销", "比单件银饰更容易提高客单价"],
-            shots: ["礼盒图", "开箱图", "贺卡细节"]
-          }
-        },
-        {
-          id: "pearl-tide-earrings",
-          category: "everyday",
-          visual: "earrings",
-          price: "$46",
-          image: "assets/meilong-products/pearl-tide-earrings.jpg",
-          photoPositions: ["center", "45% 28%", "55% 70%"],
-          en: {
-            category: "Pearl Silver",
-            name: "Pearl Tide Earrings",
-            summary: "Freshwater pearl earrings with a soft coastal profile for everyday and office styling.",
-            material: "925 silver needle, freshwater pearl",
-            size: "18 mm drop length",
-            moq: "40 pairs",
-            lead: "8-14 days",
-            market: "Office wear, gift retail",
-            story: "Pearl earrings are familiar enough to convert quickly, while the Meilong origin story gives them a stronger sourcing narrative.",
-            bullets: ["Good entry product for sensitive-ear claims", "Pairs naturally with necklace upsell", "Small and light for cross-border parcels"],
-            shots: ["Studio shot", "Ear close-up", "Care card"]
-          },
-          zh: {
-            category: "珍珠银饰",
-            name: "海珠耳环",
-            summary: "淡水珍珠耳环，轮廓柔和，适合日常通勤与礼赠。",
-            material: "925 银针，淡水珍珠",
-            size: "约 18 mm 垂坠长度",
-            moq: "40 对",
-            lead: "8-14 天",
-            market: "通勤佩戴、礼品零售",
-            story: "珍珠耳环认知门槛低，转化更快；叠加梅陇供应链故事后，更容易形成品牌感。",
-            bullets: ["适合强调银针与敏感耳友好", "可与项链做加购组合", "体积小，适合跨境小包"],
-            shots: ["棚拍图", "耳部特写", "保养卡"]
-          }
-        },
-        {
-          id: "plum-vermeil-bracelet",
-          category: "gifts",
-          visual: "bracelet",
-          price: "$76",
-          image: "assets/meilong-products/plum-vermeil-bracelet.jpg",
-          photoPositions: ["center", "55% 25%", "45% 70%"],
-          en: {
-            category: "Gold Vermeil",
-            name: "Plum Vermeil Bracelet",
-            summary: "Gold vermeil bracelet inspired by plum blossoms, positioned for festival and family gifting.",
-            material: "925 silver base, gold vermeil finish",
-            size: "15+4 cm adjustable",
-            moq: "30 pcs",
-            lead: "12-16 days",
-            market: "Festival gifts, family gifting",
-            story: "A warm gold-tone piece for customers who want the look of gold jewelry without the cost and logistics risk of solid gold.",
-            bullets: ["Clear vermeil wording avoids misleading gold claims", "Works well in red and cream packaging", "Good fit for Lunar New Year campaigns"],
-            shots: ["Studio shot", "Wrist view", "Gift sleeve"]
-          },
-          zh: {
-            category: "镀金银饰",
-            name: "梅影镀金银手链",
-            summary: "以梅花意象为灵感的镀金银手链，适合节庆与家庭礼赠。",
-            material: "925 银底，镀金工艺",
-            size: "15+4 cm 可调节",
-            moq: "30 件",
-            lead: "12-16 天",
-            market: "节庆礼赠、家庭礼物",
-            story: "适合想要金色质感但不想承担足金成本和物流风险的海外消费者。",
-            bullets: ["清楚标注 vermeil / 镀金银，避免误导", "适合红色与米白礼盒包装", "适合春节礼赠活动"],
-            shots: ["棚拍图", "腕部佩戴", "礼品封套"]
-          }
-        },
-        {
-          id: "custom-name-pendant",
-          category: "everyday",
-          visual: "pendant",
-          price: "$58",
-          image: "assets/meilong-products/custom-name-pendant.jpg",
-          photoPositions: ["center", "50% 30%", "50% 74%"],
-          en: {
-            category: "Custom Silver",
-            name: "Custom Name Pendant",
-            summary: "Personalized sterling silver pendant for names, initials, dates, and small family-gift batches.",
-            material: "925 sterling silver, optional gold vermeil",
-            size: "Pendant width 18-28 mm",
-            moq: "1 pc retail / 30 pcs wholesale",
-            lead: "5-10 days per custom batch",
-            market: "Personalized gifts, creator stores",
-            story: "Light customization gives the website a reason to collect buyer information and makes the product harder to compare only by price.",
-            bullets: ["Supports name, initial, or date engraving", "Good for influencer codes and repeat gifting", "Clear production lead time reduces after-sales risk"],
-            shots: ["Name sample", "Worn view", "Order card"]
-          },
-          zh: {
-            category: "定制银饰",
-            name: "定制姓名吊坠",
-            summary: "支持姓名、首字母、日期等轻定制，适合个人礼品与小批量定制。",
-            material: "925 银，可选镀金银",
-            size: "吊坠宽 18-28 mm",
-            moq: "零售 1 件 / 批发 30 件",
-            lead: "每批定制 5-10 天",
-            market: "个性化礼品、达人店铺",
-            story: "轻定制让独立站更有收集买家需求的理由，也让产品不容易陷入纯价格比较。",
-            bullets: ["支持姓名、首字母或日期刻字", "适合达人折扣码和复购礼品", "明确生产周期，降低售后风险"],
-            shots: ["姓名样品", "佩戴图", "订单卡"]
-          }
-        },
-        {
-          id: "boutique-sample-box",
-          category: "wholesale",
-          visual: "sample-box",
-          price: "$299",
-          image: "assets/meilong-products/boutique-sample-box.jpg",
-          photoPositions: ["center", "50% 26%", "50% 72%"],
-          en: {
-            category: "Wholesale Sample",
-            name: "Boutique Sample Box",
-            summary: "A curated 12-piece sample box for overseas boutiques to test Meilong silver and gemstone lines.",
-            material: "Mixed 925 silver, pearl, gemstone, vermeil samples",
-            size: "12 SKUs with material cards",
-            moq: "1 sample box",
-            lead: "Ready in 5-7 days",
-            market: "Boutiques, distributors, wedding studios",
-            story: "The sample box turns unknown supply capacity into something buyers can inspect, photograph, and reorder from.",
-            bullets: ["Includes material cards and wholesale price ranges", "Designed for B2B conversion after first contact", "Can be customized by market segment"],
-            shots: ["Box layout", "Material cards", "SKU tray"]
-          },
-          zh: {
-            category: "批发样品",
-            name: "精品店样品盒",
-            summary: "为海外精品店准备的 12 件样品盒，用于测试梅陇银饰与彩宝系列。",
-            material: "925 银、珍珠、彩宝、镀金银混合样品",
-            size: "12 个 SKU，配材质卡",
-            moq: "1 盒起",
-            lead: "5-7 天备好",
-            market: "精品店、分销商、婚庆工作室",
-            story: "样品盒把抽象的供应链能力变成买家能触摸、拍摄和复购的具体产品。",
-            bullets: ["包含材质卡和批发价格区间", "用于首次接触后的 B2B 转化", "可按目标市场定制组合"],
-            shots: ["盒内陈列", "材质卡", "SKU 托盘"]
-          }
-        },
-        {
-          id: "bridal-hairpin-set",
-          category: "gifts",
-          visual: "hairpin",
-          price: "$118",
-          image: "assets/meilong-products/bridal-hairpin-set.jpg",
-          photoPositions: ["center", "50% 30%", "50% 72%"],
-          en: {
-            category: "Wedding Jewelry",
-            name: "Bridal Hairpin Set",
-            summary: "Silver-tone bridal hairpins for Southeast Asian wedding studios and ceremonial styling.",
-            material: "Silver-plated copper or 925 silver upgrade",
-            size: "3-piece set, 8-12 cm",
-            moq: "30 sets",
-            lead: "14-20 days",
-            market: "Wedding studios, cultural ceremonies",
-            story: "A ceremony-focused product lets the business enter wedding studios where buyers need repeat supply and customized packaging.",
-            bullets: ["Two material tiers for different budgets", "Strong fit for wedding photography content", "Wholesale packaging can be localized"],
-            shots: ["Studio shot", "Hair styling", "Set packaging"]
-          },
-          zh: {
-            category: "婚庆首饰",
-            name: "新娘发簪套装",
-            summary: "面向东南亚婚庆工作室和仪式造型的银色发簪套装。",
-            material: "镀银铜，可升级 925 银",
-            size: "3 件套，8-12 cm",
-            moq: "30 套",
-            lead: "14-20 天",
-            market: "婚庆工作室、文化仪式造型",
-            story: "婚庆产品能进入需要复购和包装定制的工作室渠道，比普通零售更适合 B2B 关系。",
-            bullets: ["两档材质适配不同预算", "适合婚纱摄影内容展示", "批发包装可做本地化"],
-            shots: ["棚拍图", "发型佩戴", "套装包装"]
-          }
-        }
-      ];
-
-      var activeCategory = "all";
-      var activeProductId = productData[0].id;
-
-      function escapeHtml(value) {
-        return String(value || "").replace(/[&<>"']/g, function (char) {
-          return {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-          }[char];
-        });
-      }
-
-      function getLang() {
-        return document.documentElement.getAttribute("data-lang") === "zh" ? "zh" : "en";
-      }
-
-      function getProductText(product) {
-        return product[getLang()] || product.en;
-      }
-
-      function visualHtml(product, label, extraClass, shotIndex) {
-        var positions = product.photoPositions || ["center", "center"];
-        var position = positions[shotIndex || 0] || "center";
-        var imageStyle = product.image ? ' style="background-image: linear-gradient(0deg, rgba(25, 22, 17, 0.04), rgba(25, 22, 17, 0.04)), url(\'' + product.image + '\'); background-position: ' + escapeHtml(position) + ';"' : "";
-        return [
-          '<div class="product-visual ' + (product.image ? "has-photo " : "") + (extraClass || "") + '" data-visual="' + escapeHtml(product.visual) + '" data-shot-index="' + (shotIndex || 0) + '"' + imageStyle + '>',
-          '  <span class="jewel"></span>',
-          '  <span class="visual-label">' + escapeHtml(label || getProductText(product).category) + "</span>",
-          "</div>"
-        ].join("");
-      }
-
-      function renderCategories() {
-        var toolbar = document.querySelector("[data-category-filter]");
-        if (!toolbar) return;
-        var dict = translations[getLang()] || translations.en;
-        toolbar.innerHTML = productCategories.map(function (category) {
-          return [
-            '<button class="category-button' + (category.key === activeCategory ? " is-active" : "") + '" type="button" data-category="' + category.key + '">',
-            escapeHtml(dict[category.labelKey] || category.key),
-            "</button>"
-          ].join("");
-        }).join("");
-      }
-
-      function renderProducts() {
-        var grid = document.querySelector("[data-product-grid]");
-        if (!grid) return;
-        var dict = translations[getLang()] || translations.en;
-        var visibleProducts = productData.filter(function (product) {
-          return activeCategory === "all" || product.category === activeCategory;
-        });
-        grid.innerHTML = visibleProducts.map(function (product) {
-          var text = getProductText(product);
-          return [
-            '<article class="product reveal is-visible" data-product-card="' + escapeHtml(product.id) + '">',
-            visualHtml(product, text.category),
-            '  <div class="product-body">',
-            '    <div class="product-meta"><span>' + escapeHtml(text.category) + '</span><span>' + escapeHtml(product.price) + '</span></div>',
-            '    <h3>' + escapeHtml(text.name) + '</h3>',
-            '    <p>' + escapeHtml(text.summary) + '</p>',
-            '    <div class="specs">',
-            '      <span>' + escapeHtml(text.material) + '</span>',
-            '      <span>' + escapeHtml(text.market) + '</span>',
-            '      <span>' + escapeHtml(text.moq) + '</span>',
-            "    </div>",
-            '    <div class="product-actions">',
-            '      <button class="small-button" type="button" data-open-product="' + escapeHtml(product.id) + '">' + escapeHtml(dict["products.viewDetails"]) + '</button>',
-            '      <button class="small-button ghost-button" type="button" data-add-inquiry="' + escapeHtml(product.en.name) + '">' + escapeHtml(dict["products.addInquiry"]) + '</button>',
-            "    </div>",
-            "  </div>",
-            "</article>"
-          ].join("");
-        }).join("");
-      }
-
-      function renderProductModal(productId) {
-        var product = productData.find(function (item) { return item.id === productId; }) || productData[0];
-        var text = getProductText(product);
-        var visual = document.querySelector("[data-modal-visual]");
-        var thumbs = document.querySelector("[data-modal-thumbs]");
-        var bullets = document.querySelector("[data-modal-bullets]");
-        activeProductId = product.id;
-
-        document.querySelector("[data-modal-category]").textContent = text.category;
-        document.querySelector("[data-modal-title]").textContent = text.name;
-        document.querySelector("[data-modal-price]").textContent = product.price;
-        document.querySelector("[data-modal-story]").textContent = text.story;
-        document.querySelector("[data-modal-material]").textContent = text.material;
-        document.querySelector("[data-modal-size]").textContent = text.size;
-        document.querySelector("[data-modal-moq]").textContent = text.moq;
-        document.querySelector("[data-modal-lead]").textContent = text.lead;
-        document.querySelector("[data-modal-add]").setAttribute("data-add-inquiry", product.en.name);
-
-        if (visual) {
-          visual.setAttribute("data-visual", product.visual);
-          visual.setAttribute("style", "background-image: linear-gradient(0deg, rgba(25, 22, 17, 0.04), rgba(25, 22, 17, 0.04)), url('" + product.image + "'); background-position: " + (product.photoPositions && product.photoPositions[0] || "center") + ";");
-          visual.classList.add("has-photo");
-          visual.querySelector("[data-modal-shot-label]").textContent = text.shots[0];
-        }
-        if (thumbs) {
-          thumbs.innerHTML = text.shots.map(function (shot, index) {
-            return visualHtml(product, shot, "", index);
-          }).join("");
-        }
-        if (bullets) {
-          bullets.innerHTML = text.bullets.map(function (item) {
-            return "<li>" + escapeHtml(item) + "</li>";
-          }).join("");
-        }
-      }
-
-      function openProductModal(productId) {
-        var modal = document.querySelector("[data-product-modal]");
-        renderProductModal(productId);
-        if (!modal) return;
-        modal.classList.add("is-open");
-        modal.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeProductModal() {
-        var modal = document.querySelector("[data-product-modal]");
-        if (!modal) return;
-        modal.classList.remove("is-open");
-        modal.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-      }
-
-      function applyLanguage(lang) {
-        var dict = translations[lang] || translations.en;
-        document.documentElement.setAttribute("data-lang", lang);
-        document.documentElement.setAttribute("lang", lang === "zh" ? "zh-CN" : "en");
-        document.querySelectorAll("[data-i18n]").forEach(function (node) {
-          var key = node.getAttribute("data-i18n");
-          if (dict[key]) node.textContent = dict[key];
-        });
-        document.querySelectorAll("[data-i18n-placeholder]").forEach(function (node) {
-          var key = node.getAttribute("data-i18n-placeholder");
-          if (dict[key]) node.setAttribute("placeholder", dict[key]);
-        });
-        try {
-          window.localStorage.setItem("meilongLang", lang);
-        } catch (error) {}
-        renderCategories();
-        renderProducts();
-        renderProductModal(activeProductId);
-      }
-
-      document.querySelectorAll("[data-lang-set]").forEach(function (button) {
-        button.addEventListener("click", function () {
-          applyLanguage(button.getAttribute("data-lang-set"));
-        });
-      });
-
-      var savedLang = "en";
-      try {
-        savedLang = window.localStorage.getItem("meilongLang") || "en";
-      } catch (error) {}
-      applyLanguage(savedLang === "zh" ? "zh" : "en");
-
-      var selectedProducts = [];
-      var inquiryForm = document.querySelector("[data-inquiry-form]");
-      var inquiryStatus = document.querySelector("[data-inquiry-status]");
-
-      function currentDict() {
-        var lang = document.documentElement.getAttribute("data-lang") || "en";
-        return translations[lang] || translations.en;
-      }
-
-      function setInquiryStatus(html) {
-        if (!inquiryStatus) return;
-        inquiryStatus.innerHTML = html;
-        inquiryStatus.classList.add("is-open");
-      }
-
-      function saveInquiryDraft(data) {
-        try {
-          window.localStorage.setItem("meilongInquiryDraft", JSON.stringify(data));
-        } catch (error) {}
-      }
-
-      function updateDetailsWithProduct(productName) {
-        if (!inquiryForm) return;
-        var details = inquiryForm.elements.details;
-        if (!details) return;
-        if (selectedProducts.indexOf(productName) === -1) {
-          selectedProducts.push(productName);
-        }
-        var skuLine = "Interested SKUs: " + selectedProducts.join(", ");
-        var current = details.value.trim();
-        if (!current) {
-          details.value = skuLine + "\nQuantity:\nMaterial / packaging needs:";
-        } else if (current.indexOf("Interested SKUs:") === -1) {
-          details.value = skuLine + "\n" + current;
-        } else {
-          details.value = current.replace(/Interested SKUs:.*(\r?\n)?/, skuLine + "\n");
-        }
-        saveInquiryDraft({ details: details.value, products: selectedProducts });
-      }
-
-      document.addEventListener("click", function (event) {
-        var categoryButton = event.target.closest("[data-category]");
-        if (categoryButton) {
-          activeCategory = categoryButton.getAttribute("data-category") || "all";
-          renderCategories();
-          renderProducts();
-          return;
+        function clamp(value, min, max) {
+          return Math.min(Math.max(value, min), max);
         }
 
-        var detailButton = event.target.closest("[data-open-product]");
-        if (detailButton) {
-          openProductModal(detailButton.getAttribute("data-open-product"));
-          return;
+        function updateProgressBar() {
+          if (!progressBar) return;
+          var doc = document.documentElement;
+          var total = Math.max(doc.scrollHeight - window.innerHeight, 0);
+          var ratio = total > 0 ? clamp(window.scrollY / total, 0, 1) : 0;
+          progressBar.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+          root.style.setProperty("--page-progress", ratio.toFixed(4));
         }
 
-        var galleryThumb = event.target.closest(".modal-gallery-thumbs .product-visual");
-        if (galleryThumb) {
-          var modalVisual = document.querySelector("[data-modal-visual]");
-          var label = galleryThumb.querySelector(".visual-label");
-          if (modalVisual && label) {
-            modalVisual.setAttribute("data-visual", galleryThumb.getAttribute("data-visual"));
-            modalVisual.setAttribute("style", galleryThumb.getAttribute("style") || "");
-            modalVisual.classList.add("has-photo");
-            modalVisual.querySelector("[data-modal-shot-label]").textContent = label.textContent;
-          }
-          return;
-        }
-
-        var addButton = event.target.closest("[data-add-inquiry]");
-        if (addButton) {
-          updateDetailsWithProduct(addButton.getAttribute("data-add-inquiry"));
-          closeProductModal();
-          document.getElementById("wholesale").scrollIntoView({ behavior: "smooth", block: "start" });
-          setInquiryStatus(currentDict()["form.added"]);
-          return;
-        }
-
-        if (event.target.closest("[data-modal-close]")) {
-          closeProductModal();
-        }
-      });
-
-      var productModal = document.querySelector("[data-product-modal]");
-      if (productModal) {
-        productModal.addEventListener("click", function (event) {
-          if (event.target === productModal) closeProductModal();
-        });
-      }
-
-      window.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") closeProductModal();
-      });
-
-      if (inquiryForm) {
-        try {
-          var savedDraft = JSON.parse(window.localStorage.getItem("meilongInquiryDraft") || "{}");
-          if (savedDraft && savedDraft.details && inquiryForm.elements.details) {
-            inquiryForm.elements.details.value = savedDraft.details;
-          }
-          if (savedDraft && Array.isArray(savedDraft.products)) {
-            selectedProducts = savedDraft.products;
-          }
-        } catch (error) {}
-
-        inquiryForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-          var dict = currentDict();
-          var buyer = inquiryForm.elements.buyer.value.trim();
-          var buyerType = inquiryForm.elements.buyerType.value.trim();
-          var market = inquiryForm.elements.market.value.trim();
-          var details = inquiryForm.elements.details.value.trim();
-          if (!buyer || !market || !details) {
-            setInquiryStatus(dict["form.required"]);
+        function updateHeroParallax() {
+          if (!hero) return;
+          if (prefersReduced) {
+            hero.style.setProperty("--hero-progress", "0");
             return;
           }
+          var rect = hero.getBoundingClientRect();
+          var heroHeight = Math.max(rect.height, 1);
+          var ratio = clamp(-rect.top / heroHeight, 0, 1);
+          hero.style.setProperty("--hero-progress", ratio.toFixed(4));
+        }
 
-          var inquiryId = "MLA-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + "-" + Math.floor(1000 + Math.random() * 9000);
-          var contactEmail = inquiryForm.getAttribute("data-contact-email") || "sales@meilongatelier.com";
-          var subject = encodeURIComponent("Wholesale inquiry " + inquiryId + " - " + buyer);
-          var body = encodeURIComponent([
-            "Inquiry ID: " + inquiryId,
-            "Buyer: " + buyer,
-            "Buyer type: " + buyerType,
-            "Target market: " + market,
-            "",
-            "Request details:",
-            details
-          ].join("\n"));
-          var mailto = "mailto:" + contactEmail + "?subject=" + subject + "&body=" + body;
+        function updateFlowCards() {
+          var cards = document.querySelectorAll("[data-flow-card]");
+          if (!cards.length) return;
 
-          saveInquiryDraft({
-            id: inquiryId,
-            buyer: buyer,
-            buyerType: buyerType,
-            market: market,
-            details: details,
-            products: selectedProducts,
-            createdAt: new Date().toISOString()
+          cards.forEach(function (card) {
+            if (prefersReduced) {
+              card.style.setProperty("--flow-shift", "0");
+              card.style.setProperty("--flow-tilt", "0");
+              card.style.setProperty("--flow-sheen", "0.14");
+              return;
+            }
+
+            var rect = card.getBoundingClientRect();
+            var viewHeight = Math.max(window.innerHeight, 1);
+            var center = rect.top + rect.height / 2;
+            var normalized = clamp((center - viewHeight * 0.52) / (viewHeight * 0.72), -1, 1);
+            var intensity = 1 - Math.abs(normalized);
+            var shift = intensity * 18;
+            var tilt = -normalized * 5.5;
+            var sheen = 0.12 + intensity * 0.24;
+            card.style.setProperty("--flow-shift", shift.toFixed(3));
+            card.style.setProperty("--flow-tilt", tilt.toFixed(3));
+            card.style.setProperty("--flow-sheen", sheen.toFixed(3));
           });
+        }
 
-          setInquiryStatus(dict["form.ready"] + ' <a href="' + mailto + '">' + dict["form.email"] + "</a><br>" + inquiryId);
-        });
+        function run() {
+          updateProgressBar();
+          updateHeroParallax();
+          updateFlowCards();
+        }
+
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(function () {
+            run();
+            ticking = false;
+          });
+        }
+
+        run();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
       }
 
-      var menuButton = document.querySelector("[data-menu-button]");
-      var mobilePanel = document.querySelector("[data-mobile-panel]");
+      function initAiEraMotion() {
+        var section = document.querySelector(".ai-era-block");
+        if (!section || section.dataset.motionBound === "1") return;
+        section.dataset.motionBound = "1";
 
-      if (menuButton && mobilePanel) {
-        menuButton.addEventListener("click", function () {
-          var nextState = !mobilePanel.classList.contains("is-open");
-          mobilePanel.classList.toggle("is-open", nextState);
-          menuButton.setAttribute("aria-expanded", String(nextState));
-        });
+        var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var observeNodes = section.querySelectorAll("[data-ai-observe]");
 
-        mobilePanel.querySelectorAll("a").forEach(function (link) {
-          link.addEventListener("click", function () {
-            mobilePanel.classList.remove("is-open");
-            menuButton.setAttribute("aria-expanded", "false");
-          });
-        });
-      }
+        if (prefersReduced) {
+          observeNodes.forEach(function (node) { node.classList.add("is-visible"); });
+          var radialStatic = section.querySelector("[data-ai-radial]");
+          if (radialStatic) radialStatic.classList.add("is-active");
+          section.querySelectorAll(".ai-era-timeline-node").forEach(function (node) { node.classList.add("is-active"); });
+          return;
+        }
 
-      var revealNodes = document.querySelectorAll(".reveal");
-      if ("IntersectionObserver" in window) {
-        var observer = new IntersectionObserver(function (entries) {
+        var revealObserver = new IntersectionObserver(function (entries, observer) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
             entry.target.classList.add("is-visible");
             observer.unobserve(entry.target);
           });
-        }, { threshold: 0.16 });
+        }, { threshold: 0.18 });
 
-        revealNodes.forEach(function (node, index) {
-          node.style.transitionDelay = Math.min(index * 45, 180) + "ms";
-          observer.observe(node);
+        observeNodes.forEach(function (node) { revealObserver.observe(node); });
+
+        var radial = section.querySelector("[data-ai-radial]");
+        if (radial) {
+          var radialObserver = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              radial.classList.add("is-active");
+              observer.unobserve(entry.target);
+            });
+          }, { threshold: 0.25 });
+          radialObserver.observe(radial);
+        }
+
+        var timeline = section.querySelector("[data-ai-timeline]");
+        if (timeline) {
+          var nodes = timeline.querySelectorAll(".ai-era-timeline-node");
+          var timelineObserver = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              nodes.forEach(function (node, index) {
+                window.setTimeout(function () { node.classList.add("is-active"); }, index * 180);
+              });
+              observer.unobserve(entry.target);
+            });
+          }, { threshold: 0.3 });
+          timelineObserver.observe(timeline);
+        }
+      }
+
+      function initKunkiCompanion() {
+        var companion = document.querySelector("[data-kunki-companion]");
+        var person = document.querySelector("[data-kunki-person]");
+        var bubble = document.querySelector("[data-kunki-bubble]");
+        if (!companion || !person || !bubble || companion.dataset.bound === "1") return;
+        companion.dataset.bound = "1";
+
+        var messages = [
+          "我先陪你逛逛。想看方法论，可以从 540 学生法则开始。",
+          "如果你现在很迷茫，先去看大学结果和成长实验，不用急着变厉害。",
+          "AI 工具那一栏会更实用一点，我会把真正跑过的流程放进去。",
+          "作品集里有一些正在长大的项目，成熟一个，我就认真整理一个。",
+          "这个站会慢慢更新。先搭骨架，再把真实经历一点点补上。",
+          "想交流的话，页面底部有微信和各个平台入口。"
+        ];
+        var messageIndex = 0;
+        var talkTimer = null;
+        var isMobile = window.matchMedia && window.matchMedia("(max-width: 720px)").matches;
+        var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var currentX = 0;
+        var currentY = 0;
+        var targetX = 0;
+        var targetY = 0;
+        var lastX = 0;
+        var followPaused = false;
+        var resumeTimer = null;
+        var idleTimer = null;
+        var idleDelay = 6200;
+
+        function clamp(value, min, max) {
+          return Math.min(Math.max(value, min), max);
+        }
+
+        function setPosition(x, y) {
+          currentX = x;
+          currentY = y;
+          targetX = x;
+          targetY = y;
+          companion.style.setProperty("--kunki-x", x.toFixed(2) + "px");
+          companion.style.setProperty("--kunki-y", y.toFixed(2) + "px");
+        }
+
+        function placeAtRest() {
+          isMobile = window.matchMedia && window.matchMedia("(max-width: 720px)").matches;
+          var x = clamp(window.innerWidth - 132, 18, Math.max(window.innerWidth - 94, 18));
+          var y = clamp(window.innerHeight - 178, 86, Math.max(window.innerHeight - 132, 86));
+          setPosition(x, y);
+        }
+
+        function showMessage(text) {
+          bubble.textContent = text;
+          companion.classList.add("is-talking");
+          window.clearTimeout(talkTimer);
+          talkTimer = window.setTimeout(function () {
+            companion.classList.remove("is-talking");
+          }, 5200);
+        }
+
+        function wakeUp() {
+          companion.classList.remove("is-sitting");
+          window.clearTimeout(idleTimer);
+        }
+
+        function scheduleSit() {
+          window.clearTimeout(idleTimer);
+          idleTimer = window.setTimeout(function () {
+            if (followPaused) return;
+            companion.classList.remove("is-walking");
+            companion.classList.add("is-sitting");
+          }, idleDelay);
+        }
+
+        function updateTarget(event) {
+          if (isMobile || prefersReduced) return;
+          wakeUp();
+          var isNearPerson = event.clientX >= currentX - 18 &&
+            event.clientX <= currentX + 108 &&
+            event.clientY >= currentY - 30 &&
+            event.clientY <= currentY + 138;
+
+          if (followPaused || isNearPerson) {
+            companion.classList.remove("is-walking");
+            scheduleSit();
+            return;
+          }
+
+          var nextX = clamp(event.clientX - 44, 18, window.innerWidth - 94);
+          var nextY = clamp(event.clientY + 32, 86, window.innerHeight - 132);
+          targetX = nextX;
+          targetY = nextY;
+          companion.dataset.direction = nextX < lastX ? "left" : "right";
+          lastX = nextX;
+          companion.classList.add("is-walking");
+          scheduleSit();
+        }
+
+        function animate() {
+          if (!isMobile && !prefersReduced) {
+            var dx = targetX - currentX;
+            var dy = targetY - currentY;
+            currentX += dx * 0.052;
+            currentY += dy * 0.052;
+            companion.style.setProperty("--kunki-x", currentX.toFixed(2) + "px");
+            companion.style.setProperty("--kunki-y", currentY.toFixed(2) + "px");
+
+            if (Math.abs(dx) + Math.abs(dy) < 1.2) {
+              companion.classList.remove("is-walking");
+            }
+          }
+          window.requestAnimationFrame(animate);
+        }
+
+        person.addEventListener("click", function () {
+          wakeUp();
+          showMessage(messages[messageIndex]);
+          messageIndex = (messageIndex + 1) % messages.length;
+          scheduleSit();
         });
-      } else {
-        revealNodes.forEach(function (node) {
-          node.classList.add("is-visible");
+        person.addEventListener("pointerenter", function () {
+          wakeUp();
+          followPaused = true;
+          companion.classList.remove("is-walking");
+          window.clearTimeout(resumeTimer);
+        });
+        person.addEventListener("pointerleave", function () {
+          window.clearTimeout(resumeTimer);
+          resumeTimer = window.setTimeout(function () {
+            followPaused = false;
+            scheduleSit();
+          }, 360);
+        });
+        window.addEventListener("mousemove", updateTarget, { passive: true });
+        window.addEventListener("resize", placeAtRest);
+
+        placeAtRest();
+        window.requestAnimationFrame(function () {
+          companion.classList.add("is-ready");
+          showMessage("点我一下，我可以带你逛这个站。");
+          scheduleSit();
+          animate();
         });
       }
+
+      SiteCommon.initNav({ currentKey: "index" });
+      SiteCommon.initQrModal({ assetPrefix: "" });
+      SiteCommon.renderPageOverride({
+        pageId: "index",
+        containerId: "dynamic-page-content",
+        staticSelector: ".site-static",
+        dataPath: "data/site-pages.json",
+        fallbackKey: "sitePages"
+      });
+
+      var container = document.getElementById("featured-posts");
+      SiteCommon.fetchWithFallback("data/articles.json", "articles").then(function (articles) {
+        var top3 = SiteCommon.uniqueByTitle(SiteCommon.sortByDateDesc(articles)).slice(0, 3);
+        container.innerHTML = top3.map(function (item) {
+          var tagLabel = item.category || "文案";
+          if (Array.isArray(item.tags) && item.tags.length > 0) {
+            tagLabel = item.tags[0];
+          } else if (typeof item.tags === "string" && item.tags.trim()) {
+            tagLabel = item.tags.trim();
+          }
+          return [
+            '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(item.url, "") + '" class="card-lift glass-flow reveal rounded-2xl border border-slate-100 bg-white p-6" data-flow-card>',
+            '  <p class="text-xs font-semibold uppercase tracking-wide text-blue-600">' + tagLabel + '</p>',
+            '  <h3 class="mt-3 text-lg font-semibold text-slate-900">' + item.title + '</h3>',
+            '  <p class="mt-3 text-sm leading-relaxed text-slate-600">' + item.description + '</p>',
+            '  <p class="mt-4 text-xs text-slate-400">' + item.date + '</p>',
+            '</a>'
+          ].join("");
+        }).join("");
+        SiteCommon.initReveal(document);
+        window.requestAnimationFrame(function () {
+          window.dispatchEvent(new Event("scroll"));
+        });
+      });
+
+      SiteCommon.initReveal(document);
+      initScrollDynamics();
+      initAiEraMotion();
+      initKunkiCompanion();
     })();
   </script>
 </body>
