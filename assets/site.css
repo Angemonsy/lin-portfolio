@@ -364,8 +364,8 @@ body {
   left: 0;
   top: 0;
   z-index: 70;
-  width: 86px;
-  height: 124px;
+  width: 122px;
+  height: 188px;
   opacity: 0;
   pointer-events: none;
   transform: translate3d(var(--kunki-x), var(--kunki-y), 0);
@@ -384,8 +384,8 @@ body {
 .kunki-companion__person {
   position: absolute;
   inset: auto 0 0 0;
-  width: 86px;
-  height: 118px;
+  width: 122px;
+  height: 184px;
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -401,9 +401,9 @@ body {
 
 .kunki-companion__shadow {
   position: absolute;
-  left: 12px;
+  left: 25px;
   bottom: 0;
-  width: 60px;
+  width: 72px;
   height: 12px;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.16);
@@ -412,13 +412,22 @@ body {
 
 .kunki-companion__figure {
   position: absolute;
-  left: 7px;
+  left: 3px;
   bottom: 8px;
-  width: 72px;
-  height: 106px;
+  width: 116px;
+  height: 178px;
   transform: scaleX(var(--kunki-facing));
   transform-origin: 50% 100%;
   transition: transform 0.28s ease;
+}
+
+.kunki-companion__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 14px rgba(15, 23, 42, 0.18));
 }
 
 .kunki-companion__head {
@@ -674,8 +683,8 @@ body {
 
 .kunki-companion__bubble {
   position: absolute;
-  right: 58px;
-  bottom: 86px;
+  right: 68px;
+  bottom: 106px;
   width: min(230px, calc(100vw - 116px));
   padding: 0.75rem 0.85rem;
   border: 1px solid rgba(147, 197, 253, 0.8);
@@ -1837,18 +1846,20 @@ body {
     top: auto;
     right: 0.85rem;
     bottom: 0.85rem;
-    width: 70px;
-    height: 98px;
+    width: 76px;
+    height: 112px;
     transform: none !important;
   }
 
   .kunki-companion__person {
-    width: 70px;
-    height: 96px;
+    width: 76px;
+    height: 110px;
   }
 
   .kunki-companion__figure {
-    left: 4px;
+    left: 0;
+    width: 76px;
+    height: 110px;
     transform: scale(0.84);
   }
 
@@ -1861,8 +1872,8 @@ body {
   }
 
   .kunki-companion__bubble {
-    right: 48px;
-    bottom: 78px;
+    right: 54px;
+    bottom: 92px;
     width: min(214px, calc(100vw - 108px));
     font-size: 0.78rem;
   }

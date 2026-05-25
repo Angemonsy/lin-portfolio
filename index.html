@@ -64,15 +64,7 @@
     <button class="kunki-companion__person" data-kunki-person type="button" aria-label="和 Kunki 小助手说话">
       <span class="kunki-companion__shadow" aria-hidden="true"></span>
       <span class="kunki-companion__figure" aria-hidden="true">
-        <span class="kunki-companion__head">
-          <span class="kunki-companion__hair"></span>
-          <span class="kunki-companion__face"><span></span><span></span></span>
-        </span>
-        <span class="kunki-companion__body"><span class="kunki-companion__strap"></span></span>
-        <span class="kunki-companion__arm kunki-companion__arm--left"></span>
-        <span class="kunki-companion__arm kunki-companion__arm--right"></span>
-        <span class="kunki-companion__leg kunki-companion__leg--left"></span>
-        <span class="kunki-companion__leg kunki-companion__leg--right"></span>
+        <img class="kunki-companion__photo" src="assets/kunki-boy.png" alt="">
       </span>
     </button>
   </div>
@@ -623,8 +615,8 @@
 
         function placeAtRest() {
           isMobile = window.matchMedia && window.matchMedia("(max-width: 720px)").matches;
-          var x = clamp(window.innerWidth - 132, 18, Math.max(window.innerWidth - 94, 18));
-          var y = clamp(window.innerHeight - 178, 86, Math.max(window.innerHeight - 132, 86));
+          var x = clamp(window.innerWidth - 158, 18, Math.max(window.innerWidth - 130, 18));
+          var y = clamp(window.innerHeight - 224, 86, Math.max(window.innerHeight - 188, 86));
           setPosition(x, y);
         }
 
@@ -665,8 +657,8 @@
             return;
           }
 
-          var nextX = clamp(event.clientX - 44, 18, window.innerWidth - 94);
-          var nextY = clamp(event.clientY + 32, 86, window.innerHeight - 132);
+          var nextX = clamp(event.clientX - 56, 18, window.innerWidth - 130);
+          var nextY = clamp(event.clientY + 32, 86, window.innerHeight - 188);
           targetX = nextX;
           targetY = nextY;
           companion.dataset.direction = nextX < lastX ? "left" : "right";
