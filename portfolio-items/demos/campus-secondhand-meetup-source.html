@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生二手面交不鸽局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#0f172a",deep:"#05171b",tealGlow:"#2dd4bf",indigoGlow:"#818cf8"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at 12% 10%,rgba(45,212,191,.24),transparent 24%),radial-gradient(circle at 86% 12%,rgba(129,140,248,.22),transparent 22%),linear-gradient(145deg,#041316,#0c2d31 48%,#27265b 100%);color:#f8fafc}
+    .glass{background:rgba(6,18,23,.72);backdrop-filter:blur(18px)}
+    .tag{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
+    .tag:hover{transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="mb-5 overflow-hidden rounded-[2rem] border border-white/10 glass">
+      <div class="grid gap-0 lg:grid-cols-[1.06fr,0.94fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-teal-200">Campus Secondhand Meetup</p>
+          <h1 class="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl">二手面交不鸽局</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-200">给校园二手群、宿舍转卖、毕业季清仓和同城面交用。它先把双方时间窗口、校内地点偏好、商品风险点和验货步骤对齐，再生成一个更不容易放鸽子、也不容易忘检查的碰头方案。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="generateBtn" class="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink">生成面交方案</button>
+            <button id="resetBtn" class="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white">恢复默认样例</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">最稳时间</p>
+              <p id="timeValue" class="mt-3 text-2xl font-extrabold text-white">待生成</p>
+              <p class="mt-2 text-sm text-slate-300">按双方时间交集和拖延风险优先排序。</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">最近快照</p>
+              <p id="historyCount" class="mt-3 text-3xl font-extrabold text-white">0</p>
+              <p class="mt-2 text-sm text-slate-300">最近三次面交方案保存在本地。</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">当前判断</p>
+              <p id="riskValue" class="mt-3 text-xl font-extrabold text-teal-200">先确认，再出门</p>
+              <p class="mt-2 text-sm text-slate-300">重点防“白跑、忘配件、临场砍不明白”。</p>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 bg-white/5 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-400">交易设置</p>
+          <div class="mt-4 space-y-4">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <label class="text-sm font-semibold text-white" for="itemName">商品名</label>
+              <input id="itemName" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400" value="99 新罗技鼠标" placeholder="例如：二手 iPad">
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+                <label class="text-sm font-semibold text-white" for="price">标价</label>
+                <input id="price" type="number" min="0" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="128">
+              </div>
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+                <label class="text-sm font-semibold text-white" for="category">品类</label>
+                <select id="category" class="mt-3 w-full rounded-2xl border border-white/10 bg-[#0d252b] px-4 py-3 text-sm text-white outline-none">
+                  <option value="数码配件">数码配件</option>
+                  <option value="教材讲义">教材讲义</option>
+                  <option value="运动闲置">运动闲置</option>
+                  <option value="宿舍用品">宿舍用品</option>
+                </select>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <label class="text-sm font-semibold text-white" for="riskFocus">最担心什么</label>
+              <input id="riskFocus" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="担心成色和配件不一致" placeholder="例如：担心临时改时间">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-5 lg:grid-cols-[1.08fr,0.92fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5 sm:px-8">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-[0.22em] text-slate-400">双方信息</p>
+              <h2 class="mt-2 text-2xl font-bold text-white">先把时间、地点偏好、面交风格说清</h2>
+            </div>
+            <button id="swapBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">交换买卖顺序</button>
+          </div>
+        </div>
+        <div class="space-y-4 p-6 sm:p-8">
+          <div id="partyList" class="grid gap-4 md:grid-cols-2"></div>
+          <div class="rounded-3xl border border-white/10 bg-black/15 p-5">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-[0.2em] text-slate-400">验货点</p>
+                <h3 class="mt-2 text-xl font-bold text-white">这次见面必须看什么</h3>
+              </div>
+              <button id="addCheckBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">新增检查项</button>
+            </div>
+            <div id="checkList" class="mt-4 space-y-3"></div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">智能结果</p>
+            <h3 class="mt-2 text-xl font-bold text-white">最稳面交方案</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <div id="planSummary" class="grid gap-3"></div>
+            <div id="messageBox" class="whitespace-pre-line rounded-3xl border border-dashed border-white/15 bg-white/5 p-4 text-sm leading-relaxed text-slate-100">生成后会给出一段可直接发给对方的确认文案。</div>
+            <div class="flex flex-wrap gap-3">
+              <button id="copyMessageBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">复制确认文案</button>
+              <button id="saveSnapshotBtn" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink">保存本地快照</button>
+            </div>
+          </div>
+        </section>
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">JSON 快照</p>
+            <h3 class="mt-2 text-xl font-bold text-white">导出 / 导入</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <button id="exportBtn" class="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white">导出当前配置</button>
+            <label class="block cursor-pointer rounded-2xl border border-dashed border-white/20 bg-black/15 px-4 py-4 text-sm leading-relaxed text-slate-300">
+              选择 JSON 文件恢复配置
+              <input id="importInput" type="file" accept="application/json" class="hidden">
+            </label>
+            <p id="importStatus" class="text-sm leading-relaxed text-slate-400">适合把常用校内面交点和验货习惯带到别的设备。</p>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="mt-5 grid gap-5 lg:grid-cols-[1fr,0.95fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-400">现场执行</p>
+          <h2 class="mt-2 text-2xl font-bold text-white">出门前要做的事</h2>
+        </div>
+        <div class="space-y-4 p-6 sm:p-8">
+          <div id="timelineList" class="space-y-3 text-sm leading-relaxed text-slate-200">
+            <p class="rounded-3xl border border-dashed border-white/15 p-4">点击“生成面交方案”后显示时间线、提醒点和砍价节奏。</p>
+          </div>
+        </div>
+      </article>
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">最近记录</p>
+            <h3 class="mt-2 text-xl font-bold text-white">最近三次面交局</h3>
+          </div>
+          <div id="historyList" class="space-y-3 px-6 py-5 text-sm leading-relaxed text-slate-300">
+            <p class="rounded-2xl border border-dashed border-white/15 p-4">保存过的方案会显示在这里。</p>
+          </div>
+        </section>
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">当前提醒</p>
+            <h3 class="mt-2 text-xl font-bold text-white">这单最容易翻车在哪</h3>
+          </div>
+          <div id="riskList" class="space-y-3 px-6 py-5 text-sm leading-relaxed text-slate-300">
+            <p class="rounded-2xl border border-dashed border-white/15 p-4">生成后会给出面交风险和应对话术。</p>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var storageKey = "campus-secondhand-meetup-history";
+      var defaultState = {
+        itemName: "99 新罗技鼠标",
+        price: 128,
+        category: "数码配件",
+        riskFocus: "担心成色和配件不一致",
+        parties: [
+          { id: "seller", role: "卖家", name: "阿泽", windows: "周三 17:30-18:30 / 周四 12:20-13:00", places: "图书馆门口,南区菜鸟驿站,一食堂", vibe: "爽快型", note: "带原盒和接收器" },
+          { id: "buyer", role: "买家", name: "Momo", windows: "周三 18:00-19:00 / 周四 11:50-12:40", places: "图书馆门口,教学楼A,一食堂", vibe: "想先试用", note: "希望现场连电脑确认一下" }
+        ],
+        checks: [
+          { id: "c1", text: "滚轮和左右键是否正常" },
+          { id: "c2", text: "接收器、电池仓、原盒是否齐全" },
+          { id: "c3", text: "现场连电脑试 1 分钟" }
+        ]
+      };
+
+      var state = clone(defaultState);
+      var latestPlan = null;
+      var history = loadHistory();
+      var els = {
+        itemName: byId("itemName"),
+        price: byId("price"),
+        category: byId("category"),
+        riskFocus: byId("riskFocus"),
+        partyList: byId("partyList"),
+        checkList: byId("checkList"),
+        planSummary: byId("planSummary"),
+        messageBox: byId("messageBox"),
+        timelineList: byId("timelineList"),
+        riskList: byId("riskList"),
+        historyList: byId("historyList"),
+        historyCount: byId("historyCount"),
+        timeValue: byId("timeValue"),
+        riskValue: byId("riskValue"),
+        importStatus: byId("importStatus")
+      };
+
+      byId("generateBtn").addEventListener("click", generatePlan);
+      byId("resetBtn").addEventListener("click", function () {
+        state = clone(defaultState);
+        latestPlan = null;
+        syncInputs();
+        renderParties();
+        renderChecks();
+        renderPlaceholder();
+      });
+      byId("swapBtn").addEventListener("click", swapParties);
+      byId("addCheckBtn").addEventListener("click", function () {
+        state.checks.push({ id: uid("c"), text: "新增检查项" });
+        renderChecks();
+      });
+      byId("saveSnapshotBtn").addEventListener("click", saveSnapshot);
+      byId("copyMessageBtn").addEventListener("click", copyMessage);
+      byId("exportBtn").addEventListener("click", exportSnapshot);
+      byId("importInput").addEventListener("change", importSnapshot);
+      ["itemName", "price", "category", "riskFocus"].forEach(function (id) {
+        byId(id).addEventListener("input", syncStateFromInputs);
+        byId(id).addEventListener("change", syncStateFromInputs);
+      });
+
+      syncInputs();
+      renderParties();
+      renderChecks();
+      renderPlaceholder();
+      renderHistory();
+
+      function byId(id) { return document.getElementById(id); }
+      function clone(value) { return JSON.parse(JSON.stringify(value)); }
+      function uid(prefix) { return prefix + Math.random().toString(36).slice(2, 8); }
+      function escapeHtml(value) { return String(value || "").replace(/[&<>"']/g, function (char) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]; }); }
+      function money(value) { return "￥" + Number(value || 0).toFixed(0); }
+      function toNumber(value) { var num = Number(value); return Number.isFinite(num) && num >= 0 ? num : 0; }
+
+      function syncInputs() {
+        els.itemName.value = state.itemName;
+        els.price.value = state.price;
+        els.category.value = state.category;
+        els.riskFocus.value = state.riskFocus;
+      }
+
+      function syncStateFromInputs() {
+        state.itemName = els.itemName.value.trim() || "校园二手商品";
+        state.price = toNumber(els.price.value);
+        state.category = els.category.value;
+        state.riskFocus = els.riskFocus.value.trim() || "担心临场信息对不上";
+      }
+
+      function renderParties() {
+        els.partyList.innerHTML = "";
+        state.parties.forEach(function (party) {
+          var card = document.createElement("article");
+          card.className = "rounded-3xl border border-white/10 bg-black/15 p-5";
+          card.innerHTML =
+            '<p class="text-xs uppercase tracking-[0.2em] text-slate-400">' + escapeHtml(party.role) + '</p>' +
+            '<h3 class="mt-2 text-xl font-bold text-white">' + escapeHtml(party.name) + '</h3>' +
+            '<div class="mt-4 grid gap-4">' +
+            field("称呼", party.id, "name", party.name) +
+            field("可面交时间", party.id, "windows", party.windows) +
+            field("偏好地点", party.id, "places", party.places) +
+            field("交易风格", party.id, "vibe", party.vibe) +
+            field("额外说明", party.id, "note", party.note) +
+            "</div>";
+          els.partyList.appendChild(card);
+        });
+        bindPartyInputs();
+      }
+
+      function renderChecks() {
+        els.checkList.innerHTML = "";
+        state.checks.forEach(function (check, index) {
+          var row = document.createElement("div");
+          row.className = "grid gap-3 md:grid-cols-[1fr,auto]";
+          row.innerHTML =
+            '<input data-check-id="' + check.id + '" class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="' + escapeHtml(check.text) + '">' +
+            '<button data-remove-check="' + check.id + '" class="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white"' + (state.checks.length <= 2 ? " disabled" : "") + '>删掉第 ' + (index + 1) + ' 项</button>';
+          els.checkList.appendChild(row);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-check-id]"), function (input) {
+          input.addEventListener("input", function () {
+            var check = state.checks.find(function (item) { return item.id === input.getAttribute("data-check-id"); });
+            if (check) check.text = input.value;
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-remove-check]"), function (button) {
+          button.addEventListener("click", function () {
+            if (state.checks.length <= 2) return;
+            var id = button.getAttribute("data-remove-check");
+            state.checks = state.checks.filter(function (item) { return item.id !== id; });
+            renderChecks();
+          });
+        });
+      }
+
+      function field(label, partyId, key, value) {
+        return '<label class="block"><span class="text-sm font-semibold text-white">' + label + '</span><input data-party-id="' + partyId + '" data-party-key="' + key + '" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="' + escapeHtml(value) + '"></label>';
+      }
+
+      function bindPartyInputs() {
+        Array.prototype.forEach.call(document.querySelectorAll("[data-party-id]"), function (input) {
+          input.addEventListener("input", function () {
+            var party = state.parties.find(function (item) { return item.id === input.getAttribute("data-party-id"); });
+            if (!party) return;
+            party[input.getAttribute("data-party-key")] = input.value;
+          });
+        });
+      }
+
+      function renderPlaceholder() {
+        els.planSummary.innerHTML = '<div class="rounded-3xl border border-dashed border-white/15 bg-white/5 p-4 text-sm leading-relaxed text-slate-300">生成后会给出推荐时间、地点、成交判断和砍价空间。</div>';
+        els.timelineList.innerHTML = '<p class="rounded-3xl border border-dashed border-white/15 p-4">点击“生成面交方案”后显示时间线、提醒点和砍价节奏。</p>';
+        els.riskList.innerHTML = '<p class="rounded-2xl border border-dashed border-white/15 p-4">生成后会给出面交风险和应对话术。</p>';
+        els.messageBox.textContent = "生成后会给出一段可直接发给对方的确认文案。";
+        els.timeValue.textContent = "待生成";
+        els.riskValue.textContent = "先确认，再出门";
+      }
+
+      function swapParties() {
+        state.parties.reverse();
+        state.parties[0].role = "卖家";
+        state.parties[1].role = "买家";
+        renderParties();
+      }
+
+      function splitTokens(value) {
+        return String(value || "").split(/[，,\/\n]/).map(function (item) { return item.trim(); }).filter(Boolean);
+      }
+
+      function scoreSlots(slot, placesOverlap, riskText, buyer, seller) {
+        var score = 50;
+        if (/周三|周四|今晚/.test(slot)) score += 10;
+        if (/18:|17:|12:/.test(slot)) score += 8;
+        if (placesOverlap.length) score += 12;
+        if (/想先试用|现场连/.test(buyer.note + seller.note)) score += 6;
+        if (/改时间|鸽/.test(riskText)) score -= 8;
+        return score;
+      }
+
+      function generatePlan() {
+        syncStateFromInputs();
+        var seller = state.parties[0];
+        var buyer = state.parties[1];
+        var sellerSlots = splitTokens(seller.windows);
+        var buyerSlots = splitTokens(buyer.windows);
+        var sellerPlaces = splitTokens(seller.places);
+        var buyerPlaces = splitTokens(buyer.places);
+        var commonSlots = sellerSlots.filter(function (slot) {
+          return buyerSlots.some(function (buyerSlot) {
+            return buyerSlot.indexOf(slot.slice(0, 2)) !== -1 || slot.indexOf(buyerSlot.slice(0, 2)) !== -1;
+          });
+        });
+        if (!commonSlots.length) {
+          commonSlots = [sellerSlots[0] || "卖家课后 30 分钟", buyerSlots[0] || "买家午休时间"];
+        }
+        var commonPlaces = sellerPlaces.filter(function (place) { return buyerPlaces.indexOf(place) !== -1; });
+        if (!commonPlaces.length) {
+          commonPlaces = [sellerPlaces[0] || buyerPlaces[0] || "图书馆门口"];
+        }
+        var topSlot = commonSlots.map(function (slot) {
+          return { slot: slot, score: scoreSlots(slot, commonPlaces, state.riskFocus, buyer, seller) };
+        }).sort(function (a, b) { return b.score - a.score; })[0];
+        var topPlace = commonPlaces[0];
+        var priceBand = recommendPriceBand(state.price, state.category, buyer, seller);
+        var checks = state.checks.map(function (check) { return check.text.trim(); }).filter(Boolean);
+        var riskItems = buildRiskItems(topSlot.slot, topPlace, checks, buyer, seller);
+        var timeline = buildTimeline(topSlot.slot, topPlace, priceBand, checks, buyer, seller);
+        latestPlan = {
+          itemName: state.itemName,
+          slot: topSlot.slot,
+          place: topPlace,
+          priceBand: priceBand,
+          checks: checks,
+          riskItems: riskItems,
+          timeline: timeline,
+          message: buildMessage(topSlot.slot, topPlace, priceBand, checks, buyer, seller)
+        };
+        renderPlan();
+      }
+
+      function recommendPriceBand(price, category, buyer, seller) {
+        var discount = 0;
+        if (category === "教材讲义") discount = 12;
+        if (category === "宿舍用品") discount = 10;
+        if (/爽快/.test(seller.vibe)) discount += 4;
+        if (/想先试用/.test(buyer.note)) discount += 3;
+        var min = Math.max(0, price - discount);
+        return { ask: price, suggest: min, phrase: min === price ? "按原价面交更稳" : "可以先试着压到 " + money(min) };
+      }
+
+      function buildRiskItems(slot, place, checks, buyer, seller) {
+        var items = [];
+        items.push("时间风险：锁定 `" + slot + "` 后，至少提前 20 分钟再互发一次“我已出门 / 我已到楼下”。");
+        items.push("地点风险：`" + place + "` 这种模糊点位，最好补一句地标，例如“图书馆西门闸机旁”。");
+        items.push("验货风险：先验 `" + checks[0] + "` 和 `" + (checks[1] || checks[0]) + "`，别先转账再找问题。");
+        if (/原盒|配件/.test(seller.note + buyer.note + state.riskFocus)) {
+          items.push("配件风险：出门前再次确认原盒、线材、发票或接收器是否一起带。");
+        }
+        return items;
+      }
+
+      function buildTimeline(slot, place, priceBand, checks, buyer, seller) {
+        return [
+          "T-60 分钟：卖家拍一张当前成色图，买家确认 `" + slot + "` 是否还成立。",
+          "T-20 分钟：双方各发一次实时位置，面交点统一写成 `" + place + "`。",
+          "见面第 1 分钟：先打招呼，不急着聊价，先检查 `" + checks.slice(0, 2).join(" / ") + "`。",
+          "见面第 3 分钟：如果状态一致，再按 `" + priceBand.phrase + "` 进入价格确认。",
+          "成交后 2 分钟：现场删除群公告或标记“已出”，避免被别人继续追问。"
+        ];
+      }
+
+      function buildMessage(slot, place, priceBand, checks, buyer, seller) {
+        return [
+          seller.name + "，我们就按 `" + slot + "` 在 `" + place + "` 面交这件 `" + state.itemName + "`。",
+          "我这边到之前会先确认一次位置；现场先看 `" + checks.slice(0, 3).join("、") + "`，没问题就直接成交。",
+          "价格先按 " + money(priceBand.ask) + " 对齐，如果现场状态和描述一致就不磨；如果有小瑕疵，我会先礼貌问能不能往 " + money(priceBand.suggest) + " 靠一点。",
+          "你出门前也帮我确认一下 `" + seller.note + "`，这样我们都别白跑。"
+        ].join("\n");
+      }
+
+      function renderPlan() {
+        if (!latestPlan) return;
+        els.timeValue.textContent = latestPlan.slot;
+        els.riskValue.textContent = latestPlan.riskItems.length >= 4 ? "先验货，再转账" : "信息对齐度较高";
+        els.planSummary.innerHTML = [
+          summaryCard("推荐地点", latestPlan.place, "优先选双方都熟的校内地标。"),
+          summaryCard("价格判断", latestPlan.priceBand.phrase, "当前标价 " + money(latestPlan.priceBand.ask) + "。"),
+          summaryCard("重点检查", latestPlan.checks.slice(0, 2).join(" / "), "前 2 项先看，避免话题跑偏。")
+        ].join("");
+        els.messageBox.textContent = latestPlan.message;
+        els.timelineList.innerHTML = latestPlan.timeline.map(function (item) {
+          return '<div class="rounded-3xl border border-white/10 bg-black/15 p-4">' + escapeHtml(item) + "</div>";
+        }).join("");
+        els.riskList.innerHTML = latestPlan.riskItems.map(function (item) {
+          return '<div class="rounded-2xl border border-white/10 bg-black/15 p-4">' + escapeHtml(item) + "</div>";
+        }).join("");
+      }
+
+      function summaryCard(label, value, note) {
+        return '<article class="rounded-3xl border border-white/10 bg-black/15 p-4"><p class="text-xs uppercase tracking-[0.18em] text-slate-400">' + label + '</p><p class="mt-3 text-lg font-bold text-white">' + escapeHtml(value) + '</p><p class="mt-2 text-sm text-slate-300">' + escapeHtml(note) + "</p></article>";
+      }
+
+      function saveSnapshot() {
+        if (!latestPlan) {
+          generatePlan();
+        }
+        var snapshots = loadHistory();
+        snapshots.unshift({
+          itemName: state.itemName,
+          slot: latestPlan.slot,
+          place: latestPlan.place,
+          price: latestPlan.priceBand.suggest,
+          createdAt: new Date().toLocaleString("zh-CN", { hour12: false })
+        });
+        history = snapshots.slice(0, 3);
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        renderHistory();
+      }
+
+      function renderHistory() {
+        els.historyCount.textContent = String(history.length);
+        if (!history.length) {
+          els.historyList.innerHTML = '<p class="rounded-2xl border border-dashed border-white/15 p-4">保存过的方案会显示在这里。</p>';
+          return;
+        }
+        els.historyList.innerHTML = history.map(function (item) {
+          return '<article class="rounded-2xl border border-white/10 bg-black/15 p-4"><p class="text-sm font-semibold text-white">' + escapeHtml(item.itemName) + '</p><p class="mt-2 text-xs uppercase tracking-[0.16em] text-slate-400">' + escapeHtml(item.createdAt) + '</p><p class="mt-3 text-sm text-slate-200">时间：' + escapeHtml(item.slot) + "</p><p class=\"mt-1 text-sm text-slate-300\">地点：" + escapeHtml(item.place) + "</p><p class=\"mt-1 text-sm text-teal-200\">建议成交：" + money(item.price) + "</p></article>";
+        }).join("");
+      }
+
+      function loadHistory() {
+        try {
+          var raw = localStorage.getItem(storageKey);
+          var parsed = raw ? JSON.parse(raw) : [];
+          return Array.isArray(parsed) ? parsed.slice(0, 3) : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function exportSnapshot() {
+        syncStateFromInputs();
+        var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "campus-secondhand-meetup.json";
+        link.click();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      }
+
+      function importSnapshot(event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          try {
+            var next = JSON.parse(reader.result);
+            if (!next || !Array.isArray(next.parties) || !Array.isArray(next.checks)) {
+              throw new Error("bad schema");
+            }
+            state = next;
+            latestPlan = null;
+            syncInputs();
+            renderParties();
+            renderChecks();
+            renderPlaceholder();
+            els.importStatus.textContent = "已恢复配置，可以重新生成面交方案。";
+          } catch (error) {
+            els.importStatus.textContent = "导入失败：JSON 结构不对。";
+          }
+          event.target.value = "";
+        };
+        reader.readAsText(file, "utf-8");
+      }
+
+      function copyMessage() {
+        if (!latestPlan) {
+          generatePlan();
+        }
+        var text = latestPlan ? latestPlan.message : "";
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            byId("copyMessageBtn").textContent = "已复制";
+            setTimeout(function () { byId("copyMessageBtn").textContent = "复制确认文案"; }, 1200);
+          });
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

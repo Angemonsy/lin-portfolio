@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生社团破冰分桌器</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#0f172a",tealNight:"#062b2b",sun:"#fb923c",mint:"#2dd4bf"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at 12% 10%,rgba(45,212,191,.26),transparent 24%),radial-gradient(circle at 88% 8%,rgba(251,146,60,.22),transparent 22%),linear-gradient(145deg,#051616,#0d2d2b 48%,#4a1d0d 100%);color:#f8fafc}
+    .glass{background:rgba(7,22,22,.7);backdrop-filter:blur(18px)}
+    .chip{transition:transform .18s ease,border-color .18s ease,background-color .18s ease}
+    .chip:hover{transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="mb-5 overflow-hidden rounded-[2rem] border border-white/10 glass">
+      <div class="grid gap-0 lg:grid-cols-[1.05fr,0.95fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-teal-200">Campus Icebreak Seating</p>
+          <h1 class="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl">社团破冰分桌器</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-200">给迎新、班会、招新说明会、工作坊和线下共学局用。它不只帮你把人“分开坐”，而是让每桌都有人能开口、有人能接话、话题不会太飘，主持人也知道第一句该怎么说。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="generateBtn" class="inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-ink">生成分桌方案</button>
+            <button id="shuffleBtn" class="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white">换一种排法</button>
+            <button id="resetBtn" class="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white">恢复样例</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">建议桌数</p>
+              <p id="tableCountValue" class="mt-3 text-3xl font-extrabold text-white">3 桌</p>
+              <p class="mt-2 text-sm text-slate-300">按参与人数和每桌人数自动计算。</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">混合度</p>
+              <p id="mixValue" class="mt-3 text-3xl font-extrabold text-white">待生成</p>
+              <p class="mt-2 text-sm text-slate-300">看每桌是否兼顾新人、老成员和社交能量。</p>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">现场判断</p>
+              <p id="hostMoodValue" class="mt-3 text-xl font-extrabold text-orange-200">先把尴尬消掉</p>
+              <p class="mt-2 text-sm text-slate-300">不是随机分组，而是降低冷场概率。</p>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 bg-white/5 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-400">活动设置</p>
+          <div class="mt-4 space-y-4">
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <label class="text-sm font-semibold text-white" for="eventName">活动名</label>
+              <input id="eventName" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-400" value="社团春招见面会" placeholder="例如：班级破冰夜">
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+                <label class="text-sm font-semibold text-white" for="mode">场景模式</label>
+                <select id="mode" class="mt-3 w-full rounded-2xl border border-white/10 bg-[#0f2a2a] px-4 py-3 text-sm text-white outline-none">
+                  <option value="迎新破冰">迎新破冰</option>
+                  <option value="部门招新">部门招新</option>
+                  <option value="共学工作坊">共学工作坊</option>
+                </select>
+              </div>
+              <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+                <label class="text-sm font-semibold text-white" for="tableSize">每桌人数</label>
+                <select id="tableSize" class="mt-3 w-full rounded-2xl border border-white/10 bg-[#0f2a2a] px-4 py-3 text-sm text-white outline-none">
+                  <option value="3">3 人桌</option>
+                  <option value="4" selected>4 人桌</option>
+                  <option value="5">5 人桌</option>
+                </select>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-white/10 bg-black/15 p-4">
+              <label class="text-sm font-semibold text-white" for="goal">组织者目标</label>
+              <input id="goal" class="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none" value="让新生都能说上第一句话" placeholder="例如：多留住几个新同学">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-5 lg:grid-cols-[1.08fr,0.92fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+        <div class="border-b border-white/10 px-6 py-5 sm:px-8">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-[0.22em] text-slate-400">参与者清单</p>
+              <h2 class="mt-2 text-2xl font-bold text-white">先把谁来、谁容易冷场说清</h2>
+            </div>
+            <button id="addParticipantBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">新增参与者</button>
+          </div>
+        </div>
+        <div id="participantList" class="space-y-4 p-6 sm:p-8"></div>
+      </article>
+
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">主持人辅助</p>
+            <h3 class="mt-2 text-xl font-bold text-white">开场词和控场提醒</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <div id="hostScript" class="whitespace-pre-line rounded-3xl border border-dashed border-white/15 bg-white/5 p-4 text-sm leading-relaxed text-slate-100">生成后会给你一段可以直接照着说的开场词。</div>
+            <div id="hostTips" class="space-y-3 text-sm leading-relaxed text-slate-300">
+              <p class="rounded-2xl border border-dashed border-white/15 p-4">还没生成方案时，这里会提醒你现场最可能卡住的点。</p>
+            </div>
+            <button id="copyScriptBtn" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white">复制开场词</button>
+          </div>
+        </section>
+        <section class="overflow-hidden rounded-[2rem] border border-white/10 glass">
+          <div class="border-b border-white/10 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-400">本轮判断</p>
+            <h3 class="mt-2 text-xl font-bold text-white">为什么这样分</h3>
+          </div>
+          <div id="reasonList" class="space-y-3 px-6 py-5 text-sm leading-relaxed text-slate-300">
+            <p class="rounded-2xl border border-dashed border-white/15 p-4">生成后会解释每一桌为什么这么排。</p>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="mt-5 overflow-hidden rounded-[2rem] border border-white/10 glass">
+      <div class="border-b border-white/10 px-6 py-5 sm:px-8">
+        <p class="text-xs uppercase tracking-[0.22em] text-slate-400">结果区</p>
+        <h2 class="mt-2 text-2xl font-bold text-white">今晚的桌面分配</h2>
+      </div>
+      <div id="tableList" class="grid gap-4 p-6 sm:p-8 xl:grid-cols-3">
+        <div class="rounded-3xl border border-dashed border-white/15 bg-black/15 p-5 text-sm leading-relaxed text-slate-300">点击“生成分桌方案”后显示每桌成员、破冰问题和注意事项。</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var defaultState = {
+        eventName: "社团春招见面会",
+        mode: "迎新破冰",
+        tableSize: 4,
+        goal: "让新生都能说上第一句话",
+        participants: [
+          { id: "u1", name: "阿禾", role: "新生", topic: "摄影,citywalk", energy: 2, wish: "想找一起拍照的人" },
+          { id: "u2", name: "小麦", role: "老成员", topic: "排版,推文", energy: 4, wish: "想认识愿意长期做内容的人" },
+          { id: "u3", name: "Lynn", role: "新生", topic: "游戏,配音", energy: 3, wish: "怕冷场，想先混熟" },
+          { id: "u4", name: "阿宇", role: "干部", topic: "运营,活动策划", energy: 5, wish: "想观察谁适合拉进部门" },
+          { id: "u5", name: "77", role: "新生", topic: "考研,自习", energy: 1, wish: "希望先跟好聊的人坐一起" },
+          { id: "u6", name: "周周", role: "老成员", topic: "剪辑,短视频", energy: 4, wish: "想带新人快速开口" },
+          { id: "u7", name: "Momo", role: "跨学院", topic: "桌游,剧本杀", energy: 3, wish: "想认识别的学院同学" },
+          { id: "u8", name: "柚子", role: "新生", topic: "志愿活动,旅行", energy: 2, wish: "希望别全是社牛" },
+          { id: "u9", name: "阿泽", role: "干部", topic: "技术,AI工具", energy: 5, wish: "想找能一起做项目的人" },
+          { id: "u10", name: "可乐", role: "新生", topic: "音乐节,说唱", energy: 3, wish: "想跟有梗的人一桌" }
+        ]
+      };
+
+      var state = clone(defaultState);
+      var latestPlan = null;
+      var modePrompts = {
+        "迎新破冰": {
+          opener: "先别介绍履历，先聊一个最近让你想加入这个社团的瞬间。",
+          prompt: "如果今天要和桌上某个人组队做一件小事，你最想做什么？",
+          tip: "先让新生说感受，再让老成员补资源。"
+        },
+        "部门招新": {
+          opener: "这桌先不自我推销，先讲一个你做过最上头的小项目。",
+          prompt: "如果下周就要开工，你想负责哪一段，为什么？",
+          tip: "避免干部扎堆，让每桌都有人能接住执行话题。"
+        },
+        "共学工作坊": {
+          opener: "先说你来之前最担心卡在哪一步，别急着说答案。",
+          prompt: "桌上谁的经验可能最能帮你少走弯路？",
+          tip: "优先把不同阶段的人混坐，减少同温层复读。"
+        }
+      };
+
+      var els = {
+        eventName: byId("eventName"),
+        mode: byId("mode"),
+        tableSize: byId("tableSize"),
+        goal: byId("goal"),
+        participantList: byId("participantList"),
+        tableList: byId("tableList"),
+        hostScript: byId("hostScript"),
+        hostTips: byId("hostTips"),
+        reasonList: byId("reasonList"),
+        tableCountValue: byId("tableCountValue"),
+        mixValue: byId("mixValue"),
+        hostMoodValue: byId("hostMoodValue"),
+        copyScriptBtn: byId("copyScriptBtn")
+      };
+
+      byId("generateBtn").addEventListener("click", function () { generatePlan(false); });
+      byId("shuffleBtn").addEventListener("click", function () { generatePlan(true); });
+      byId("resetBtn").addEventListener("click", function () {
+        state = clone(defaultState);
+        latestPlan = null;
+        syncInputs();
+        renderParticipants();
+        renderPlaceholder();
+      });
+      byId("addParticipantBtn").addEventListener("click", function () {
+        state.participants.push({ id: uid("u"), name: "新同学", role: "新生", topic: "还没想好", energy: 3, wish: "想先别太尴尬" });
+        renderParticipants();
+      });
+      ["eventName", "mode", "tableSize", "goal"].forEach(function (id) {
+        byId(id).addEventListener("input", syncStateFromInputs);
+        byId(id).addEventListener("change", syncStateFromInputs);
+      });
+      byId("copyScriptBtn").addEventListener("click", copyScript);
+
+      syncInputs();
+      renderParticipants();
+      renderPlaceholder();
+
+      function byId(id) { return document.getElementById(id); }
+      function clone(value) { return JSON.parse(JSON.stringify(value)); }
+      function uid(prefix) { return prefix + Math.random().toString(36).slice(2, 8); }
+      function escapeHtml(value) { return String(value || "").replace(/[&<>"']/g, function (char) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]; }); }
+      function clampEnergy(value) { var num = Number(value); if (!Number.isFinite(num)) return 3; return Math.min(5, Math.max(1, Math.round(num))); }
+
+      function syncInputs() {
+        els.eventName.value = state.eventName;
+        els.mode.value = state.mode;
+        els.tableSize.value = String(state.tableSize);
+        els.goal.value = state.goal;
+        els.tableCountValue.textContent = Math.max(1, Math.ceil(state.participants.length / state.tableSize)) + " 桌";
+      }
+
+      function syncStateFromInputs() {
+        state.eventName = els.eventName.value.trim() || "校园破冰局";
+        state.mode = els.mode.value;
+        state.tableSize = Number(els.tableSize.value) || 4;
+        state.goal = els.goal.value.trim() || "让大家都能开口";
+        els.tableCountValue.textContent = Math.max(1, Math.ceil(state.participants.length / state.tableSize)) + " 桌";
+      }
+
+      function renderParticipants() {
+        els.participantList.innerHTML = "";
+        state.participants.forEach(function (person, index) {
+          var card = document.createElement("article");
+          card.className = "rounded-3xl border border-white/10 bg-black/15 p-5";
+          card.innerHTML = '<div class="flex flex-wrap items-center justify-between gap-3"><p class="text-sm font-semibold text-white">参与者 ' + (index + 1) + '</p><button data-remove-user="' + person.id + '" class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-300">移除</button></div><div class="mt-4 grid gap-4 md:grid-cols-2">' + field("名字", person.id, "name", person.name) + field("身份", person.id, "role", person.role) + field("想聊什么", person.id, "topic", person.topic) + field("来场目标", person.id, "wish", person.wish) + field("社交能量 1-5", person.id, "energy", person.energy, "number") + "</div>";
+          els.participantList.appendChild(card);
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-user-id]"), function (input) {
+          input.addEventListener("input", function () {
+            var person = state.participants.find(function (item) { return item.id === input.getAttribute("data-user-id"); });
+            if (!person) return;
+            var key = input.getAttribute("data-user-key");
+            person[key] = key === "energy" ? clampEnergy(input.value) : input.value;
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-remove-user]"), function (button) {
+          button.addEventListener("click", function () {
+            if (state.participants.length <= 3) return;
+            var id = button.getAttribute("data-remove-user");
+            state.participants = state.participants.filter(function (person) { return person.id !== id; });
+            renderParticipants();
+            syncInputs();
+          });
+        });
+      }
+
+      function field(label, id, key, value, type) {
+        var inputType = type || "text";
+        return '<label class="block text-sm text-slate-300">' + label + '<input data-user-id="' + id + '" data-user-key="' + key + '" type="' + inputType + '" value="' + escapeHtml(value) + '" class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none"></label>';
+      }
+
+      function generatePlan(reshuffle) {
+        syncStateFromInputs();
+        var participants = state.participants.map(function (person) {
+          return {
+            id: person.id,
+            name: (person.name || "未命名同学").trim(),
+            role: (person.role || "参与者").trim(),
+            topic: (person.topic || "随聊").trim(),
+            wish: (person.wish || "想先熟一点").trim(),
+            energy: clampEnergy(person.energy)
+          };
+        });
+        var groupCount = Math.max(1, Math.ceil(participants.length / state.tableSize));
+        var buckets = [];
+        var i;
+        for (i = 0; i < groupCount; i += 1) {
+          buckets.push({ index: i + 1, members: [] });
+        }
+        var ordered = participants.slice().sort(function (a, b) {
+          if (b.energy !== a.energy) return b.energy - a.energy;
+          return a.name.localeCompare(b.name, "zh-CN");
+        });
+        if (reshuffle) {
+          ordered = ordered.map(function (item, idx) { return ordered[(idx * 3) % ordered.length]; });
+        }
+        ordered.forEach(function (person, index) {
+          var targetIndex = index % groupCount;
+          if (Math.floor(index / groupCount) % 2 === 1) {
+            targetIndex = groupCount - 1 - targetIndex;
+          }
+          buckets[targetIndex].members.push(person);
+        });
+
+        var promptSet = modePrompts[state.mode] || modePrompts["迎新破冰"];
+        var tableSummaries = buckets.map(function (bucket) {
+          var members = bucket.members;
+          var roles = uniqueValues(members.map(function (person) { return person.role; }));
+          var avgEnergy = members.reduce(function (sum, person) { return sum + person.energy; }, 0) / Math.max(1, members.length);
+          var topicPool = uniqueValues(members.map(function (person) { return person.topic.split(",")[0].trim(); }).filter(Boolean));
+          var quietCount = members.filter(function (person) { return person.energy <= 2; }).length;
+          var strongCount = members.filter(function (person) { return person.energy >= 4; }).length;
+          var risk = quietCount >= 2 && strongCount === 0 ? "偏安静，主持人要主动点名发球。" : strongCount >= 3 ? "偏热闹，先限时轮流说，防止一人带飞。" : "能量比较均衡，适合自由聊开。";
+          return {
+            index: bucket.index,
+            members: members,
+            roles: roles,
+            avgEnergy: avgEnergy,
+            topicPool: topicPool,
+            opener: "第 " + bucket.index + " 桌先聊：" + promptSet.prompt,
+            hostLine: "这一桌可以先从「" + (topicPool[0] || "为什么来这里") + "」开始，再带到「" + state.goal + "」。",
+            risk: risk
+          };
+        });
+
+        var newcomerTables = tableSummaries.filter(function (table) {
+          return table.members.some(function (person) { return person.role.indexOf("新") !== -1; });
+        }).length;
+        var mixScore = Math.round((tableSummaries.reduce(function (sum, table) {
+          return sum + Math.min(3, table.roles.length) + (table.avgEnergy >= 2.3 && table.avgEnergy <= 3.8 ? 1 : 0);
+        }, 0) / (tableSummaries.length * 4)) * 100);
+        var hostMood = mixScore >= 80 ? "气氛稳，可以直接开聊" : mixScore >= 60 ? "中等稳妥，前 3 分钟要带一下" : "先控场，再放自由聊";
+
+        latestPlan = {
+          mixScore: mixScore,
+          hostMood: hostMood,
+          groupCount: groupCount,
+          newcomerTables: newcomerTables,
+          tables: tableSummaries,
+          hostScript: [
+            "【" + state.eventName + "】",
+            "大家先别急着自我介绍，我先帮大家分好桌了。",
+            promptSet.opener,
+            "今天的目标很简单：" + state.goal + "。",
+            "每桌先按我给的第一个问题聊 4 分钟，再自由接话；如果有人还没开口，桌上默认帮他递一次话。"
+          ].join("\n"),
+          tips: buildTips(tableSummaries, promptSet.tip),
+          reasons: buildReasons(tableSummaries)
+        };
+        renderPlan(latestPlan);
+      }
+
+      function uniqueValues(items) {
+        return items.filter(function (item, index) { return item && items.indexOf(item) === index; });
+      }
+
+      function buildTips(tables, baseTip) {
+        var tips = [baseTip];
+        if (tables.some(function (table) { return table.members.filter(function (person) { return person.energy <= 2; }).length >= 2; })) {
+          tips.push("至少一桌偏安静，主持人第一轮别问太大问题，先问最近一件具体小事。");
+        }
+        if (tables.some(function (table) { return table.members.filter(function (person) { return person.energy >= 4; }).length >= 3; })) {
+          tips.push("有桌偏热闹，记得设置“每人 30 秒”的轮流节奏，不然新人会直接隐身。");
+        }
+        if (tables.length > 2) {
+          tips.push("第 8 分钟统一提醒换到“下次还想一起做什么”，方便后续拉群或留人。");
+        }
+        return tips;
+      }
+
+      function buildReasons(tables) {
+        return tables.map(function (table) {
+          var lead = table.members.reduce(function (best, person) { return person.energy > best.energy ? person : best; }, table.members[0]);
+          var quiet = table.members.find(function (person) { return person.energy <= 2; });
+          var reason = "第 " + table.index + " 桌用 " + lead.name + " 带节奏";
+          if (quiet) {
+            reason += "，同时把 " + quiet.name + " 放进有承接力的组合里，降低冷场概率。";
+          } else {
+            reason += "，并保留至少一个不同身份的人，避免同温层复读。";
+          }
+          return reason;
+        });
+      }
+
+      function renderPlan(plan) {
+        els.tableCountValue.textContent = plan.groupCount + " 桌";
+        els.mixValue.textContent = plan.mixScore + "%";
+        els.hostMoodValue.textContent = plan.hostMood;
+        els.hostScript.textContent = plan.hostScript;
+        els.hostTips.innerHTML = plan.tips.map(function (tip) {
+          return '<p class="rounded-2xl border border-white/10 bg-white/5 p-4">' + escapeHtml(tip) + '</p>';
+        }).join("");
+        els.reasonList.innerHTML = plan.reasons.map(function (reason) {
+          return '<p class="rounded-2xl border border-white/10 bg-white/5 p-4">' + escapeHtml(reason) + '</p>';
+        }).join("");
+        els.tableList.innerHTML = plan.tables.map(function (table) {
+          return [
+            '<article class="rounded-[1.6rem] border border-white/10 bg-black/15 p-5">',
+            '  <div class="flex items-center justify-between gap-3">',
+            '    <div>',
+            '      <p class="text-xs uppercase tracking-[0.18em] text-slate-400">第 ' + table.index + ' 桌</p>',
+            '      <h3 class="mt-2 text-xl font-bold text-white">' + escapeHtml(table.roles.join(" / ")) + '</h3>',
+            "    </div>",
+            '    <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-orange-200">平均能量 ' + table.avgEnergy.toFixed(1) + "</span>",
+            "  </div>",
+            '  <div class="mt-4 space-y-3">',
+            table.members.map(function (person) {
+              return '<div class="rounded-2xl border border-white/10 bg-white/5 p-4"><div class="flex items-center justify-between gap-3"><p class="font-semibold text-white">' + escapeHtml(person.name) + '</p><span class="text-xs font-semibold text-teal-200">' + escapeHtml(person.role) + " · 能量 " + person.energy + '</span></div><p class="mt-2 text-sm text-slate-300">想聊：' + escapeHtml(person.topic) + '</p><p class="mt-1 text-sm text-slate-400">来场目标：' + escapeHtml(person.wish) + "</p></div>";
+            }).join(""),
+            "  </div>",
+            '  <div class="mt-4 rounded-2xl border border-teal-200/40 bg-teal-300/10 p-4">',
+            '    <p class="text-xs uppercase tracking-[0.18em] text-teal-200">开场问题</p>',
+            '    <p class="mt-2 text-sm leading-relaxed text-slate-100">' + escapeHtml(table.opener) + '</p>',
+            "  </div>",
+            '  <div class="mt-3 rounded-2xl border border-orange-200/40 bg-orange-300/10 p-4">',
+            '    <p class="text-xs uppercase tracking-[0.18em] text-orange-200">主持人提醒</p>',
+            '    <p class="mt-2 text-sm leading-relaxed text-slate-100">' + escapeHtml(table.hostLine) + '</p>',
+            '    <p class="mt-2 text-sm leading-relaxed text-slate-300">' + escapeHtml(table.risk) + "</p>",
+            "  </div>",
+            "</article>"
+          ].join("");
+        }).join("");
+        els.copyScriptBtn.textContent = "复制开场词";
+      }
+
+      function renderPlaceholder() {
+        els.tableList.innerHTML = '<div class="rounded-3xl border border-dashed border-white/15 bg-black/15 p-5 text-sm leading-relaxed text-slate-300">点击“生成分桌方案”后显示每桌成员、破冰问题和注意事项。</div>';
+        els.hostScript.textContent = "生成后会给你一段可以直接照着说的开场词。";
+        els.hostTips.innerHTML = '<p class="rounded-2xl border border-dashed border-white/15 p-4">还没生成方案时，这里会提醒你现场最可能卡住的点。</p>';
+        els.reasonList.innerHTML = '<p class="rounded-2xl border border-dashed border-white/15 p-4">生成后会解释每一桌为什么这么排。</p>';
+        els.mixValue.textContent = "待生成";
+        els.hostMoodValue.textContent = "先把尴尬消掉";
+      }
+
+      function copyScript() {
+        var text = els.hostScript.textContent;
+        if (!text || text.indexOf("生成后") === 0) {
+          els.copyScriptBtn.textContent = "先生成方案";
+          setTimeout(function () { els.copyScriptBtn.textContent = "复制开场词"; }, 1200);
+          return;
+        }
+        navigator.clipboard.writeText(text).then(function () {
+          els.copyScriptBtn.textContent = "已复制";
+          setTimeout(function () { els.copyScriptBtn.textContent = "复制开场词"; }, 1200);
+        }).catch(function () {
+          els.copyScriptBtn.textContent = "复制失败";
+          setTimeout(function () { els.copyScriptBtn.textContent = "复制开场词"; }, 1200);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

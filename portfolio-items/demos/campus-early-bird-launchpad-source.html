@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生早八出门生存台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#0f172a",sea:"#0f766e",sky:"#2563eb",warn:"#f59e0b",rose:"#e11d48"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:light}
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at top left,rgba(13,148,136,.18),transparent 24%),radial-gradient(circle at right 16%,rgba(37,99,235,.16),transparent 24%),linear-gradient(145deg,#f8fafc,#ecfeff 46%,#eff6ff 100%);color:#0f172a}
+    .glass{background:rgba(255,255,255,.78);backdrop-filter:blur(18px)}
+    .slot{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+    .slot:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(15,23,42,.08)}
+    .timeline::-webkit-scrollbar{height:8px}
+    .timeline::-webkit-scrollbar-thumb{background:rgba(148,163,184,.6);border-radius:999px}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="overflow-hidden rounded-[2rem] border border-slate-200 glass">
+      <div class="grid gap-0 lg:grid-cols-[1.15fr,0.85fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-teal-700">Early Class Survival</p>
+          <h1 class="mt-4 max-w-4xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">大学生早八出门生存台</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">把天气、通勤和困意一起算，不再凭直觉决定今天几点从宿舍冲出去。它会给你一个最稳妥的出门窗口，以及“今天别逞强”的现实建议。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="analyzeBtn" class="inline-flex items-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">生成今天的出门方案</button>
+            <button id="sampleBtn" class="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700">加载默认样本</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">推荐出门</p>
+              <p id="departValue" class="mt-3 text-3xl font-extrabold text-slate-900">--:--</p>
+              <p id="departNote" class="mt-2 text-sm text-slate-500">等你先算一次。</p>
+            </div>
+            <div class="rounded-3xl border border-teal-200 bg-teal-50 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-teal-700">生存等级</p>
+              <p id="riskValue" class="mt-3 text-3xl font-extrabold text-teal-900">待计算</p>
+              <p id="riskNote" class="mt-2 text-sm text-teal-800">看的是迟到、淋雨、体感和睡眠叠加风险。</p>
+            </div>
+            <div class="rounded-3xl border border-blue-200 bg-blue-50 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-700">数据来源</p>
+              <p id="sourceValue" class="mt-3 text-xl font-extrabold text-blue-900">实时天气 / 离线兜底</p>
+              <p id="updatedValue" class="mt-2 text-sm text-blue-900/80">最近一轮还没拉取。</p>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-slate-200 bg-slate-50/85 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-500">输入区</p>
+          <div class="mt-4 space-y-4">
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <label class="text-sm font-semibold text-slate-800" for="campusInput">城市 / 校区关键词</label>
+              <input id="campusInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="Shanghai">
+              <p class="mt-2 text-xs leading-relaxed text-slate-500">建议填城市英文或学校常用英文名，接口更稳定，比如 Shanghai、Beijing、Fudan University。</p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="classTimeInput">最早上课时间</label>
+                <input id="classTimeInput" type="time" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="08:00">
+              </div>
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="commuteInput">单程通勤</label>
+                <input id="commuteInput" type="number" min="5" max="90" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="18">
+                <p class="mt-2 text-xs text-slate-500">单位：分钟</p>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="modeInput">通勤方式</label>
+                <select id="modeInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="walk">步行</option>
+                  <option value="bike" selected>骑车</option>
+                  <option value="bus">校车 / 公交</option>
+                </select>
+              </div>
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="sleepInput">昨晚睡眠</label>
+                <select id="sleepInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="4.5">4.5 小时以下</option>
+                  <option value="6" selected>约 6 小时</option>
+                  <option value="7.5">7 小时以上</option>
+                </select>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <p class="text-sm font-semibold text-slate-800">今天会帮你一起判断</p>
+              <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+                <li>什么时候出门最稳，能不能留出 10 分钟缓冲。</li>
+                <li>当前窗口的淋雨、风感、体感温度和迟到风险。</li>
+                <li>要不要带伞、换鞋、喝咖啡，甚至今天适不适合洗头。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-5 grid gap-5 lg:grid-cols-[1.08fr,0.92fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-slate-200 glass">
+        <div class="border-b border-slate-200 px-6 py-5 sm:px-8">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-500">行动方案</p>
+          <h2 class="mt-2 text-2xl font-bold text-slate-900">今天怎么出门，别再凭宿舍玄学</h2>
+        </div>
+        <div class="space-y-5 p-6 sm:p-8">
+          <div class="grid gap-4 xl:grid-cols-[0.9fr,1.1fr]">
+            <div class="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5">
+              <p class="text-xs uppercase tracking-[0.18em] text-slate-500">主结论</p>
+              <h3 id="headlineValue" class="mt-3 text-2xl font-bold text-slate-900">先拉一次天气，再决定冲不冲。</h3>
+              <p id="summaryValue" class="mt-3 text-sm leading-relaxed text-slate-600">这里会生成“最稳妥出门时机 + 风险等级 + 今天别做什么”的一句话结论。</p>
+            </div>
+            <div class="rounded-[1.75rem] border border-teal-200 bg-teal-50 p-5">
+              <p class="text-xs uppercase tracking-[0.18em] text-teal-700">补救动作</p>
+              <div id="actionList" class="mt-3 grid gap-3 sm:grid-cols-2">
+                <div class="rounded-2xl border border-white/80 bg-white px-4 py-3 text-sm text-slate-600">先计算一次，补救动作会出现在这里。</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between gap-3">
+              <p class="text-sm font-semibold text-slate-800">候选出门窗口</p>
+              <p class="text-xs text-slate-500">按风险分由低到高排序</p>
+            </div>
+            <div id="slotList" class="mt-4 grid gap-4 md:grid-cols-3">
+              <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">计算后，这里会给出 3 个时间窗口。</div>
+            </div>
+          </div>
+
+          <div class="rounded-[1.75rem] border border-slate-200 bg-white p-5">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-[0.18em] text-slate-500">逐小时观察</p>
+                <p class="mt-1 text-sm text-slate-600">围绕你的出门前后 6 小时看天气，不只是看一眼气温。</p>
+              </div>
+              <span id="hourLabel" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">等待数据</span>
+            </div>
+            <div id="timeline" class="timeline mt-4 flex gap-3 overflow-x-auto pb-2">
+              <div class="min-w-[200px] rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">这里会显示出门前后的小时级天气切片。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-slate-200 glass">
+          <div class="border-b border-slate-200 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">即时判断</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">今天别高估自己的抗性</h3>
+          </div>
+          <div class="grid gap-4 px-6 py-5">
+            <div class="rounded-3xl border border-blue-200 bg-blue-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-blue-900"><span>淋雨概率</span><span id="rainValue">--</span></div>
+              <p id="rainCopy" class="mt-3 text-sm text-blue-900/80">先拉天气。</p>
+            </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-slate-800"><span>体感温度</span><span id="tempValue">--</span></div>
+              <p id="tempCopy" class="mt-3 text-sm text-slate-600">冷热不只是看室外温度。</p>
+            </div>
+            <div class="rounded-3xl border border-rose-200 bg-rose-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-rose-900"><span>洗头风险</span><span id="hairValue">--</span></div>
+              <p id="hairCopy" class="mt-3 text-sm text-rose-900/80">风大或雨大时，别拿自己试。</p>
+            </div>
+            <div class="rounded-3xl border border-amber-200 bg-amber-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-amber-900"><span>困意补救</span><span id="sleepValue">--</span></div>
+              <p id="sleepCopy" class="mt-3 text-sm text-amber-900/80">根据昨晚睡眠和天气给你一条现实建议。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="overflow-hidden rounded-[2rem] border border-slate-200 glass">
+          <div class="border-b border-slate-200 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">一句话借走</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">发给舍友也说得通</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <div id="shareCopy" class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm leading-relaxed text-slate-600">算完后，这里会生成一段可直接发给舍友的提醒文案。</div>
+            <button id="copyBtn" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">复制提醒文案</button>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var storageKey = "campus-early-bird-launchpad-state";
+      var fallbackLabel = "离线样本";
+      var defaults = {
+        campus: "Shanghai",
+        classTime: "08:00",
+        commute: 18,
+        mode: "bike",
+        sleep: "6"
+      };
+
+      var modeMeta = {
+        walk: { label: "步行", extra: 4, windFactor: 1.1 },
+        bike: { label: "骑车", extra: 8, windFactor: 1.35 },
+        bus: { label: "校车 / 公交", extra: 12, windFactor: 0.8 }
+      };
+
+      var els = {
+        analyzeBtn: byId("analyzeBtn"),
+        sampleBtn: byId("sampleBtn"),
+        campusInput: byId("campusInput"),
+        classTimeInput: byId("classTimeInput"),
+        commuteInput: byId("commuteInput"),
+        modeInput: byId("modeInput"),
+        sleepInput: byId("sleepInput"),
+        departValue: byId("departValue"),
+        departNote: byId("departNote"),
+        riskValue: byId("riskValue"),
+        riskNote: byId("riskNote"),
+        sourceValue: byId("sourceValue"),
+        updatedValue: byId("updatedValue"),
+        headlineValue: byId("headlineValue"),
+        summaryValue: byId("summaryValue"),
+        actionList: byId("actionList"),
+        slotList: byId("slotList"),
+        timeline: byId("timeline"),
+        hourLabel: byId("hourLabel"),
+        rainValue: byId("rainValue"),
+        rainCopy: byId("rainCopy"),
+        tempValue: byId("tempValue"),
+        tempCopy: byId("tempCopy"),
+        hairValue: byId("hairValue"),
+        hairCopy: byId("hairCopy"),
+        sleepValue: byId("sleepValue"),
+        sleepCopy: byId("sleepCopy"),
+        shareCopy: byId("shareCopy"),
+        copyBtn: byId("copyBtn")
+      };
+
+      els.analyzeBtn.addEventListener("click", analyze);
+      els.sampleBtn.addEventListener("click", function () {
+        setForm(defaults);
+        analyze({ forceFallback: true });
+      });
+      els.copyBtn.addEventListener("click", copyShare);
+
+      hydrate();
+      renderIdle();
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function hydrate() {
+        try {
+          var saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+          setForm({
+            campus: saved.campus || defaults.campus,
+            classTime: saved.classTime || defaults.classTime,
+            commute: saved.commute || defaults.commute,
+            mode: saved.mode || defaults.mode,
+            sleep: saved.sleep || defaults.sleep
+          });
+        } catch (error) {
+          setForm(defaults);
+        }
+      }
+
+      function setForm(nextState) {
+        els.campusInput.value = nextState.campus;
+        els.classTimeInput.value = nextState.classTime;
+        els.commuteInput.value = nextState.commute;
+        els.modeInput.value = nextState.mode;
+        els.sleepInput.value = nextState.sleep;
+      }
+
+      function getForm() {
+        return {
+          campus: (els.campusInput.value || "").trim() || defaults.campus,
+          classTime: els.classTimeInput.value || defaults.classTime,
+          commute: clamp(Number(els.commuteInput.value || defaults.commute), 5, 90),
+          mode: els.modeInput.value,
+          sleep: Number(els.sleepInput.value || defaults.sleep)
+        };
+      }
+
+      async function analyze(options) {
+        var state = getForm();
+        persist(state);
+        renderLoading(state);
+        try {
+          var payload = options && options.forceFallback
+            ? buildFallbackPayload(state)
+            : await fetchPayload(state);
+          renderResult(state, payload);
+        } catch (error) {
+          renderResult(state, buildFallbackPayload(state, error));
+        }
+      }
+
+      function persist(state) {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+      }
+
+      async function fetchPayload(state) {
+        var geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&language=zh&format=json&name=" + encodeURIComponent(state.campus);
+        var geoRes = await fetch(geoUrl);
+        if (!geoRes.ok) {
+          throw new Error("geo_failed");
+        }
+        var geoData = await geoRes.json();
+        if (!geoData.results || !geoData.results.length) {
+          throw new Error("geo_empty");
+        }
+        var place = geoData.results[0];
+        var weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + place.latitude + "&longitude=" + place.longitude + "&hourly=temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,cloud_cover&timezone=auto&forecast_days=2";
+        var weatherRes = await fetch(weatherUrl);
+        if (!weatherRes.ok) {
+          throw new Error("weather_failed");
+        }
+        var weatherData = await weatherRes.json();
+        return {
+          source: "Open-Meteo 实时天气",
+          locationLabel: [place.name, place.admin1 || place.country || ""].filter(Boolean).join(" · "),
+          updatedLabel: "已拉取 " + formatNow(),
+          hourly: mapHourly(weatherData.hourly)
+        };
+      }
+
+      function buildFallbackPayload(state, error) {
+        var base = nextTargetDate(state.classTime);
+        var hourly = [];
+        var hours = [base.getHours() - 3, base.getHours() - 2, base.getHours() - 1, base.getHours(), base.getHours() + 1, base.getHours() + 2, base.getHours() + 3];
+        hours.forEach(function (hour, idx) {
+          var itemDate = new Date(base);
+          itemDate.setHours(hour, 0, 0, 0);
+          hourly.push({
+            time: itemDate.toISOString(),
+            temperature: 19 - Math.max(0, idx - 2),
+            apparentTemperature: 18 - Math.max(0, idx - 2),
+            precipitationProbability: idx === 2 ? 35 : (idx >= 4 ? 20 : 8),
+            windSpeed: idx >= 3 ? 22 : 14,
+            cloudCover: idx >= 1 ? 56 : 28
+          });
+        });
+        return {
+          source: fallbackLabel,
+          locationLabel: state.campus + " · 样本天气",
+          updatedLabel: error ? "实时拉取失败，已切到离线样本" : "正在使用默认样本",
+          hourly: hourly
+        };
+      }
+
+      function mapHourly(hourly) {
+        var out = [];
+        for (var i = 0; i < hourly.time.length; i += 1) {
+          out.push({
+            time: hourly.time[i],
+            temperature: hourly.temperature_2m[i],
+            apparentTemperature: hourly.apparent_temperature[i],
+            precipitationProbability: hourly.precipitation_probability[i],
+            windSpeed: hourly.wind_speed_10m[i],
+            cloudCover: hourly.cloud_cover[i]
+          });
+        }
+        return out;
+      }
+
+      function renderLoading(state) {
+        els.departValue.textContent = "--:--";
+        els.departNote.textContent = "正在计算 " + state.campus + " 的出门窗口。";
+        els.riskValue.textContent = "计算中";
+        els.riskNote.textContent = "会优先尝试实时天气，失败再切到离线兜底。";
+        els.sourceValue.textContent = "正在请求";
+        els.updatedValue.textContent = "请稍等。";
+        els.headlineValue.textContent = "先别急着冲，我在看天气和通勤。";
+        els.summaryValue.textContent = "加载后会按你的上课时间和通勤方式给出具体方案。";
+      }
+
+      function renderIdle() {
+        els.headlineValue.textContent = "先拉一次天气，再决定冲不冲。";
+        els.summaryValue.textContent = "这里会生成“最稳妥出门时机 + 风险等级 + 今天别做什么”的一句话结论。";
+        els.actionList.innerHTML = '<div class="rounded-2xl border border-white/80 bg-white px-4 py-3 text-sm text-slate-600">先计算一次，补救动作会出现在这里。</div>';
+        els.slotList.innerHTML = '<div class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">计算后，这里会给出 3 个时间窗口。</div>';
+        els.timeline.innerHTML = '<div class="min-w-[200px] rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">这里会显示出门前后的小时级天气切片。</div>';
+        els.hourLabel.textContent = "等待数据";
+      }
+
+      function renderResult(state, payload) {
+        var mode = modeMeta[state.mode] || modeMeta.walk;
+        var target = nextTargetDate(state.classTime);
+        var rawDeparture = new Date(target.getTime() - (state.commute + mode.extra + 10) * 60000);
+        var ranked = buildCandidateSlots(payload.hourly, rawDeparture, target, state, mode);
+        var best = ranked[0];
+        var alt = ranked[1];
+        var worst = ranked[ranked.length - 1];
+
+        els.departValue.textContent = formatTime(best.date);
+        els.departNote.textContent = best.arrivalDelta >= 0 ? "预计还能留出 " + best.arrivalDelta + " 分钟缓冲。" : "已经有迟到风险，别再磨蹭。";
+        els.riskValue.textContent = best.level;
+        els.riskNote.textContent = "你的目标是 " + state.classTime + " 到教室，" + mode.label + " 模式下按风险最低的窗口排序。";
+        els.sourceValue.textContent = payload.source;
+        els.updatedValue.textContent = payload.locationLabel + " · " + payload.updatedLabel;
+        els.headlineValue.textContent = buildHeadline(best, state);
+        els.summaryValue.textContent = buildSummary(best, alt, worst);
+        els.actionList.innerHTML = buildActions(best, state).map(function (item) {
+          return '<div class="rounded-2xl border border-white/80 bg-white px-4 py-3 text-sm text-slate-700">' + escapeHtml(item) + '</div>';
+        }).join("");
+        els.slotList.innerHTML = ranked.map(function (item, index) {
+          var accent = index === 0 ? "border-teal-200 bg-teal-50" : "border-slate-200 bg-white";
+          return [
+            '<article class="slot rounded-3xl border ' + accent + ' p-5">',
+            '  <div class="flex items-center justify-between gap-3">',
+            '    <p class="text-xs uppercase tracking-[0.18em] ' + (index === 0 ? "text-teal-700" : "text-slate-500") + '">' + (index === 0 ? "最稳窗口" : "备选方案 " + index) + '</p>',
+            '    <span class="rounded-full ' + levelChip(item.level) + ' px-3 py-1 text-xs font-semibold">' + escapeHtml(item.level) + '</span>',
+            "  </div>",
+            '  <h3 class="mt-3 text-2xl font-extrabold text-slate-900">' + formatTime(item.date) + '</h3>',
+            '  <p class="mt-2 text-sm leading-relaxed text-slate-600">' + escapeHtml(item.reason) + '</p>',
+            '  <ul class="mt-4 space-y-2 text-xs leading-relaxed text-slate-500">',
+            '    <li>降雨概率：' + item.hour.precipitationProbability + '%</li>',
+            '    <li>风速：' + Math.round(item.hour.windSpeed) + ' km/h</li>',
+            '    <li>体感：' + round1(item.hour.apparentTemperature) + '°C</li>',
+            '    <li>到教室缓冲：' + item.arrivalDelta + ' 分钟</li>',
+            "  </ul>",
+            "</article>"
+          ].join("");
+        }).join("");
+
+        var focusHours = collectFocusHours(payload.hourly, best.date);
+        els.hourLabel.textContent = focusHours.length ? "围绕 " + formatTime(best.date) + " 展开" : "样本不足";
+        els.timeline.innerHTML = focusHours.map(function (item) {
+          return [
+            '<article class="min-w-[180px] rounded-3xl border border-slate-200 bg-slate-50 p-4">',
+            '  <p class="text-xs uppercase tracking-[0.18em] text-slate-500">' + formatHour(item.date) + '</p>',
+            '  <p class="mt-3 text-2xl font-extrabold text-slate-900">' + round1(item.apparentTemperature) + '°C</p>',
+            '  <p class="mt-2 text-sm text-slate-600">降雨 ' + item.precipitationProbability + '% · 风速 ' + Math.round(item.windSpeed) + ' km/h</p>',
+            '  <p class="mt-2 text-xs text-slate-500">' + escapeHtml(describeHour(item)) + '</p>',
+            "</article>"
+          ].join("");
+        }).join("");
+
+        renderInstantReads(best, state);
+        els.shareCopy.textContent = buildShareCopy(state, best, payload);
+      }
+
+      function buildCandidateSlots(hourly, rawDeparture, target, state, mode) {
+        var baseOffsets = [-20, 0, 20];
+        var ranked = baseOffsets.map(function (offset) {
+          var slotDate = new Date(rawDeparture.getTime() + offset * 60000);
+          var nearest = nearestHour(hourly, slotDate);
+          var arrivalDelta = Math.round((target.getTime() - (slotDate.getTime() + state.commute * 60000)) / 60000);
+          var rainScore = nearest.precipitationProbability * 0.45;
+          var windScore = nearest.windSpeed * 0.8 * mode.windFactor;
+          var tempScore = Math.abs(nearest.apparentTemperature - 18) * 1.6;
+          var sleepScore = state.sleep <= 4.5 ? 14 : (state.sleep < 7 ? 7 : 0);
+          var lateScore = arrivalDelta < 0 ? 35 + Math.abs(arrivalDelta) * 2.2 : Math.max(0, 10 - arrivalDelta);
+          var score = rainScore + windScore + tempScore + sleepScore + lateScore;
+          return {
+            date: slotDate,
+            score: score,
+            level: score < 34 ? "稳妥" : (score < 56 ? "谨慎" : "高危"),
+            arrivalDelta: arrivalDelta,
+            hour: nearest,
+            reason: buildReason(nearest, arrivalDelta, score)
+          };
+        }).sort(function (a, b) { return a.score - b.score; });
+        return ranked;
+      }
+
+      function buildReason(hour, arrivalDelta, score) {
+        if (arrivalDelta < 0) {
+          return "这个点出门已经偏晚，哪怕天气还行，也容易迟到。";
+        }
+        if (hour.precipitationProbability >= 45) {
+          return "雨感明显，最好把伞和鞋都提前想好。";
+        }
+        if (hour.windSpeed >= 24) {
+          return "风有点顶，骑车和洗头都要谨慎。";
+        }
+        if (score < 34) {
+          return "这是当前样本里最平衡的窗口，留有缓冲，风险也不高。";
+        }
+        return "能赶上，但体验不会特别优雅，适合当备选。";
+      }
+
+      function buildHeadline(best, state) {
+        if (best.level === "高危") {
+          return "今天别磨蹭，" + formatTime(best.date) + " 前就该离开宿舍。";
+        }
+        if (best.hour.precipitationProbability >= 45) {
+          return "今天能上，但请把“带伞”当硬条件，不是建议。";
+        }
+        if (state.sleep <= 4.5) {
+          return "天气还行，但你昨晚没睡够，靠拖延只会更难受。";
+        }
+        return formatTime(best.date) + " 左右出门最稳，今天不需要硬刚天气。";
+      }
+
+      function buildSummary(best, alt, worst) {
+        return "最优窗口是 " + formatTime(best.date) + "，" + best.reason + " 如果你已经磨到这个点之后，至少切到 " + formatTime(alt.date) + " 的备选节奏；最不建议拖到 " + formatTime(worst.date) + " 再冲。";
+      }
+
+      function buildActions(best, state) {
+        var items = [];
+        items.push(best.hour.precipitationProbability >= 35 ? "伞别塞包底，直接拿在手上，白鞋今天别上场。" : "降雨压力不大，包里塞一把小伞就够。");
+        items.push(best.hour.windSpeed >= 22 ? "风偏大，骑车建议多留 3 到 5 分钟，别赌红绿灯。" : "风不算顶，按正常节奏走就行。");
+        items.push(best.hour.apparentTemperature <= 14 ? "体感偏凉，穿外套比赌教室空调更稳。" : "体感温和，不需要为了早八穿得像去军训。");
+        items.push(state.sleep <= 4.5 ? "昨晚睡太少，出门前直接补咖啡或能量饮，不要指望路上清醒。" : "睡眠还行，早餐比咖啡更值得优先安排。");
+        return items;
+      }
+
+      function renderInstantReads(best, state) {
+        els.rainValue.textContent = best.hour.precipitationProbability + "%";
+        els.rainCopy.textContent = best.hour.precipitationProbability >= 45 ? "这一档不是看运气，是看你有没有真的带伞。" : "短时雨压不算爆表，但也不适合裸奔。";
+        els.tempValue.textContent = round1(best.hour.apparentTemperature) + "°C";
+        els.tempCopy.textContent = best.hour.apparentTemperature <= 14 ? "体感偏冷，风一上来会比你想的更难受。" : "冷热在可接受区间，别因为宿舍暖和就穿太少。";
+        var hairRisk = best.hour.precipitationProbability + best.hour.windSpeed * 0.8;
+        els.hairValue.textContent = hairRisk >= 55 ? "今天别洗" : (hairRisk >= 35 ? "谨慎洗" : "可接受");
+        els.hairCopy.textContent = hairRisk >= 55 ? "雨或风其中一项已经够你后悔，今天别做发型实验。" : "不是绝对危险，但最好别把洗头安排在出门前最后半小时。";
+        els.sleepValue.textContent = state.sleep <= 4.5 ? "强补救" : (state.sleep < 7 ? "轻补救" : "状态尚可");
+        els.sleepCopy.textContent = state.sleep <= 4.5 ? "别空腹出门，也别指望第一节课自然醒。咖啡、糖和提前 5 分钟坐下都算补救。" : (state.sleep < 7 ? "正常人类边缘状态，靠拉长缓冲和少做临时决策来保命。" : "睡眠过关，主要防天气，不用把自己吓得太狠。");
+      }
+
+      function buildShareCopy(state, best, payload) {
+        return "给舍友的版本：今天 " + payload.locationLabel + " 这边建议最晚 " + formatTime(best.date) + " 出门，" + modeMeta[state.mode].label + " 去 " + state.classTime + " 的课更稳。当前降雨 " + best.hour.precipitationProbability + "%、体感 " + round1(best.hour.apparentTemperature) + "°C，" + (best.hour.windSpeed >= 22 ? "风有点顶，别拖。" : "整体能打。");
+      }
+
+      function collectFocusHours(hourly, departDate) {
+        return hourly.map(function (item) {
+          return hydrateHour(item);
+        }).filter(function (item) {
+          return Math.abs(item.date.getTime() - departDate.getTime()) <= 3 * 3600000;
+        }).sort(function (a, b) { return a.date - b.date; });
+      }
+
+      function nearestHour(hourly, targetDate) {
+        var enriched = hourly.map(function (item) { return hydrateHour(item); });
+        enriched.sort(function (a, b) {
+          return Math.abs(a.date.getTime() - targetDate.getTime()) - Math.abs(b.date.getTime() - targetDate.getTime());
+        });
+        return enriched[0];
+      }
+
+      function hydrateHour(item) {
+        return {
+          date: new Date(item.time),
+          time: item.time,
+          temperature: Number(item.temperature),
+          apparentTemperature: Number(item.apparentTemperature),
+          precipitationProbability: Number(item.precipitationProbability),
+          windSpeed: Number(item.windSpeed),
+          cloudCover: Number(item.cloudCover)
+        };
+      }
+
+      function describeHour(item) {
+        if (item.precipitationProbability >= 45) {
+          return "这一小时雨意最明显。";
+        }
+        if (item.windSpeed >= 24) {
+          return "风感比较强，骑车体验一般。";
+        }
+        if (item.apparentTemperature <= 14) {
+          return "体感偏凉，适合多带一层。";
+        }
+        return "整体还算平稳。";
+      }
+
+      function nextTargetDate(classTime) {
+        var parts = (classTime || "08:00").split(":");
+        var now = new Date();
+        var target = new Date(now);
+        target.setHours(Number(parts[0] || 8), Number(parts[1] || 0), 0, 0);
+        if (target.getTime() - now.getTime() < -30 * 60000) {
+          target.setDate(target.getDate() + 1);
+        }
+        return target;
+      }
+
+      function formatNow() {
+        return new Date().toLocaleString("zh-CN", { hour12: false });
+      }
+
+      function formatTime(date) {
+        return pad(date.getHours()) + ":" + pad(date.getMinutes());
+      }
+
+      function formatHour(date) {
+        return pad(date.getHours()) + ":00";
+      }
+
+      function pad(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function round1(value) {
+        return Math.round(value * 10) / 10;
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function levelChip(level) {
+        if (level === "稳妥") return "bg-teal-100 text-teal-700";
+        if (level === "谨慎") return "bg-amber-100 text-amber-700";
+        return "bg-rose-100 text-rose-700";
+      }
+
+      function copyShare() {
+        var text = els.shareCopy.textContent;
+        if (!text || text.indexOf("算完后") === 0) {
+          return;
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            els.copyBtn.textContent = "已复制提醒文案";
+            setTimeout(function () {
+              els.copyBtn.textContent = "复制提醒文案";
+            }, 1600);
+          });
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      }
+    })();
+  </script>
+</body>
+</html>

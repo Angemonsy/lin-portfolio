@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>奇绩怪谈AIQ | 校园梗玩法实验室（AI自动化）</title>
+  <title>奇绩怪谈AIQ | AI优质信息源雷达（自动化实验室）</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { theme: { extend: { colors: { brandFrom: "#3b82f6", brandTo: "#6366f1", softBg: "#f8fafc" } } } };
@@ -21,7 +21,7 @@
         <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
         <div class="hidden items-center gap-1 text-sm md:flex">
           <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="../index.html">首页</a>
-          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="../blog.html">文案</a>
           <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
           <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
           <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="../services.html">服务</a>
@@ -31,7 +31,7 @@
       <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
         <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
           <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="../index.html">首页</a>
-          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="../blog.html">文章</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="../blog.html">文案</a>
           <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="../knowledge.html">知识库</a>
           <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="../portfolio.html">作品集</a>
           <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="../services.html">服务</a>
@@ -45,8 +45,8 @@
     <section class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
       <article class="reveal rounded-3xl border border-slate-200 bg-white p-8">
           <p class="text-sm font-semibold text-blue-600">作品详情 · 实验室</p>
-        <h1 class="mt-3 text-3xl font-extrabold text-slate-900">校园梗玩法实验室（AI自动化）</h1>
-        <p class="mt-4 text-sm leading-relaxed text-slate-600">这里不再主打“看起来有用但没人会打开”的伪需求工具，而是优先做大学生愿意转发、愿意拉同学一起玩的梗玩法实验。AI 负责自动产出和迭代，我只保留那些既好玩又能顺手带来真实价值的项目。</p>
+        <h1 class="mt-3 text-3xl font-extrabold text-slate-900">AI优质信息源雷达（自动化实验室）</h1>
+        <p class="mt-4 text-sm leading-relaxed text-slate-600">这里不再主打“看起来有用但没人会打开”的伪需求工具，而是让 AI 定期去 YouTube、B站、MOOC、职业平台和创业平台找真正值得大学生长期关注的信息源。实验室负责筛选、打标签、更新入口，最后沉淀成可直接行动的学习与成长导航。</p>
 
         <div class="mt-6 grid gap-4 md:grid-cols-2">
           <section class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
@@ -68,11 +68,45 @@
           </section>
         </div>
 
+        <section class="mt-6 rounded-2xl border border-cyan-200 bg-cyan-50/70 p-6">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold tracking-wide text-cyan-700">新自动化 · 信息源雷达</p>
+              <h2 class="mt-2 text-lg font-bold text-slate-900">把 AI 用在“找优质信息源”上</h2>
+              <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-700">我按学业发展、职业求职、个人规划、个人成长、创业副业五类做一个可更新源池。每个源都要说明适合谁、解决什么问题、多久复核一次，避免变成一堆收藏夹链接。</p>
+            </div>
+            <span id="source-radar-updated" class="rounded-full border border-cyan-200 bg-white px-3 py-1 text-xs font-semibold text-cyan-700">正在读取信息源</span>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2" aria-label="信息源分类筛选">
+            <button class="filter-btn is-active" data-source-filter="全部" type="button">全部</button>
+            <button class="filter-btn" data-source-filter="学业发展" type="button">学业发展</button>
+            <button class="filter-btn" data-source-filter="职业求职" type="button">职业求职</button>
+            <button class="filter-btn" data-source-filter="个人规划" type="button">个人规划</button>
+            <button class="filter-btn" data-source-filter="个人成长" type="button">个人成长</button>
+            <button class="filter-btn" data-source-filter="创业副业" type="button">创业副业</button>
+          </div>
+          <div id="source-radar-list" class="mt-5 grid gap-3 md:grid-cols-2"></div>
+          <div class="mt-5 grid gap-3 md:grid-cols-3">
+            <article class="rounded-2xl border border-cyan-200 bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-cyan-700">采集规则</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">先找原始源、官方源、长期更新源，再看播放量和爆款，不把二手搬运当底层资料。</p>
+            </article>
+            <article class="rounded-2xl border border-blue-200 bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-blue-700">筛选规则</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">每个源必须能被转化成课程清单、求职动作、复盘模板、项目案例或副业技能。</p>
+            </article>
+            <article class="rounded-2xl border border-emerald-200 bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">更新规则</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">定期复核链接和方向标签，优先更新能直接服务大学生行动的信息源。</p>
+            </article>
+          </div>
+        </section>
+
         <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 class="text-base font-bold text-slate-900">今天的实验结论：好玩优先于“假刚需”</h2>
-              <p class="mt-2 text-sm leading-relaxed text-slate-600">最近这轮回看后很明确：真正容易出圈的不是“又一个计划工具”，而是能让同学 30 秒上手、2 分钟玩完、愿意转发到群里的梗玩法。实验室后续只保留这种方向。</p>
+              <h2 class="text-base font-bold text-slate-900">今天的实验结论：信息源比伪需求工具更值钱</h2>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">这轮回看后很明确：很多“大学生工具”只是在制造新按钮，但真正稀缺的是稳定、可信、能带来行动的信息源。实验室后续会把自动化优先用在找源、筛源、更新源，再把高价值内容转成项目。</p>
             </div>
             <a href="https://github.com/KayvanShah1/VirtuTA" target="_blank" rel="noopener" class="inline-flex items-center rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">看一个教育类样本</a>
           </div>
@@ -137,6 +171,9 @@
                 <a href="./campus-ddl-command.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生DDL拆弹指挥台</a>
                 <a href="./campus-group-sync-board.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生小组作业对齐板</a>
                 <a href="./campus-proof-vault.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生成果证据仓</a>
+                <a href="./campus-paper-radar.html" class="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm font-semibold text-teal-900 hover:bg-teal-100">大学生文献破冰台</a>
+                <a href="./campus-recite-survival.html" class="rounded-xl border border-sky-200 bg-sky-50 p-3 text-sm font-semibold text-sky-900 hover:bg-sky-100">大学生期末抽背生存局</a>
+                <a href="./campus-class-speak-lab.html" class="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm font-semibold text-blue-900 hover:bg-blue-100">大学生课堂发言接球局</a>
               </div>
             </section>
 
@@ -146,6 +183,8 @@
                 <a href="./campus-offer-sprint-planner.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">应届生求职冲刺看板</a>
                 <a href="./campus-interview-sparring.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生面试追问陪练台</a>
                 <a href="./campus-interview-trip-kit.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生异地面试出发台</a>
+                <a href="./campus-group-interview-scramble.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生群面抢话生存局</a>
+                <a href="./campus-job-fair-sprint.html" class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-semibold text-amber-900 hover:bg-amber-100">大学生双选会突围台</a>
               </div>
             </section>
 
@@ -155,6 +194,7 @@
                 <a href="./campus-hook-defense.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">校园爆款标题防守战</a>
                 <a href="./campus-gap-buddy.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生空档搭子局</a>
                 <a href="./campus-dorm-peace-pact.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生宿舍公约谈判局</a>
+                <a href="./campus-icebreak-seating-lab.html" class="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm font-semibold text-teal-900 hover:bg-teal-100">大学生社团破冰分桌器</a>
               </div>
             </section>
 
@@ -163,32 +203,60 @@
               <div class="mt-2 grid gap-3 md:grid-cols-2">
                 <a href="./campus-content-radar.html" class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm font-semibold text-slate-800 hover:bg-slate-100">大学生自媒体选题雷达</a>
                 <a href="./campus-snack-split.html" class="rounded-xl border border-orange-200 bg-orange-50 p-3 text-sm font-semibold text-orange-900 hover:bg-orange-100">大学生夜宵拼单不吵架局</a>
+                <a href="./campus-early-bird-launchpad.html" class="rounded-xl border border-teal-200 bg-teal-50 p-3 text-sm font-semibold text-teal-900 hover:bg-teal-100">大学生早八出门生存台</a>
+                <a href="./campus-secondhand-meetup.html" class="rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-sm font-semibold text-indigo-900 hover:bg-indigo-100">大学生二手面交不鸽局</a>
+                <a href="./campus-meal-decision-lab.html" class="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-semibold text-amber-900 hover:bg-amber-100">大学生吃什么不纠结局</a>
               </div>
             </section>
           </div>
         </section>
 
-        <section class="mt-6 rounded-2xl border border-orange-200 bg-orange-50/80 p-6">
+        <section class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/80 p-6">
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p class="text-xs font-semibold tracking-wide text-orange-700">今晚新增 · 校园生活 / 轻量数据存储</p>
-              <h2 class="mt-2 text-lg font-bold text-slate-900">大学生夜宵拼单不吵架局</h2>
-              <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-700">把宿舍夜宵最容易炸的预算、满减、忌口和垫付问题收进一个页面里。AI 今晚优先轮换到“轻量数据存储”方向，用 localStorage + JSON 快照把这类高频小摩擦做成可复用工具。</p>
+              <p class="text-xs font-semibold tracking-wide text-emerald-700">今晚新增 · 学业表达 / 轻量游戏 + JSON</p>
+              <h2 class="mt-2 text-lg font-bold text-slate-900">大学生课堂发言接球局</h2>
+              <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-700">这轮避开地图/API 场景，转去一个更常见却更隐形的学习痛点：很多大学生脑子里有内容，但课堂讨论、pre 追问和 seminar 发言时，第一句总是开不出来。这个项目把那一下拆成任务卡，直接给开口句、接话句、救场句和收尾句，再把顺手表达沉淀成本地句库。</p>
             </div>
-            <a href="./campus-snack-split.html" class="inline-flex items-center rounded-xl border border-orange-200 bg-white px-4 py-2 text-sm font-semibold text-orange-700 transition hover:bg-orange-100">查看今晚项目</a>
+            <a href="./campus-class-speak-lab.html" class="inline-flex items-center rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100">查看今晚项目</a>
           </div>
           <div class="mt-4 grid gap-3 md:grid-cols-3">
-            <article class="rounded-2xl border border-orange-200 bg-white p-4">
+            <article class="rounded-2xl border border-emerald-200 bg-white p-4">
               <p class="text-xs font-semibold tracking-wide text-orange-700">解决什么</p>
-              <p class="mt-2 text-sm leading-relaxed text-slate-700">不再靠群里来回问“你吃啥”“还差几块”“谁先垫”。</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">把“我其实有想法，但一被点名就空白”的表达磨损，压成可立即开口的一套句式，不再把课堂加分机会直接让掉。</p>
             </article>
             <article class="rounded-2xl border border-violet-200 bg-white p-4">
               <p class="text-xs font-semibold tracking-wide text-violet-700">怎么做</p>
-              <p class="mt-2 text-sm leading-relaxed text-slate-700">录入室友预算和忌口，勾菜单，自动生成推荐拼单和分摊方案。</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">按课程类型、准备程度和紧张程度生成一轮任务卡，用连击、收藏句卡和 JSON 导入导出，把课堂发言训练做成每天都能跑一轮的轻练习。</p>
             </article>
             <article class="rounded-2xl border border-slate-200 bg-white p-4">
               <p class="text-xs font-semibold tracking-wide text-slate-600">为什么先留实验室</p>
-              <p class="mt-2 text-sm leading-relaxed text-slate-700">先看它是否真的被愿意反复打开，再决定要不要晋级公开作品集。</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">先验证学生会不会真的把它当成讨论课和 pre 前的固定热身动作，而不是只觉得好玩点两下。只有重复练起来，才值得往公开作品流升级。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="mt-6 rounded-2xl border border-teal-200 bg-teal-50/70 p-6">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold tracking-wide text-teal-700">本轮补充 · 校园生活 / 本地快照</p>
+              <h2 class="mt-2 text-lg font-bold text-slate-900">大学生二手面交不鸽局</h2>
+              <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-700">上一轮的校园生活项目继续保留，和今晚这次吃饭决策台形成一组对照：一个解决“二手面交怎么别白跑”，一个解决“下课组局怎么别空转”。两者都不是大而空的平台，而是把大学生日常摩擦压成即时可执行的动作。</p>
+            </div>
+            <a href="./campus-secondhand-meetup.html" class="inline-flex items-center rounded-xl border border-teal-200 bg-white px-4 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-100">查看补充项目</a>
+          </div>
+          <div class="mt-4 grid gap-3 md:grid-cols-3">
+            <article class="rounded-2xl border border-teal-200 bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-teal-700">需求依据</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">不少大学生做二手交易时并不是没人接单，而是时间、地点和验货点没有提前对齐，最后双方都觉得自己白跑一趟。</p>
+            </article>
+            <article class="rounded-2xl border border-sky-200 bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-sky-700">怎么做</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">把双方时间窗口、校内地点偏好、验货清单和确认文案做成一轮本地快照，减少面交前反复改约和现场漏验。</p>
+            </article>
+            <article class="rounded-2xl border border-slate-200 bg-white p-4">
+              <p class="text-xs font-semibold tracking-wide text-slate-600">当前状态</p>
+              <p class="mt-2 text-sm leading-relaxed text-slate-700">已完成并可运行，继续保留在 AI 自动产出区，观察学生是否会把它当成面交前的固定对齐动作。</p>
             </article>
           </div>
         </section>
@@ -205,7 +273,7 @@
 
         <section class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-6">
           <h2 class="text-base font-bold text-slate-900">这个区域对网站的意义</h2>
-          <p class="mt-3 text-sm leading-relaxed text-slate-600">它让网站不只是“展示我做过什么”，而是持续产生新内容、新工具和新实验。对来访的人来说，这里也是一眼看懂我在做什么、为什么做、还能继续往哪里做的入口；对首页和作品集来说，它则负责把试验态内容先隔离掉。</p>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">它让网站不只是“展示我做过什么”，而是持续产生新信息源、新内容、新工具和新实验。对来访的人来说，这里也是一眼看懂我如何用 AI 服务大学生学业、求职、规划和副业探索的入口；对首页和作品集来说，它则负责把试验态内容先隔离掉。</p>
           <div class="mt-4 flex flex-wrap gap-3">
             <a href="./autonomous-ai-lab-business.html" class="inline-flex items-center rounded-xl bg-gradient-to-r from-brandFrom to-brandTo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-95">查看项目说明与探索入口</a>
             <a href="../services.html" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">看可合作服务</a>
@@ -246,6 +314,63 @@
       SiteCommon.initNav({ currentKey: "portfolio" });
       SiteCommon.initQrModal({ assetPrefix: "../" });
       SiteCommon.initReveal(document);
+
+      var activeSourceFilter = "全部";
+      var sourceList = document.getElementById("source-radar-list");
+      var sourceUpdated = document.getElementById("source-radar-updated");
+      var areaClass = {
+        "学业发展": "border-blue-200 bg-blue-50 text-blue-700",
+        "职业求职": "border-amber-200 bg-amber-50 text-amber-700",
+        "个人规划": "border-violet-200 bg-violet-50 text-violet-700",
+        "个人成长": "border-emerald-200 bg-emerald-50 text-emerald-700",
+        "创业副业": "border-orange-200 bg-orange-50 text-orange-700"
+      };
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, function (char) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char];
+        });
+      }
+
+      function renderSources(items) {
+        if (!sourceList) return;
+        var filtered = activeSourceFilter === "全部"
+          ? items
+          : items.filter(function (item) { return item.area === activeSourceFilter; });
+        sourceList.innerHTML = filtered.map(function (item) {
+          var tagCls = areaClass[item.area] || "border-slate-200 bg-slate-50 text-slate-700";
+          return [
+            '<article class="rounded-2xl border border-slate-200 bg-white p-5">',
+            '  <div class="flex flex-wrap items-center justify-between gap-2">',
+            '    <span class="rounded-full border px-3 py-1 text-xs font-semibold ' + tagCls + '">' + escapeHtml(item.area) + '</span>',
+            '    <span class="text-xs font-semibold text-slate-500">' + escapeHtml(item.platform) + '</span>',
+            "  </div>",
+            '  <h3 class="mt-3 text-base font-bold text-slate-900">' + escapeHtml(item.sourceName) + '</h3>',
+            '  <p class="mt-2 text-sm leading-relaxed text-slate-600">' + escapeHtml(item.why) + '</p>',
+            '  <p class="mt-3 text-xs leading-relaxed text-slate-500"><span class="font-semibold text-slate-700">适合：</span>' + escapeHtml(item.bestFor) + '</p>',
+            '  <p class="mt-1 text-xs leading-relaxed text-slate-500"><span class="font-semibold text-slate-700">复核：</span>' + escapeHtml(item.cadence) + '</p>',
+            '  <a class="mt-4 inline-flex items-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener">打开信息源</a>',
+            "</article>"
+          ].join("");
+        }).join("");
+        if (sourceUpdated) {
+          sourceUpdated.textContent = "已载入 " + filtered.length + " 个信息源";
+        }
+      }
+
+      SiteCommon.fetchWithFallback("../data/source-radar.json", "sourceRadar").then(function (items) {
+        var sources = items || [];
+        renderSources(sources);
+        document.querySelectorAll("[data-source-filter]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            activeSourceFilter = button.getAttribute("data-source-filter") || "全部";
+            document.querySelectorAll("[data-source-filter]").forEach(function (node) {
+              node.classList.toggle("is-active", node === button);
+            });
+            renderSources(sources);
+          });
+        });
+      });
     })();
   </script>
 </body>

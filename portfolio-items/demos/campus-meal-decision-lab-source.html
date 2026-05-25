@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生吃什么不纠结局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#111827",sun:"#ea580c",leaf:"#0f766e",cream:"#fff7ed",moss:"#14532d"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:light}
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at top left,rgba(251,146,60,.24),transparent 24%),radial-gradient(circle at right 20%,rgba(16,185,129,.18),transparent 24%),linear-gradient(145deg,#fffaf2,#fff7ed 45%,#ecfdf5 100%);color:#111827}
+    .glass{background:rgba(255,251,235,.74);backdrop-filter:blur(18px)}
+    .spot{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .spot:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(17,24,39,.08)}
+    .history-scroll::-webkit-scrollbar{height:8px}
+    .history-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.6);border-radius:999px}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="overflow-hidden rounded-[2rem] border border-orange-100 glass">
+      <div class="grid gap-0 lg:grid-cols-[1.08fr,0.92fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-orange-700">Campus Meal Decision</p>
+          <h1 class="mt-4 max-w-4xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">大学生吃什么不纠结局</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-700">别再让“都行”“随便”“你定吧”吃掉下课后的黄金 15 分钟。这个页面会结合校区位置、附近餐饮点、预算、人数、口味和赶时间程度，帮你迅速拍板去哪吃，并把结果变成能直接发群的决策文案。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="generateBtn" class="inline-flex items-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">生成今天的吃饭方案</button>
+            <button id="sampleBtn" class="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700">加载默认样本</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl border border-white bg-white/90 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">最佳选项</p>
+              <p id="topPick" class="mt-3 text-2xl font-extrabold text-slate-900">待生成</p>
+              <p id="topPickNote" class="mt-2 text-sm text-slate-500">先算一次，再决定往哪边走。</p>
+            </div>
+            <div class="rounded-3xl border border-orange-200 bg-orange-50 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-orange-700">决策状态</p>
+              <p id="decisionState" class="mt-3 text-2xl font-extrabold text-orange-900">待决策</p>
+              <p id="decisionNote" class="mt-2 text-sm text-orange-800">会综合预算、距离和赶时间程度。</p>
+            </div>
+            <div class="rounded-3xl border border-emerald-200 bg-emerald-50 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-emerald-700">数据来源</p>
+              <p id="sourceLabel" class="mt-3 text-xl font-extrabold text-emerald-900">POI 实时检索 / 离线兜底</p>
+              <p id="updatedLabel" class="mt-2 text-sm text-emerald-900/80">还没拉取附近候选。</p>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-orange-100 bg-white/70 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-500">组局设置</p>
+          <div class="mt-4 space-y-4">
+            <div class="rounded-3xl border border-orange-100 bg-white p-4">
+              <label class="text-sm font-semibold text-slate-800" for="campusInput">城市 / 校区关键词</label>
+              <input id="campusInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="Fudan University Shanghai">
+              <p class="mt-2 text-xs leading-relaxed text-slate-500">建议填英文更稳定，比如 Fudan University Shanghai、Tsinghua University Beijing。</p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-orange-100 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="budgetInput">人均预算</label>
+                <input id="budgetInput" type="number" min="10" max="150" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="35">
+              </div>
+              <div class="rounded-3xl border border-orange-100 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="groupInput">几个人</label>
+                <input id="groupInput" type="number" min="1" max="12" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="4">
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-orange-100 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="radiusInput">搜索半径</label>
+                <select id="radiusInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="600">600 米</option>
+                  <option value="1000" selected>1000 米</option>
+                  <option value="1400">1400 米</option>
+                </select>
+              </div>
+              <div class="rounded-3xl border border-orange-100 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="paceInput">赶时间程度</label>
+                <select id="paceInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="chill">不赶，重氛围</option>
+                  <option value="normal" selected>正常吃饭</option>
+                  <option value="rush">赶时间，优先快</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-orange-100 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="vibeInput">今天想吃什么</label>
+                <select id="vibeInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="comfort" selected>热乎耐吃</option>
+                  <option value="spicy">辣一点</option>
+                  <option value="light">清淡一点</option>
+                  <option value="coffee">边吃边聊</option>
+                </select>
+              </div>
+              <div class="rounded-3xl border border-orange-100 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="avoidInput">想避开什么</label>
+                <select id="avoidInput" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="queue" selected>太排队</option>
+                  <option value="expensive">太贵</option>
+                  <option value="far">太远</option>
+                  <option value="unknown">踩雷未知</option>
+                </select>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-orange-100 bg-white p-4">
+              <p class="text-sm font-semibold text-slate-800">这次会一起帮你判断</p>
+              <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+                <li>附近有哪些可选餐饮点，先挑 3 个更稳的。</li>
+                <li>哪家更适合赶时间、哪家更适合坐下聊天。</li>
+                <li>群里怎么一句话拍板，减少来回“都行”。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-5 grid gap-5 lg:grid-cols-[1.08fr,0.92fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-orange-100 glass">
+        <div class="border-b border-orange-100 px-6 py-5 sm:px-8">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-500">候选结果</p>
+          <h2 class="mt-2 text-2xl font-bold text-slate-900">今天别再在路口投票投 10 分钟</h2>
+        </div>
+        <div class="space-y-5 p-6 sm:p-8">
+          <div class="grid gap-4 xl:grid-cols-[0.94fr,1.06fr]">
+            <div class="rounded-[1.75rem] border border-orange-100 bg-white p-5">
+              <p class="text-xs uppercase tracking-[0.18em] text-slate-500">主结论</p>
+              <h3 id="headlineValue" class="mt-3 text-2xl font-bold text-slate-900">先检索一下附近候选，再让今天的“随便”有结果。</h3>
+              <p id="summaryValue" class="mt-3 text-sm leading-relaxed text-slate-600">这里会给出最适合今天这组人的一句话判断：该快吃、慢聊，还是直接去最稳那家。</p>
+            </div>
+            <div class="rounded-[1.75rem] border border-emerald-200 bg-emerald-50 p-5">
+              <p class="text-xs uppercase tracking-[0.18em] text-emerald-700">拍板动作</p>
+              <div id="actionList" class="mt-3 grid gap-3 sm:grid-cols-2">
+                <div class="rounded-2xl border border-white bg-white px-4 py-3 text-sm text-slate-600">先生成一次，行动建议会出现在这里。</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between gap-3">
+              <p class="text-sm font-semibold text-slate-800">优先候选</p>
+              <p class="text-xs text-slate-500">按今天这组人的约束从高到低排序</p>
+            </div>
+            <div id="spotList" class="mt-4 grid gap-4 md:grid-cols-3">
+              <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">生成后，这里会给出 3 个最稳的吃饭候选。</div>
+            </div>
+          </div>
+
+          <div class="rounded-[1.75rem] border border-orange-100 bg-white p-5">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <p class="text-xs uppercase tracking-[0.18em] text-slate-500">shortlist</p>
+                <p class="mt-1 text-sm text-slate-600">把这次真的可能去的点存下来，下次少重新搜一遍。</p>
+              </div>
+              <span id="shortlistLabel" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">0 条候选</span>
+            </div>
+            <div id="shortlist" class="history-scroll mt-4 flex gap-3 overflow-x-auto pb-2">
+              <div class="min-w-[220px] rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">保存后，这里会显示你的常用吃饭点快照。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-orange-100 glass">
+          <div class="border-b border-orange-100 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">即时判断</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">这局最容易卡在哪</h3>
+          </div>
+          <div class="grid gap-4 px-6 py-5">
+            <div class="rounded-3xl border border-orange-200 bg-orange-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-orange-900"><span>预算贴合</span><span id="budgetValue">--</span></div>
+              <p id="budgetCopy" class="mt-3 text-sm text-orange-900/80">先拉候选。</p>
+            </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-slate-800"><span>赶时间风险</span><span id="paceValue">--</span></div>
+              <p id="paceCopy" class="mt-3 text-sm text-slate-600">是否适合下节课前快速解决。</p>
+            </div>
+            <div class="rounded-3xl border border-emerald-200 bg-emerald-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-emerald-900"><span>聊天友好</span><span id="chatValue">--</span></div>
+              <p id="chatCopy" class="mt-3 text-sm text-emerald-900/80">是否适合边吃边聊、不用吃完就撤。</p>
+            </div>
+            <div class="rounded-3xl border border-amber-200 bg-amber-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-amber-900"><span>踩雷提醒</span><span id="avoidValue">--</span></div>
+              <p id="avoidCopy" class="mt-3 text-sm text-amber-900/80">会根据你最想避开的点给一个提醒。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="overflow-hidden rounded-[2rem] border border-orange-100 glass">
+          <div class="border-b border-orange-100 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">一句话发群</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">别让“都行”继续转圈</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <div id="shareCopy" class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm leading-relaxed text-slate-600">算完后，这里会生成一段可直接发到宿舍群或小组群的拍板文案。</div>
+            <div class="flex flex-wrap gap-3">
+              <button id="copyBtn" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">复制拍板文案</button>
+              <button id="saveBtn" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">保存这次 shortlist</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="overflow-hidden rounded-[2rem] border border-orange-100 glass">
+          <div class="border-b border-orange-100 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">JSON 快照</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">导出 / 导入</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <button id="exportBtn" class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700">导出当前配置</button>
+            <label class="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-4 text-sm leading-relaxed text-slate-500">
+              选择 JSON 文件恢复配置
+              <input id="importInput" type="file" accept="application/json" class="hidden">
+            </label>
+            <p id="importStatus" class="text-sm leading-relaxed text-slate-500">适合把常吃 shortlist 和组局习惯带到别的设备。</p>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var previewMode = params.get("mode") === "preview";
+      var stateKey = "campus-meal-decision-lab-state";
+      var shortlistKey = "campus-meal-decision-lab-shortlist";
+      var defaults = {
+        campus: "Fudan University Shanghai",
+        budget: 35,
+        group: 4,
+        radius: "1000",
+        pace: "normal",
+        vibe: "comfort",
+        avoid: "queue"
+      };
+      var fallbackOrigin = { label: "复旦大学邯郸校区", lat: 31.2992, lon: 121.5037 };
+      var fallbackVenues = [
+        { name: "阿北牛肉面", amenity: "fast_food", cuisine: "noodle", lat: 31.3011, lon: 121.5029, opening_hours: "10:30-21:00" },
+        { name: "松间小馆", amenity: "restaurant", cuisine: "chinese", lat: 31.2978, lon: 121.5058, opening_hours: "11:00-22:00" },
+        { name: "南区轻食吧", amenity: "cafe", cuisine: "salad;sandwich", lat: 31.2985, lon: 121.5009, opening_hours: "08:30-20:00" },
+        { name: "上课前鸡排饭", amenity: "fast_food", cuisine: "chicken;rice", lat: 31.3004, lon: 121.5071, opening_hours: "10:00-22:00" },
+        { name: "操场边辣锅档", amenity: "restaurant", cuisine: "hotpot;spicy", lat: 31.2969, lon: 121.5018, opening_hours: "11:00-23:00" },
+        { name: "图书馆旁咖喱屋", amenity: "restaurant", cuisine: "curry", lat: 31.2997, lon: 121.4996, opening_hours: "11:00-21:30" }
+      ];
+
+      var els = {
+        generateBtn: byId("generateBtn"),
+        sampleBtn: byId("sampleBtn"),
+        campusInput: byId("campusInput"),
+        budgetInput: byId("budgetInput"),
+        groupInput: byId("groupInput"),
+        radiusInput: byId("radiusInput"),
+        paceInput: byId("paceInput"),
+        vibeInput: byId("vibeInput"),
+        avoidInput: byId("avoidInput"),
+        topPick: byId("topPick"),
+        topPickNote: byId("topPickNote"),
+        decisionState: byId("decisionState"),
+        decisionNote: byId("decisionNote"),
+        sourceLabel: byId("sourceLabel"),
+        updatedLabel: byId("updatedLabel"),
+        headlineValue: byId("headlineValue"),
+        summaryValue: byId("summaryValue"),
+        actionList: byId("actionList"),
+        spotList: byId("spotList"),
+        shortlistLabel: byId("shortlistLabel"),
+        shortlist: byId("shortlist"),
+        budgetValue: byId("budgetValue"),
+        budgetCopy: byId("budgetCopy"),
+        paceValue: byId("paceValue"),
+        paceCopy: byId("paceCopy"),
+        chatValue: byId("chatValue"),
+        chatCopy: byId("chatCopy"),
+        avoidValue: byId("avoidValue"),
+        avoidCopy: byId("avoidCopy"),
+        shareCopy: byId("shareCopy"),
+        copyBtn: byId("copyBtn"),
+        saveBtn: byId("saveBtn"),
+        exportBtn: byId("exportBtn"),
+        importInput: byId("importInput"),
+        importStatus: byId("importStatus")
+      };
+
+      var latestPlan = null;
+      var shortlist = loadShortlist();
+
+      hydrate();
+      renderShortlist();
+      renderIdle();
+
+      els.generateBtn.addEventListener("click", function () {
+        analyze({ forceFallback: false });
+      });
+      els.sampleBtn.addEventListener("click", function () {
+        setForm(defaults);
+        analyze({ forceFallback: true });
+      });
+      els.copyBtn.addEventListener("click", copyShare);
+      els.saveBtn.addEventListener("click", saveShortlist);
+      els.exportBtn.addEventListener("click", exportSnapshot);
+      els.importInput.addEventListener("change", importSnapshot);
+
+      if (previewMode) {
+        setForm(defaults);
+        analyze({ forceFallback: true, silent: true });
+      }
+
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
+      function hydrate() {
+        try {
+          var saved = JSON.parse(localStorage.getItem(stateKey) || "{}");
+          setForm({
+            campus: saved.campus || defaults.campus,
+            budget: saved.budget || defaults.budget,
+            group: saved.group || defaults.group,
+            radius: saved.radius || defaults.radius,
+            pace: saved.pace || defaults.pace,
+            vibe: saved.vibe || defaults.vibe,
+            avoid: saved.avoid || defaults.avoid
+          });
+        } catch (error) {
+          setForm(defaults);
+        }
+      }
+
+      function setForm(state) {
+        els.campusInput.value = state.campus;
+        els.budgetInput.value = state.budget;
+        els.groupInput.value = state.group;
+        els.radiusInput.value = String(state.radius);
+        els.paceInput.value = state.pace;
+        els.vibeInput.value = state.vibe;
+        els.avoidInput.value = state.avoid;
+      }
+
+      function getFormState() {
+        return {
+          campus: (els.campusInput.value || "").trim() || defaults.campus,
+          budget: clampNumber(els.budgetInput.value, 10, 150, defaults.budget),
+          group: clampNumber(els.groupInput.value, 1, 12, defaults.group),
+          radius: String(clampNumber(els.radiusInput.value, 400, 2000, Number(defaults.radius))),
+          pace: els.paceInput.value,
+          vibe: els.vibeInput.value,
+          avoid: els.avoidInput.value
+        };
+      }
+
+      function persistState(state) {
+        try {
+          localStorage.setItem(stateKey, JSON.stringify(state));
+        } catch (error) {}
+      }
+
+      function loadShortlist() {
+        try {
+          var data = JSON.parse(localStorage.getItem(shortlistKey) || "[]");
+          return Array.isArray(data) ? data : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function persistShortlist() {
+        try {
+          localStorage.setItem(shortlistKey, JSON.stringify(shortlist.slice(0, 6)));
+        } catch (error) {}
+      }
+
+      async function analyze(options) {
+        var state = getFormState();
+        persistState(state);
+        setLoading();
+        var source = "fallback";
+        var origin = fallbackOrigin;
+        var venues = fallbackVenues.slice();
+
+        if (!options.forceFallback) {
+          try {
+            origin = await geocodeCampus(state.campus);
+            var liveVenues = await fetchNearbyVenues(origin, Number(state.radius));
+            if (liveVenues.length >= 3) {
+              venues = liveVenues;
+              source = "live";
+            }
+          } catch (error) {}
+        }
+
+        var picks = rankVenues(venues, origin, state).slice(0, 5);
+        latestPlan = buildPlan(picks, origin, state, source);
+        renderPlan(latestPlan);
+        if (!options.silent) {
+          els.importStatus.textContent = source === "live" ? "已完成一次实时 POI 检索。" : "本次使用离线兜底样本，适合本地预览和接口异常场景。";
+        }
+      }
+
+      async function geocodeCampus(query) {
+        var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" + encodeURIComponent(query);
+        var response = await fetch(url, { headers: { "Accept": "application/json" } });
+        if (!response.ok) {
+          throw new Error("Geocode failed");
+        }
+        var results = await response.json();
+        if (!Array.isArray(results) || !results.length) {
+          throw new Error("No geocode results");
+        }
+        return {
+          label: results[0].display_name || query,
+          lat: Number(results[0].lat),
+          lon: Number(results[0].lon)
+        };
+      }
+
+      async function fetchNearbyVenues(origin, radius) {
+        var query = '[out:json][timeout:20];(' +
+          'node["amenity"~"restaurant|fast_food|cafe|food_court"](around:' + radius + "," + origin.lat + "," + origin.lon + ');' +
+          'way["amenity"~"restaurant|fast_food|cafe|food_court"](around:' + radius + "," + origin.lat + "," + origin.lon + ');' +
+          'relation["amenity"~"restaurant|fast_food|cafe|food_court"](around:' + radius + "," + origin.lat + "," + origin.lon + ');' +
+          ');out center 40;';
+        var response = await fetch("https://overpass-api.de/api/interpreter", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=UTF-8" },
+          body: query
+        });
+        if (!response.ok) {
+          throw new Error("Overpass failed");
+        }
+        var data = await response.json();
+        var elements = Array.isArray(data.elements) ? data.elements : [];
+        return elements.map(function (item) {
+          var tags = item.tags || {};
+          return {
+            name: tags.name || inferName(tags.amenity, tags.cuisine),
+            amenity: tags.amenity || "restaurant",
+            cuisine: tags.cuisine || "",
+            opening_hours: tags.opening_hours || "",
+            lat: item.lat || (item.center && item.center.lat) || origin.lat,
+            lon: item.lon || (item.center && item.center.lon) || origin.lon
+          };
+        }).filter(function (item) {
+          return !!item.name;
+        });
+      }
+
+      function inferName(amenity, cuisine) {
+        var base = cuisine ? cuisine.split(";")[0] : amenity;
+        var labelMap = {
+          restaurant: "附近餐馆",
+          fast_food: "附近快餐",
+          cafe: "附近咖啡店",
+          food_court: "附近食堂"
+        };
+        return base ? ("附近" + base) : (labelMap[amenity] || "附近可吃点");
+      }
+
+      function rankVenues(venues, origin, state) {
+        return venues.map(function (venue) {
+          var distance = getDistance(origin.lat, origin.lon, venue.lat, venue.lon);
+          var estimate = estimatePrice(venue);
+          var speed = estimateSpeed(venue);
+          var social = estimateSocial(venue);
+          var vibeScore = estimateVibe(venue, state.vibe);
+          var avoidPenalty = estimateAvoidPenalty(venue, distance, estimate, speed, state.avoid);
+          var budgetFit = Math.max(0, 100 - Math.abs(state.budget - estimate) * 2.4);
+          var distanceFit = Math.max(0, 100 - distance / 18);
+          var paceFit = state.pace === "rush" ? speed * 1.15 + (distanceFit * 0.35) : state.pace === "chill" ? social * 1.1 : (speed + distanceFit) / 2;
+          var groupBonus = state.group >= 4 ? social : speed;
+          var score = budgetFit * 0.28 + distanceFit * 0.22 + vibeScore * 0.22 + paceFit * 0.18 + groupBonus * 0.1 - avoidPenalty;
+          return {
+            name: venue.name,
+            amenity: venue.amenity,
+            cuisine: venue.cuisine,
+            opening_hours: venue.opening_hours,
+            distance: Math.round(distance),
+            price: estimate,
+            speed: Math.round(speed),
+            social: Math.round(social),
+            vibeScore: Math.round(vibeScore),
+            score: Math.round(score),
+            why: buildWhy(venue, state, estimate, distance, speed, social)
+          };
+        }).sort(function (a, b) {
+          return b.score - a.score;
+        });
+      }
+
+      function estimatePrice(venue) {
+        if (venue.amenity === "fast_food") {
+          return 22;
+        }
+        if (venue.amenity === "cafe") {
+          return 38;
+        }
+        var cuisine = (venue.cuisine || "").toLowerCase();
+        if (/hotpot|bbq|barbecue|japanese|korean/.test(cuisine)) {
+          return 55;
+        }
+        if (/salad|sandwich|curry|noodle|dumpling/.test(cuisine)) {
+          return 30;
+        }
+        return venue.amenity === "food_court" ? 24 : 36;
+      }
+
+      function estimateSpeed(venue) {
+        var cuisine = (venue.cuisine || "").toLowerCase();
+        if (venue.amenity === "fast_food" || /sandwich|salad|coffee/.test(cuisine)) {
+          return 88;
+        }
+        if (/hotpot|bbq/.test(cuisine)) {
+          return 38;
+        }
+        if (venue.amenity === "cafe") {
+          return 62;
+        }
+        return 70;
+      }
+
+      function estimateSocial(venue) {
+        var cuisine = (venue.cuisine || "").toLowerCase();
+        if (venue.amenity === "cafe") {
+          return 92;
+        }
+        if (/hotpot|bbq|korean/.test(cuisine)) {
+          return 84;
+        }
+        if (venue.amenity === "fast_food") {
+          return 45;
+        }
+        return 68;
+      }
+
+      function estimateVibe(venue, vibe) {
+        var cuisine = (venue.cuisine || "").toLowerCase();
+        if (vibe === "spicy") {
+          return /hotpot|spicy|sichuan|hunan/.test(cuisine) ? 95 : 58;
+        }
+        if (vibe === "light") {
+          return /salad|sandwich|curry|vegetarian|tea/.test(cuisine) || venue.amenity === "cafe" ? 90 : 54;
+        }
+        if (vibe === "coffee") {
+          return venue.amenity === "cafe" ? 96 : 60;
+        }
+        return /noodle|rice|dumpling|chinese/.test(cuisine) || venue.amenity === "food_court" ? 92 : 66;
+      }
+
+      function estimateAvoidPenalty(venue, distance, price, speed, avoid) {
+        if (avoid === "queue") {
+          return venue.amenity === "restaurant" && speed < 60 ? 12 : 4;
+        }
+        if (avoid === "expensive") {
+          return price > 45 ? 18 : 3;
+        }
+        if (avoid === "far") {
+          return distance > 850 ? 18 : 2;
+        }
+        if (avoid === "unknown") {
+          return venue.opening_hours ? 2 : 10;
+        }
+        return 0;
+      }
+
+      function buildWhy(venue, state, price, distance, speed, social) {
+        var tags = [];
+        tags.push("约 " + price + " 元 / 人");
+        tags.push(distance + " 米");
+        tags.push(speed >= 75 ? "出餐偏快" : speed <= 45 ? "更适合慢吃" : "节奏中等");
+        if (state.group >= 4 && social >= 70) {
+          tags.push("适合 " + state.group + " 人一起坐下");
+        }
+        if (state.pace === "rush" && speed >= 75) {
+          tags.push("适合赶下一节课");
+        }
+        if (state.vibe === "coffee" && venue.amenity === "cafe") {
+          tags.push("适合边吃边聊");
+        }
+        return tags.slice(0, 4);
+      }
+
+      function buildPlan(picks, origin, state, source) {
+        var top = picks[0];
+        var alt = picks[1];
+        var third = picks[2];
+        var fastCount = picks.filter(function (item) { return item.speed >= 75; }).length;
+        var decisionState = state.pace === "rush" ? "快进快出" : state.group >= 5 ? "适合组局" : "可直接拍板";
+        var headline = top ? (top.name + " 更适合今天这局") : "先用离线样本兜底";
+        var summary = top ? ("围绕 " + origin.label + " 1 公里内筛了 " + picks.length + " 个候选，今天更稳的是 " + top.name + "，" + top.why[0] + "，而且 " + top.why[1] + "。") : "没拿到足够候选时，会用离线样本帮你先做一轮决策。";
+        var actions = top ? [
+          "先在群里直接拍 " + top.name,
+          state.pace === "rush" ? "约定 8 分钟内出发，别继续二选一" : "让一位同学负责收尾，不再继续投票",
+          alt ? ("如果第一家排队，就立刻切到 " + alt.name) : "保留一个备选，别到门口再重开讨论",
+          state.group >= 5 ? "先按人数拆 AA，再决定是否加饮品" : "默认各自点主食，减少纠结"
+        ] : [];
+        var budgetCopy = top ? (top.price <= state.budget + 5 ? "预算基本贴合" : "第一名略超预算，注意提前说清人均。") : "等待计算。";
+        var paceCopy = top ? (state.pace === "rush" ? (top.speed >= 75 ? "这家更适合赶课前快速解决。" : "今天赶时间，但第一名更适合坐下吃。") : (fastCount >= 2 ? "附近也有更快的备选，不怕磨蹭。" : "附近慢节奏餐馆更多，适合边吃边聊。")) : "等待计算。";
+        var chatCopy = top ? (top.social >= 75 ? "今天这家适合边吃边把事聊完。" : "第一名更偏效率，不一定适合久坐。") : "等待计算。";
+        var avoidCopy = top ? buildAvoidCopy(top, state.avoid) : "等待计算。";
+        var shareCopy = top ? [
+          "我拍板一下：去 " + top.name + "。",
+          "位置离 " + shortLabel(origin.label) + " 约 " + top.distance + " 米，人均大概 " + top.price + "，" + (state.pace === "rush" ? "更适合赶时间" : "今天这局比较稳") + "。",
+          alt ? ("如果排队就直接切 " + alt.name + "，不再重新投票。") : "如果到门口不合适，就按最近备选处理。"
+        ].join("\n") : "先生成一次再复制。";
+        return {
+          picks: picks,
+          decisionState: decisionState,
+          headline: headline,
+          summary: summary,
+          actions: actions,
+          budgetValue: top ? ("约 " + top.price + " / 人") : "--",
+          budgetCopy: budgetCopy,
+          paceValue: top ? (top.speed >= 75 ? "偏快" : top.speed <= 45 ? "偏慢" : "中等") : "--",
+          paceCopy: paceCopy,
+          chatValue: top ? (top.social >= 75 ? "适合聊天" : top.social <= 50 ? "吃完就走" : "一般") : "--",
+          chatCopy: chatCopy,
+          avoidValue: top ? avoidLabel(state.avoid) : "--",
+          avoidCopy: avoidCopy,
+          shareCopy: shareCopy,
+          topPick: top ? top.name : "离线样本",
+          topPickNote: top ? (top.why.join(" / ")) : "没有实时候选时使用样本。",
+          source: source === "live" ? "OpenStreetMap 实时 POI" : "离线兜底样本",
+          updatedLabel: (source === "live" ? "刚完成实时检索" : "本次使用离线样本") + " · " + new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }),
+          shortlistOrigin: shortLabel(origin.label),
+          snapshot: {
+            state: state,
+            generatedAt: new Date().toISOString(),
+            source: source,
+            origin: origin,
+            picks: picks.slice(0, 3)
+          }
+        };
+      }
+
+      function buildAvoidCopy(top, avoid) {
+        if (avoid === "queue") {
+          return top.speed >= 75 ? "优先了更快出餐的点，少冒排队风险。" : "这家节奏不算快，最好先让一个人过去看眼排队。";
+        }
+        if (avoid === "expensive") {
+          return top.price <= 35 ? "预算压力不大，适合直接拍板。" : "第一名略超经济线，记得先说清人均。";
+        }
+        if (avoid === "far") {
+          return top.distance <= 600 ? "走路成本可控，不容易走到半路后悔。" : "距离不算近，适合一开始就统一方向。";
+        }
+        return top.opening_hours ? "至少有营业时间信息，未知风险相对小。" : "这家公开信息少，建议到门口前再看一眼。";
+      }
+
+      function renderIdle() {
+        els.topPick.textContent = "待生成";
+        els.topPickNote.textContent = "先算一次，再决定往哪边走。";
+        els.decisionState.textContent = "待决策";
+        els.decisionNote.textContent = "会综合预算、距离和赶时间程度。";
+        els.headlineValue.textContent = "先检索一下附近候选，再让今天的“随便”有结果。";
+        els.summaryValue.textContent = "这里会给出最适合今天这组人的一句话判断：该快吃、慢聊，还是直接去最稳那家。";
+        els.actionList.innerHTML = '<div class="rounded-2xl border border-white bg-white px-4 py-3 text-sm text-slate-600">先生成一次，行动建议会出现在这里。</div>';
+        els.spotList.innerHTML = '<div class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">生成后，这里会给出 3 个最稳的吃饭候选。</div>';
+        els.budgetValue.textContent = "--";
+        els.budgetCopy.textContent = "先拉候选。";
+        els.paceValue.textContent = "--";
+        els.paceCopy.textContent = "是否适合下节课前快速解决。";
+        els.chatValue.textContent = "--";
+        els.chatCopy.textContent = "是否适合边吃边聊、不用吃完就撤。";
+        els.avoidValue.textContent = "--";
+        els.avoidCopy.textContent = "会根据你最想避开的点给一个提醒。";
+        els.shareCopy.textContent = "算完后，这里会生成一段可直接发到宿舍群或小组群的拍板文案。";
+      }
+
+      function setLoading() {
+        els.generateBtn.disabled = true;
+        els.generateBtn.textContent = "正在检索附近候选...";
+        els.decisionState.textContent = "检索中";
+        els.decisionNote.textContent = "先找校区附近餐饮点，再排序。";
+      }
+
+      function renderPlan(plan) {
+        els.generateBtn.disabled = false;
+        els.generateBtn.textContent = "重新生成今天的吃饭方案";
+        els.topPick.textContent = plan.topPick;
+        els.topPickNote.textContent = plan.topPickNote;
+        els.decisionState.textContent = plan.decisionState;
+        els.decisionNote.textContent = plan.summary;
+        els.sourceLabel.textContent = plan.source;
+        els.updatedLabel.textContent = plan.updatedLabel;
+        els.headlineValue.textContent = plan.headline;
+        els.summaryValue.textContent = plan.summary;
+        els.actionList.innerHTML = plan.actions.map(function (item) {
+          return '<div class="rounded-2xl border border-white bg-white px-4 py-3 text-sm text-slate-700">' + escapeHtml(item) + "</div>";
+        }).join("");
+        els.spotList.innerHTML = plan.picks.slice(0, 3).map(function (item, index) {
+          return '<article class="spot rounded-3xl border ' + (index === 0 ? "border-orange-300 bg-orange-50" : "border-slate-200 bg-white") + ' p-5">' +
+            '<p class="text-xs uppercase tracking-[0.18em] ' + (index === 0 ? "text-orange-700" : "text-slate-500") + '">' + (index === 0 ? "最优先" : "备选 " + index) + "</p>" +
+            '<h3 class="mt-3 text-xl font-bold text-slate-900">' + escapeHtml(item.name) + "</h3>" +
+            '<p class="mt-2 text-sm text-slate-500">' + formatAmenity(item.amenity) + (item.cuisine ? " · " + escapeHtml(item.cuisine.replace(/;/g, " / ")) : "") + "</p>" +
+            '<div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">' +
+            '<span class="rounded-full bg-white px-3 py-1 text-slate-700">约 ' + item.price + ' / 人</span>' +
+            '<span class="rounded-full bg-white px-3 py-1 text-slate-700">' + item.distance + ' 米</span>' +
+            '<span class="rounded-full bg-white px-3 py-1 text-slate-700">得分 ' + item.score + "</span>" +
+            "</div>" +
+            '<ul class="mt-4 space-y-2 text-sm leading-relaxed text-slate-700">' + item.why.map(function (why) {
+              return "<li>· " + escapeHtml(why) + "</li>";
+            }).join("") + "</ul>" +
+            (item.opening_hours ? '<p class="mt-3 text-xs text-slate-500">营业时间：' + escapeHtml(item.opening_hours) + "</p>" : "") +
+            "</article>";
+        }).join("");
+        els.budgetValue.textContent = plan.budgetValue;
+        els.budgetCopy.textContent = plan.budgetCopy;
+        els.paceValue.textContent = plan.paceValue;
+        els.paceCopy.textContent = plan.paceCopy;
+        els.chatValue.textContent = plan.chatValue;
+        els.chatCopy.textContent = plan.chatCopy;
+        els.avoidValue.textContent = plan.avoidValue;
+        els.avoidCopy.textContent = plan.avoidCopy;
+        els.shareCopy.textContent = plan.shareCopy;
+      }
+
+      function renderShortlist() {
+        els.shortlistLabel.textContent = shortlist.length + " 条候选";
+        if (!shortlist.length) {
+          els.shortlist.innerHTML = '<div class="min-w-[220px] rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">保存后，这里会显示你的常用吃饭点快照。</div>';
+          return;
+        }
+        els.shortlist.innerHTML = shortlist.map(function (item) {
+          return '<button type="button" data-shortlist-id="' + escapeHtml(item.id) + '" class="min-w-[250px] rounded-3xl border border-orange-100 bg-white p-4 text-left">' +
+            '<p class="text-xs uppercase tracking-[0.18em] text-slate-500">' + escapeHtml(item.origin) + "</p>" +
+            '<h3 class="mt-2 text-lg font-bold text-slate-900">' + escapeHtml(item.topPick) + "</h3>" +
+            '<p class="mt-2 text-sm leading-relaxed text-slate-600">' + escapeHtml(item.summary) + "</p>" +
+            '<p class="mt-3 text-xs text-slate-500">' + escapeHtml(item.generatedAtLabel) + "</p>" +
+            "</button>";
+        }).join("");
+        Array.prototype.forEach.call(els.shortlist.querySelectorAll("[data-shortlist-id]"), function (button) {
+          button.addEventListener("click", function () {
+            var match = shortlist.find(function (entry) { return entry.id === button.getAttribute("data-shortlist-id"); });
+            if (match) {
+              setForm(match.state);
+              latestPlan = {
+                picks: match.picks,
+                topPick: match.topPick,
+                topPickNote: match.topPickNote,
+                decisionState: match.decisionState,
+                summary: match.summary,
+                headline: match.headline,
+                actions: match.actions,
+                budgetValue: match.budgetValue,
+                budgetCopy: match.budgetCopy,
+                paceValue: match.paceValue,
+                paceCopy: match.paceCopy,
+                chatValue: match.chatValue,
+                chatCopy: match.chatCopy,
+                avoidValue: match.avoidValue,
+                avoidCopy: match.avoidCopy,
+                shareCopy: match.shareCopy,
+                source: match.source,
+                updatedLabel: match.generatedAtLabel
+              };
+              renderPlan(latestPlan);
+            }
+          });
+        });
+      }
+
+      function saveShortlist() {
+        if (!latestPlan) {
+          els.importStatus.textContent = "先生成一次方案，再决定要不要存。";
+          return;
+        }
+        var state = getFormState();
+        var entry = {
+          id: "meal-" + Date.now(),
+          state: state,
+          topPick: latestPlan.topPick,
+          topPickNote: latestPlan.topPickNote,
+          decisionState: latestPlan.decisionState,
+          summary: latestPlan.summary,
+          headline: latestPlan.headline,
+          actions: latestPlan.actions,
+          budgetValue: latestPlan.budgetValue,
+          budgetCopy: latestPlan.budgetCopy,
+          paceValue: latestPlan.paceValue,
+          paceCopy: latestPlan.paceCopy,
+          chatValue: latestPlan.chatValue,
+          chatCopy: latestPlan.chatCopy,
+          avoidValue: latestPlan.avoidValue,
+          avoidCopy: latestPlan.avoidCopy,
+          shareCopy: latestPlan.shareCopy,
+          source: latestPlan.source,
+          origin: latestPlan.shortlistOrigin,
+          picks: latestPlan.picks.slice(0, 3),
+          generatedAtLabel: new Date().toLocaleString("zh-CN")
+        };
+        shortlist.unshift(entry);
+        shortlist = shortlist.slice(0, 6);
+        persistShortlist();
+        renderShortlist();
+        els.importStatus.textContent = "已保存这次 shortlist，下次可以直接点开复用。";
+      }
+
+      async function copyShare() {
+        if (!latestPlan) {
+          els.importStatus.textContent = "先生成一次方案，再复制。";
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(latestPlan.shareCopy);
+          els.importStatus.textContent = "拍板文案已复制。";
+        } catch (error) {
+          els.importStatus.textContent = "当前环境不支持自动复制，可以手动复制右侧文案。";
+        }
+      }
+
+      function exportSnapshot() {
+        var payload = {
+          exportedAt: new Date().toISOString(),
+          state: getFormState(),
+          latestPlan: latestPlan ? latestPlan.snapshot : null,
+          shortlist: shortlist
+        };
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        var link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "campus-meal-decision-lab.json";
+        link.click();
+        URL.revokeObjectURL(link.href);
+        els.importStatus.textContent = "当前配置和 shortlist 已导出。";
+      }
+
+      function importSnapshot(event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) {
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function () {
+          try {
+            var parsed = JSON.parse(String(reader.result || "{}"));
+            if (parsed.state) {
+              setForm({
+                campus: parsed.state.campus || defaults.campus,
+                budget: parsed.state.budget || defaults.budget,
+                group: parsed.state.group || defaults.group,
+                radius: parsed.state.radius || defaults.radius,
+                pace: parsed.state.pace || defaults.pace,
+                vibe: parsed.state.vibe || defaults.vibe,
+                avoid: parsed.state.avoid || defaults.avoid
+              });
+              persistState(getFormState());
+            }
+            if (Array.isArray(parsed.shortlist)) {
+              shortlist = parsed.shortlist.slice(0, 6);
+              persistShortlist();
+              renderShortlist();
+            }
+            els.importStatus.textContent = "JSON 已导入，可以直接继续生成。";
+          } catch (error) {
+            els.importStatus.textContent = "导入失败：文件内容不是可识别的 JSON 快照。";
+          }
+        };
+        reader.readAsText(file, "utf-8");
+        event.target.value = "";
+      }
+
+      function clampNumber(value, min, max, fallback) {
+        var number = Number(value);
+        if (!Number.isFinite(number)) {
+          return fallback;
+        }
+        return Math.min(max, Math.max(min, Math.round(number)));
+      }
+
+      function shortLabel(label) {
+        return String(label || "").split(",")[0];
+      }
+
+      function avoidLabel(value) {
+        return {
+          queue: "避排队",
+          expensive: "避高价",
+          far: "避走远",
+          unknown: "避踩雷"
+        }[value] || "正常";
+      }
+
+      function formatAmenity(amenity) {
+        return {
+          restaurant: "餐馆",
+          fast_food: "快餐",
+          cafe: "咖啡店",
+          food_court: "食堂"
+        }[amenity] || "餐饮点";
+      }
+
+      function getDistance(lat1, lon1, lat2, lon2) {
+        var rad = Math.PI / 180;
+        var dLat = (lat2 - lat1) * rad;
+        var dLon = (lon2 - lon1) * rad;
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return 6371000 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      }
+
+      function escapeHtml(value) {
+        return String(value || "").replace(/[&<>"']/g, function (char) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char];
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

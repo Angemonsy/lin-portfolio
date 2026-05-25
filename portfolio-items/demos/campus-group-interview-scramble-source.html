@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生群面抢话生存局</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{ink:"#0f172a",accent:"#22c55e",warn:"#f59e0b",danger:"#fb7185"}}}};</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;min-height:100vh;font-family:"Noto Sans SC",sans-serif;background:radial-gradient(circle at top left,rgba(34,197,94,.18),transparent 24%),radial-gradient(circle at top right,rgba(59,130,246,.18),transparent 22%),linear-gradient(145deg,#eff6ff,#f8fafc 40%,#ecfccb 100%);color:#0f172a}
+    .panel{background:rgba(255,255,255,.84);backdrop-filter:blur(16px)}
+    .choice{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .choice:hover{transform:translateY(-2px);box-shadow:0 18px 35px rgba(15,23,42,.08)}
+  </style>
+</head>
+<body>
+  <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <section class="overflow-hidden rounded-[2rem] border border-slate-200 panel">
+      <div class="grid gap-0 lg:grid-cols-[1.08fr,0.92fr]">
+        <div class="p-6 sm:p-8 lg:p-10">
+          <p class="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">Group Interview Rush</p>
+          <h1 class="mt-4 max-w-3xl text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">大学生群面抢话生存局</h1>
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">把无领导小组最常见的抢话、冷场、跑偏和总结翻车做成 6 回合快节奏小游戏。每一轮都要选一个发言动作，最后不仅给你分，还会生成下一次群面的开口脚本。</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="startBtn" class="inline-flex items-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">开始这一轮群面</button>
+            <button id="resetBtn" class="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700">恢复默认剧本</button>
+          </div>
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">当前关卡</p>
+              <p id="roundValue" class="mt-3 text-3xl font-extrabold text-slate-900">0 / 6</p>
+              <p class="mt-2 text-sm text-slate-500">每局 6 回合，2 分钟内能跑完。</p>
+            </div>
+            <div class="rounded-3xl border border-emerald-200 bg-emerald-50 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-emerald-700">最佳成绩</p>
+              <p id="bestScoreValue" class="mt-3 text-3xl font-extrabold text-emerald-900">0</p>
+              <p class="mt-2 text-sm text-emerald-800">浏览器本地保留你的历史最高分。</p>
+            </div>
+            <div class="rounded-3xl border border-blue-200 bg-blue-50 p-4">
+              <p class="text-xs uppercase tracking-[0.2em] text-blue-700">今晚主线</p>
+              <p id="keywordValue" class="mt-3 text-xl font-extrabold text-blue-900">先搭框架，再补价值</p>
+              <p class="mt-2 text-sm text-blue-900/75">不是谁声音大谁赢，是谁能推进讨论。</p>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-slate-200 bg-slate-50 p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-500">本局设定</p>
+          <div class="mt-4 space-y-4">
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <label class="text-sm font-semibold text-slate-800" for="scenarioTitle">题目场景</label>
+              <input id="scenarioTitle" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="给校园咖啡品牌做秋招快闪方案">
+            </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <label class="text-sm font-semibold text-slate-800" for="roleName">你的目标角色</label>
+              <input id="roleName" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none" value="框架型选手">
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="timeBudget">单轮时机</label>
+                <select id="timeBudget" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="稳一点">稳一点</option>
+                  <option value="快一点">快一点</option>
+                  <option value="最后收口">最后收口</option>
+                </select>
+              </div>
+              <div class="rounded-3xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-semibold text-slate-800" for="teamStyle">对手风格</label>
+                <select id="teamStyle" class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none">
+                  <option value="抢话型">抢话型</option>
+                  <option value="沉默型">沉默型</option>
+                  <option value="跑偏型">跑偏型</option>
+                </select>
+              </div>
+            </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <p class="text-sm font-semibold text-slate-800">胜利条件</p>
+              <ul class="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+                <li>结构清晰：别一上来就散点输出。</li>
+                <li>存在感够强：至少两次抓住关键推进时机。</li>
+                <li>团队信任：不能只抢话，不收口。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-5 grid gap-5 lg:grid-cols-[1.05fr,0.95fr]">
+      <article class="overflow-hidden rounded-[2rem] border border-slate-200 panel">
+        <div class="border-b border-slate-200 px-6 py-5 sm:px-8">
+          <p class="text-xs uppercase tracking-[0.22em] text-slate-500">实时局势</p>
+          <h2 class="mt-2 text-2xl font-bold text-slate-900">这一轮你要不要开口</h2>
+        </div>
+        <div class="space-y-5 p-6 sm:p-8">
+          <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+            <p class="text-xs uppercase tracking-[0.18em] text-slate-500">回合情境</p>
+            <h3 id="promptTitle" class="mt-3 text-xl font-bold text-slate-900">点击开始，进入群面现场。</h3>
+            <p id="promptBody" class="mt-3 text-sm leading-relaxed text-slate-600">你会看到不同的群面瞬间，然后选最合适的发言动作。每个选择都会影响结构感、存在感和团队信任。</p>
+          </div>
+          <div id="choices" class="grid gap-4 md:grid-cols-2"></div>
+          <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-5">
+            <p class="text-xs uppercase tracking-[0.18em] text-slate-500">上一轮反馈</p>
+            <div id="feedbackBox" class="mt-3 text-sm leading-relaxed text-slate-600">还没开始。准备好以后直接开打。</div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="space-y-5">
+        <section class="overflow-hidden rounded-[2rem] border border-slate-200 panel">
+          <div class="border-b border-slate-200 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">评分面板</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">别只顾说，先看你在涨什么</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <div class="rounded-3xl border border-slate-200 bg-white p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-slate-700"><span>结构清晰</span><span id="clarityValue">0</span></div>
+              <div class="mt-3 h-3 overflow-hidden rounded-full bg-slate-100"><div id="clarityBar" class="h-full rounded-full bg-slate-900" style="width:0%"></div></div>
+            </div>
+            <div class="rounded-3xl border border-amber-200 bg-amber-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-amber-900"><span>存在感</span><span id="presenceValue">0</span></div>
+              <div class="mt-3 h-3 overflow-hidden rounded-full bg-amber-100"><div id="presenceBar" class="h-full rounded-full bg-amber-500" style="width:0%"></div></div>
+            </div>
+            <div class="rounded-3xl border border-emerald-200 bg-emerald-50 p-4">
+              <div class="flex items-center justify-between text-sm font-semibold text-emerald-900"><span>团队信任</span><span id="trustValue">0</span></div>
+              <div class="mt-3 h-3 overflow-hidden rounded-full bg-emerald-100"><div id="trustBar" class="h-full rounded-full bg-emerald-500" style="width:0%"></div></div>
+            </div>
+            <div class="rounded-3xl border border-blue-200 bg-blue-50 p-4">
+              <p class="text-xs uppercase tracking-[0.18em] text-blue-700">总分</p>
+              <p id="totalScoreValue" class="mt-3 text-4xl font-extrabold text-blue-900">0</p>
+              <p class="mt-2 text-sm text-blue-900/75">系统按推进讨论的有效性计分，不按“抢到几次话”计分。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="overflow-hidden rounded-[2rem] border border-slate-200 panel">
+          <div class="border-b border-slate-200 px-6 py-5">
+            <p class="text-xs uppercase tracking-[0.22em] text-slate-500">本局产出</p>
+            <h3 class="mt-2 text-xl font-bold text-slate-900">结束后直接带走发言脚本</h3>
+          </div>
+          <div class="space-y-4 px-6 py-5">
+            <div id="resultBox" class="rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm leading-relaxed text-slate-600">通关后，这里会生成你的群面画像、失分点和下一次开口模板。</div>
+            <button id="copyResultBtn" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700">复制结果</button>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var bestKey = "campus-group-interview-best-score";
+      var defaults = {
+        scenarioTitle: "给校园咖啡品牌做秋招快闪方案",
+        roleName: "框架型选手",
+        timeBudget: "稳一点",
+        teamStyle: "抢话型"
+      };
+      var prompts = [
+        {
+          title: "一开场，所有人都在抢定义问题",
+          body: "两个人同时开始讲自己的想法，讨论要散。你此时插进去，最值钱的是哪种动作？",
+          choices: [
+            { label: "抢第一句：直接说我有三个点", effect: { clarity: 2, presence: 3, trust: -1 }, note: "有存在感，但如果没先接住场面，容易被认为只想抢镜。" },
+            { label: "搭框架：先统一目标、用户和约束", effect: { clarity: 4, presence: 2, trust: 2 }, note: "这是高质量开口，先把场子收住，再给后面的人留入口。" },
+            { label: "先沉默观察，等别人说完再补", effect: { clarity: 1, presence: 0, trust: 1 }, note: "稳，但容易错过黄金时机，首轮信号感不够。" },
+            { label: "直接否掉别人：这思路不行", effect: { clarity: 0, presence: 2, trust: -3 }, note: "群面早期硬否定很伤团队氛围，后续信任值会掉得很快。" }
+          ]
+        },
+        {
+          title: "队友开始疯狂堆点子，没有优先级",
+          body: "现在内容不少，但完全像散点笔记。你要做的是加内容，还是先做收束？",
+          choices: [
+            { label: "继续补创意：再抛两个活动玩法", effect: { clarity: 1, presence: 2, trust: 0 }, note: "内容变多了，但问题不是不够多，而是没有主线。" },
+            { label: "切到标准：先用成本、传播、执行难度筛一轮", effect: { clarity: 4, presence: 3, trust: 2 }, note: "你把讨论从发散拉回决策，这种发言很加分。" },
+            { label: "提醒时间：还有 8 分钟，大家快点", effect: { clarity: 1, presence: 1, trust: 1 }, note: "提醒没错，但如果没给方法，推进力度有限。" },
+            { label: "帮最弱的队友说：让他先补一个点", effect: { clarity: 2, presence: 1, trust: 3 }, note: "团队信任会涨，但如果没同步结构，整体效率还是一般。" }
+          ]
+        },
+        {
+          title: "有人开始执着争论细节，题目被带偏",
+          body: "对方一直在争 Logo 配色和摊位海报字体，主问题是秋招快闪方案本身。你怎么接？",
+          choices: [
+            { label: "直接截断：这些细节不重要，先别说", effect: { clarity: 3, presence: 2, trust: -1 }, note: "方向对，但语气太硬，容易让人防御。" },
+            { label: "承接后拉回：视觉先记下，先定人群和转化路径", effect: { clarity: 4, presence: 2, trust: 2 }, note: "这是典型的高分接法，既不打脸，也把话题拽回主线。" },
+            { label: "顺着细节聊下去，证明自己懂运营", effect: { clarity: 0, presence: 2, trust: 0 }, note: "你会显得很能聊，但局面会继续跑偏。" },
+            { label: "保持沉默，等面试官打断", effect: { clarity: 0, presence: 0, trust: 0 }, note: "把控场责任交给面试官，自己损失了存在感。" }
+          ]
+        },
+        {
+          title: "队伍里出现小冲突：两套方案都有人护着",
+          body: "一边要做咖啡试饮，一边要做简历诊断摊位。时间不够，两边都不想让。",
+          choices: [
+            { label: "站队其中一边，把对方压下去", effect: { clarity: 1, presence: 2, trust: -2 }, note: "强势不等于高分，群面更看你怎么帮团队做决策。" },
+            { label: "提出折中：主方案 + 备用方案，按目标拆优先级", effect: { clarity: 3, presence: 3, trust: 3 }, note: "冲突没有硬碰硬，而是被你变成结构化选择。" },
+            { label: "让大家投票，少数服从多数", effect: { clarity: 2, presence: 1, trust: 1 }, note: "能结束争论，但你缺少更深的分析与判断。" },
+            { label: "不管冲突，继续说自己的点", effect: { clarity: 0, presence: 1, trust: -2 }, note: "这会显得你只顾自己输出，没有把团队局面当回事。" }
+          ]
+        },
+        {
+          title: "快到尾声，大家都觉得差不多了",
+          body: "现在方案有轮廓，但还没有一个像样的收口。你这时最值钱的动作是什么？",
+          choices: [
+            { label: "再补一个创意亮点，显得自己很会想", effect: { clarity: 1, presence: 2, trust: 0 }, note: "临门一脚最缺的不是新点子，而是完整度。" },
+            { label: "主动认领总结：我来按目标、动作、分工收一遍", effect: { clarity: 4, presence: 4, trust: 2 }, note: "如果你前面有推进，这种总结会直接拉高整体印象。" },
+            { label: "让别人总结，自己最后补一句", effect: { clarity: 1, presence: 1, trust: 1 }, note: "安全，但不够出彩。" },
+            { label: "开始背模板金句", effect: { clarity: 0, presence: 1, trust: -1 }, note: "空话在尾声尤其容易暴露，面试官能一眼看出来。" }
+          ]
+        },
+        {
+          title: "最后 30 秒，面试官追问：你的个人贡献是什么？",
+          body: "这里不是让你复读全组答案，而是快速讲清你推进了什么。",
+          choices: [
+            { label: "强调自己说得最多、最积极", effect: { clarity: 1, presence: 2, trust: -1 }, note: "说得多不是贡献，推进了什么才是。" },
+            { label: "点名自己的关键动作：搭框架、拉回主线、收总结", effect: { clarity: 4, presence: 3, trust: 2 }, note: "这类回答最像真实复盘，面试官容易记住。" },
+            { label: "把功劳都让给别人，显得自己很谦虚", effect: { clarity: 1, presence: 0, trust: 2 }, note: "团队感有了，但个人辨识度会不够。" },
+            { label: "讲一堆感受：我学到了很多", effect: { clarity: 0, presence: 1, trust: 0 }, note: "感受不是问题，问题是你没回答贡献本身。" }
+          ]
+        }
+      ];
+
+      var state = { scenarioTitle: defaults.scenarioTitle, roleName: defaults.roleName, timeBudget: defaults.timeBudget, teamStyle: defaults.teamStyle };
+      var scoreboard = { clarity: 0, presence: 0, trust: 0, total: 0 };
+      var roundIndex = -1;
+      var log = [];
+      var finished = false;
+
+      var els = {
+        scenarioTitle: byId("scenarioTitle"),
+        roleName: byId("roleName"),
+        timeBudget: byId("timeBudget"),
+        teamStyle: byId("teamStyle"),
+        roundValue: byId("roundValue"),
+        bestScoreValue: byId("bestScoreValue"),
+        keywordValue: byId("keywordValue"),
+        promptTitle: byId("promptTitle"),
+        promptBody: byId("promptBody"),
+        choices: byId("choices"),
+        feedbackBox: byId("feedbackBox"),
+        clarityValue: byId("clarityValue"),
+        presenceValue: byId("presenceValue"),
+        trustValue: byId("trustValue"),
+        clarityBar: byId("clarityBar"),
+        presenceBar: byId("presenceBar"),
+        trustBar: byId("trustBar"),
+        totalScoreValue: byId("totalScoreValue"),
+        resultBox: byId("resultBox")
+      };
+
+      byId("startBtn").addEventListener("click", startGame);
+      byId("resetBtn").addEventListener("click", resetAll);
+      byId("copyResultBtn").addEventListener("click", copyResult);
+      ["scenarioTitle", "roleName", "timeBudget", "teamStyle"].forEach(function (id) {
+        byId(id).addEventListener("input", syncSettings);
+        byId(id).addEventListener("change", syncSettings);
+      });
+
+      renderBest();
+      syncSettings();
+      renderScoreboard();
+      renderIdle();
+
+      function byId(id) { return document.getElementById(id); }
+
+      function syncSettings() {
+        state.scenarioTitle = els.scenarioTitle.value.trim() || defaults.scenarioTitle;
+        state.roleName = els.roleName.value.trim() || defaults.roleName;
+        state.timeBudget = els.timeBudget.value;
+        state.teamStyle = els.teamStyle.value;
+        els.keywordValue.textContent = state.timeBudget === "最后收口" ? "该收就收，别贪输出" : (state.teamStyle === "抢话型" ? "先搭框架，再补价值" : "先推进，再抢存在感");
+      }
+
+      function startGame() {
+        syncSettings();
+        scoreboard = { clarity: 0, presence: 0, trust: 0, total: 0 };
+        roundIndex = 0;
+        log = [];
+        finished = false;
+        renderScoreboard();
+        renderRound();
+      }
+
+      function resetAll() {
+        state = { scenarioTitle: defaults.scenarioTitle, roleName: defaults.roleName, timeBudget: defaults.timeBudget, teamStyle: defaults.teamStyle };
+        els.scenarioTitle.value = state.scenarioTitle;
+        els.roleName.value = state.roleName;
+        els.timeBudget.value = state.timeBudget;
+        els.teamStyle.value = state.teamStyle;
+        scoreboard = { clarity: 0, presence: 0, trust: 0, total: 0 };
+        roundIndex = -1;
+        log = [];
+        finished = false;
+        syncSettings();
+        renderScoreboard();
+        renderIdle();
+      }
+
+      function renderIdle() {
+        els.roundValue.textContent = "0 / " + prompts.length;
+        els.promptTitle.textContent = "点击开始，进入群面现场。";
+        els.promptBody.textContent = "你会看到不同的群面瞬间，然后选最合适的发言动作。每个选择都会影响结构感、存在感和团队信任。";
+        els.feedbackBox.textContent = "还没开始。准备好以后直接开打。";
+        els.choices.innerHTML = "";
+        els.resultBox.textContent = "通关后，这里会生成你的群面画像、失分点和下一次开口模板。";
+      }
+
+      function renderRound() {
+        var prompt = prompts[roundIndex];
+        els.roundValue.textContent = (roundIndex + 1) + " / " + prompts.length;
+        els.promptTitle.textContent = prompt.title;
+        els.promptBody.textContent = prompt.body + " 当前题目：" + state.scenarioTitle + "；对手风格：" + state.teamStyle + "。";
+        els.choices.innerHTML = prompt.choices.map(function (choice, index) {
+          return '<button class="choice rounded-3xl border border-slate-200 bg-white p-5 text-left" data-choice-index="' + index + '">' +
+            '<p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">动作 ' + (index + 1) + '</p>' +
+            '<p class="mt-3 text-base font-bold text-slate-900">' + escapeHtml(choice.label) + '</p>' +
+            '</button>';
+        }).join("");
+        Array.prototype.forEach.call(els.choices.querySelectorAll("[data-choice-index]"), function (btn) {
+          btn.addEventListener("click", function () {
+            selectChoice(Number(btn.getAttribute("data-choice-index")));
+          });
+        });
+      }
+
+      function selectChoice(choiceIndex) {
+        if (finished || roundIndex < 0) { return; }
+        var prompt = prompts[roundIndex];
+        var choice = prompt.choices[choiceIndex];
+        scoreboard.clarity += choice.effect.clarity;
+        scoreboard.presence += choice.effect.presence;
+        scoreboard.trust += choice.effect.trust;
+        scoreboard.total = scoreboard.clarity * 7 + scoreboard.presence * 6 + scoreboard.trust * 7;
+        log.push({ title: prompt.title, label: choice.label, note: choice.note });
+        renderScoreboard();
+        els.feedbackBox.textContent = choice.note;
+        roundIndex += 1;
+        if (roundIndex >= prompts.length) {
+          finishGame();
+        } else {
+          renderRound();
+        }
+      }
+
+      function finishGame() {
+        finished = true;
+        els.roundValue.textContent = prompts.length + " / " + prompts.length;
+        els.choices.innerHTML = "";
+        els.promptTitle.textContent = "本局结束，你的群面画像已生成。";
+        els.promptBody.textContent = "看分数，也看你到底是怎么推进场子的。高分核心不是抢麦，而是把讨论往答案上推。";
+        var weakest = weakestDimension();
+        var style = deriveStyle();
+        var script = "如果让我补一句，我建议先把目标和约束统一，再按优先级筛两套方案，最后我来帮大家收一个结论。";
+        var summary = [
+          "角色画像：" + style + "（目标角色：" + state.roleName + "）",
+          "最高价值动作：" + topMoment(),
+          "当前短板：" + weakest.label + "，建议下一轮优先补 " + weakest.fix + "。",
+          "下次开口模板：" + script
+        ].join("\n");
+        els.resultBox.textContent = summary;
+        saveBest(scoreboard.total);
+      }
+
+      function weakestDimension() {
+        var dims = [
+          { key: "clarity", label: "结构清晰", value: scoreboard.clarity, fix: "先搭框架再发散" },
+          { key: "presence", label: "存在感", value: scoreboard.presence, fix: "至少抢两次关键推进位" },
+          { key: "trust", label: "团队信任", value: scoreboard.trust, fix: "多做承接和收束，少做硬压制" }
+        ];
+        dims.sort(function (a, b) { return a.value - b.value; });
+        return dims[0];
+      }
+
+      function deriveStyle() {
+        if (scoreboard.clarity >= scoreboard.presence && scoreboard.clarity >= scoreboard.trust) {
+          return "控场搭框架型";
+        }
+        if (scoreboard.presence >= scoreboard.trust) {
+          return "强推进抢时机型";
+        }
+        return "高协同收口型";
+      }
+
+      function topMoment() {
+        if (!log.length) { return "暂无"; }
+        var best = log[0];
+        if (log.some(function (item) { return item.label.indexOf("主动认领总结") !== -1; })) {
+          best = log.filter(function (item) { return item.label.indexOf("主动认领总结") !== -1; })[0];
+        } else if (log.some(function (item) { return item.label.indexOf("搭框架") !== -1; })) {
+          best = log.filter(function (item) { return item.label.indexOf("搭框架") !== -1; })[0];
+        }
+        return best.title + " -> " + best.label;
+      }
+
+      function renderScoreboard() {
+        els.clarityValue.textContent = scoreboard.clarity;
+        els.presenceValue.textContent = scoreboard.presence;
+        els.trustValue.textContent = scoreboard.trust;
+        els.totalScoreValue.textContent = scoreboard.total;
+        els.clarityBar.style.width = Math.max(0, Math.min(100, scoreboard.clarity * 8)) + "%";
+        els.presenceBar.style.width = Math.max(0, Math.min(100, scoreboard.presence * 8)) + "%";
+        els.trustBar.style.width = Math.max(0, Math.min(100, scoreboard.trust * 8)) + "%";
+      }
+
+      function renderBest() {
+        var best = Number(localStorage.getItem(bestKey) || 0);
+        els.bestScoreValue.textContent = best;
+      }
+
+      function saveBest(score) {
+        var current = Number(localStorage.getItem(bestKey) || 0);
+        if (score > current) {
+          localStorage.setItem(bestKey, String(score));
+        }
+        renderBest();
+      }
+
+      function copyResult() {
+        var text = els.resultBox.textContent;
+        if (!text || text.indexOf("通关后") === 0) { return; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            byId("copyResultBtn").textContent = "已复制结果";
+            setTimeout(function () { byId("copyResultBtn").textContent = "复制结果"; }, 1600);
+          });
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+      }
+    })();
+  </script>
+</body>
+</html>

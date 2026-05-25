@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生双选会突围台</title>
+  <style>
+    :root { --ink:#1c1917; --muted:#6b625a; --line:#e9ddd1; --paper:#fffaf4; --accent:#b45309; --accent-2:#0f766e; --deep:#2a211b; --warm:#f97316; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif; color:var(--ink); background:radial-gradient(circle at 12% 10%, rgba(249,115,22,.14), transparent 24%), radial-gradient(circle at 88% 12%, rgba(20,184,166,.12), transparent 26%), linear-gradient(180deg, #fff9f1 0%, #fff5eb 42%, #f0fdfb 100%); }
+    button, input, select, textarea { font:inherit; }
+    button { cursor:pointer; }
+    .app { width:min(1380px, calc(100% - 28px)); margin:0 auto; padding:24px 0 40px; }
+    .hero { display:grid; grid-template-columns:1.05fr .95fr; gap:18px; }
+    .workspace { display:grid; grid-template-columns:360px minmax(0, 1fr); gap:18px; margin-top:18px; align-items:start; }
+    .panel { border:1px solid rgba(120,53,15,.14); border-radius:30px; background:rgba(255,250,244,.9); box-shadow:0 22px 50px rgba(28,25,23,.08); backdrop-filter:blur(14px); overflow:hidden; }
+    .pad { padding:22px; }
+    .eyebrow { margin:0; color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:12px 0 0; font-size:clamp(34px, 5vw, 66px); line-height:.95; letter-spacing:-.06em; max-width:9ch; }
+    .lead { margin:16px 0 0; max-width:58ch; color:var(--muted); font-size:16px; line-height:1.8; }
+    .chips, .actions, .meta-row { display:flex; flex-wrap:wrap; gap:10px; }
+    .chips { margin-top:18px; }
+    .chip { border-radius:999px; border:1px solid rgba(120,53,15,.14); background:rgba(255,255,255,.72); padding:9px 12px; font-size:12px; font-weight:800; letter-spacing:.04em; }
+    .actions { margin-top:18px; }
+    .btn { border:none; border-radius:18px; background:#fff; padding:12px 15px; color:#4b5563; font-weight:800; box-shadow:inset 0 0 0 1px rgba(120,53,15,.14); }
+    .btn.primary { background:linear-gradient(135deg, var(--deep), var(--accent)); color:#fff; box-shadow:0 18px 34px rgba(180,83,9,.18); }
+    .poster { position:relative; min-height:390px; color:#fff7ed; background:linear-gradient(145deg,#2a211b 0%,#9a3412 52%,#0f766e 100%); }
+    .poster::after { content:""; position:absolute; inset:18px; border-radius:28px; border:1px solid rgba(255,255,255,.16); pointer-events:none; }
+    .poster-map { position:absolute; inset:20px; background:
+      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size:72px 72px,72px 72px; opacity:.45; border-radius:28px; }
+    .poster-content { position:relative; z-index:1; }
+    .poster-grid { display:grid; gap:10px; margin-top:22px; }
+    .poster-note { border-radius:22px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.12); padding:14px 16px; font-size:14px; line-height:1.7; }
+    .poster-note strong { display:block; margin-bottom:4px; font-size:13px; letter-spacing:.04em; }
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .section-head h2 { margin:8px 0 0; font-size:24px; line-height:1.2; }
+    .muted { color:var(--muted); font-size:13px; line-height:1.7; }
+    .label { display:block; margin-top:14px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#7c2d12; }
+    input, select, textarea { width:100%; margin-top:7px; border:1px solid #f1ddca; border-radius:16px; background:#fffdf9; padding:12px 13px; color:var(--ink); }
+    textarea { min-height:88px; resize:vertical; }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:rgba(180,83,9,.42); box-shadow:0 0 0 4px rgba(251,146,60,.12); }
+    .inline { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .status { margin-top:14px; border-radius:18px; border:1px solid #fed7aa; background:#fff7ed; padding:13px 14px; color:#9a3412; font-size:13px; line-height:1.7; }
+    .metrics { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric { border-radius:22px; border:1px solid #f3e3d5; background:#fff; padding:16px; }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .divider { height:1px; margin:14px 0; background:linear-gradient(90deg, rgba(249,115,22,.18), rgba(15,118,110,.08)); }
+    .route-list, .script-list, .follow-list, .saved-list { display:grid; gap:12px; margin-top:16px; }
+    .route-card, .script-card, .follow-card, .saved-card { border-radius:24px; border:1px solid #f1e0d0; background:linear-gradient(180deg, #fff, #fffbf7); padding:16px; }
+    .route-card h3, .script-card h3, .follow-card h3 { margin:0; font-size:16px; }
+    .route-card p, .route-card li, .script-card p, .script-card li, .follow-card li, .saved-card span { color:#4f463f; font-size:14px; line-height:1.8; }
+    .route-card ul, .script-card ul, .follow-card ul { margin:10px 0 0; padding-left:18px; }
+    .tag { display:inline-flex; align-items:center; border-radius:999px; padding:8px 11px; font-size:12px; font-weight:800; }
+    .tag.warm { background:#ffedd5; color:#9a3412; }
+    .tag.cool { background:#ccfbf1; color:#115e59; }
+    .saved-card { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .saved-card strong { display:block; font-size:15px; }
+    .full-only { display:block; }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero, body[data-mode="preview"] .workspace, body[data-mode="preview"] .metrics, body[data-mode="preview"] .inline { grid-template-columns:1fr; }
+    @media (max-width: 1080px) { .hero, .workspace, .metrics, .inline { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="app">
+    <section class="hero">
+      <div class="panel pad">
+        <p class="eyebrow">Job Fair Sprint</p>
+        <h1>大学生双选会突围台</h1>
+        <p class="lead">别再进场十分钟还在原地乱看海报。填完你这次想找的岗位、现场停留时长和最怕卡住的点，系统会直接排出先热身、再进攻、最后兜底的摊位路线，并给你一套不尴尬的开场白和跟进动作。</p>
+        <div class="chips">
+          <span class="chip">先热身再冲目标</span>
+          <span class="chip">开口话术</span>
+          <span class="chip">会后跟进</span>
+        </div>
+        <div class="actions full-only">
+          <button id="sampleBtn" class="btn" type="button">加载样例路线</button>
+          <button id="generateBtn" class="btn primary" type="button">生成突围方案</button>
+          <button id="saveBtn" class="btn" type="button">保存这轮计划</button>
+        </div>
+      </div>
+      <div class="panel poster pad">
+        <div class="poster-map"></div>
+        <div class="poster-content">
+          <p class="eyebrow" style="color:#fdba74;">On Site</p>
+          <h2 style="margin:10px 0 0; max-width:10ch; font-size:clamp(30px, 4.8vw, 56px); line-height:1; letter-spacing:-.05em;">先进场，别先被会场气势打退。</h2>
+          <div class="chips">
+            <span class="chip" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.12);">摊位优先级</span>
+            <span class="chip" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.12);">自我介绍骨架</span>
+            <span class="chip" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.12);">追问问题</span>
+          </div>
+          <div class="poster-grid">
+            <div class="poster-note"><strong>痛点 01</strong>很多同学不是没有准备，而是刚进双选会就被人流和摊位密度压住，不敢开第一句。</div>
+            <div class="poster-note"><strong>痛点 02</strong>现场最容易浪费的是顺序：还没热身就冲最想去的公司，结果一紧张把最重要的机会用掉。</div>
+            <div class="poster-note"><strong>痛点 03</strong>真正缺的往往不是“更多岗位信息”，而是一套现场 30 分钟内能执行的逛展路线。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel pad full-only">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Setup</p>
+            <h2>定义这场招聘会</h2>
+          </div>
+        </div>
+        <p class="muted">适合校内双选会、专场宣讲会和线下招聘市集。系统不会替你决定去哪家公司，而是先帮你降低“我不敢走过去开口”的门槛。</p>
+        <label class="label">目标岗位<input id="roleInput" value="产品运营 / 用户增长"></label>
+        <div class="inline">
+          <label class="label">会场规模<select id="venueInput"><option selected>中型校内双选会</option><option>大型综合招聘会</option><option>学院专场宣讲</option></select></label>
+          <label class="label">可停留时长<select id="timeInput"><option>25 分钟</option><option selected>45 分钟</option><option>70 分钟</option></select></label>
+        </div>
+        <div class="inline">
+          <label class="label">简历状态<select id="resumeInput"><option>还在草稿期</option><option selected>能投但不够稳</option><option>已经打印并改过</option></select></label>
+          <label class="label">紧张程度<select id="confidenceInput"><option>很紧张</option><option selected>一般</option><option>能主动开口</option></select></label>
+        </div>
+        <label class="label">优先想看的公司类型<input id="companyInput" value="互联网平台、教育科技、新消费品牌"></label>
+        <label class="label">最怕卡住的点<select id="blockerInput"><option selected>不知道怎么开第一句</option><option>怕被问项目细节</option><option>怕简历太普通</option><option>问完不知道怎么收尾</option></select></label>
+        <label class="label">现场备注<textarea id="notesInput">我更想先找实习和校招都能聊的岗位，希望有两家拿来热身，一家重点冲刺。</textarea></label>
+        <div id="statusBox" class="status">先生成一轮突围方案。系统会按“热身摊位 -> 主攻摊位 -> 兜底摊位”给你排顺序，再补三句开口话术。</div>
+      </aside>
+
+      <section>
+        <div class="metrics">
+          <article class="metric"><p>推荐摊位</p><strong id="boothMetric">0</strong></article>
+          <article class="metric"><p>主攻窗口</p><strong id="windowMetric">-</strong></article>
+          <article class="metric"><p>开场强度</p><strong id="toneMetric">-</strong></article>
+          <article class="metric"><p>已存计划</p><strong id="savedMetric">0</strong></article>
+        </div>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Route</p>
+              <h2>先去哪几家</h2>
+            </div>
+            <span id="routeTag" class="tag warm">等待生成</span>
+          </div>
+          <div class="divider"></div>
+          <div id="routeList" class="route-list"></div>
+        </section>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Openers</p>
+              <h2>第一句怎么说</h2>
+            </div>
+            <span id="scriptTag" class="tag cool">现场开口模板</span>
+          </div>
+          <div class="divider"></div>
+          <div id="scriptList" class="script-list"></div>
+        </section>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Follow Up</p>
+              <h2>聊完别空手走</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="followList" class="follow-list"></div>
+        </section>
+
+        <section class="panel pad full-only" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Saved Runs</p>
+              <h2>最近的突围记录</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="savedList" class="saved-list"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var storageKey = "campus_job_fair_sprint_runs_v1";
+      var latestKey = "campus_job_fair_sprint_latest_v1";
+      var boothLibrary = [
+        { tag: "热身摊位", company: "校园友好型中厂", fit: "对学生项目表达更宽容，适合先练第一句。", ask: "请问贵司这个岗位更看重活动执行还是数据分析？", focus: "先把简历递出去，再练一次 20 秒自我介绍。" },
+        { tag: "主攻摊位", company: "目标行业核心公司", fit: "和你的岗位关键词最贴近，应该留给状态最好的一次开口。", ask: "如果我想往 " + "目标岗位" + " 方向走，您最希望看到什么项目证据？", focus: "别讲太满，重点说一段最像岗位的经历。" },
+        { tag: "兜底摊位", company: "可延展岗位公司", fit: "岗位相近、门槛略低，适合补信息和拿反馈。", ask: "这个岗位后续转到核心业务线的机会大吗？", focus: "把它当成额外试错位，不要带着“随便聊聊”的语气。" }
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        roleInput: $("roleInput"),
+        venueInput: $("venueInput"),
+        timeInput: $("timeInput"),
+        resumeInput: $("resumeInput"),
+        confidenceInput: $("confidenceInput"),
+        companyInput: $("companyInput"),
+        blockerInput: $("blockerInput"),
+        notesInput: $("notesInput"),
+        statusBox: $("statusBox"),
+        boothMetric: $("boothMetric"),
+        windowMetric: $("windowMetric"),
+        toneMetric: $("toneMetric"),
+        savedMetric: $("savedMetric"),
+        routeTag: $("routeTag"),
+        scriptTag: $("scriptTag"),
+        routeList: $("routeList"),
+        scriptList: $("scriptList"),
+        followList: $("followList"),
+        savedList: $("savedList")
+      };
+
+      function read(key, fallback) { try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (err) { return fallback; } }
+      function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (err) {} }
+      function escapeHtml(value) { return String(value || "").replace(/[&<>"']/g, function (char) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[char]; }); }
+      function setStatus(text) { if (els.statusBox) els.statusBox.textContent = text; }
+      function syncSavedMetric() { if (els.savedMetric) els.savedMetric.textContent = String(read(storageKey, []).length); }
+      function pad(num) { return String(num).padStart(2, "0"); }
+      function stamp() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+      function confidenceTone(level) {
+        if (level === "很紧张") return "先问问题";
+        if (level === "能主动开口") return "直接亮经历";
+        return "先寒暄再递简历";
+      }
+      function attackWindow(duration) {
+        if (duration === "25 分钟") return "12 分钟";
+        if (duration === "70 分钟") return "28 分钟";
+        return "18 分钟";
+      }
+      function buildRoute() {
+        var role = els.roleInput.value.trim() || "目标岗位";
+        var venue = els.venueInput.value;
+        var duration = els.timeInput.value;
+        var resume = els.resumeInput.value;
+        var confidence = els.confidenceInput.value;
+        var company = els.companyInput.value.trim() || "目标公司";
+        var blocker = els.blockerInput.value;
+        var notes = els.notesInput.value.trim();
+
+        var route = boothLibrary.map(function (item, index) {
+          var warmupBoost = confidence === "很紧张" && index === 0 ? "先用这家把声音打开，别第一站就冲最想去的。": "";
+          var resumeBoost = resume === "还在草稿期" ? "重点问清楚岗位对简历最看重哪一段，回去先改这一处。": resume === "已经打印并改过" ? "这站可以更主动要反馈，别只停留在自我介绍。": "递简历后顺手问一句：如果回去只改一条，您最建议我改哪里？";
+          var boothName = index === 0 ? company.split("、")[0] || "互联网平台" : index === 1 ? company.split("、")[1] || company.split("、")[0] || "教育科技" : company.split("、")[2] || company.split("、")[0] || "新消费品牌";
+          return {
+            title: item.tag + " · " + boothName,
+            timeSlot: index === 0 ? "入场后前 8 分钟" : index === 1 ? "状态最稳的中段" : "离场前 6 分钟",
+            detail: item.fit,
+            steps: [
+              "目标岗位：" + role,
+              "现场动作：" + (index === 1 ? "先递简历，再用一句经历证明自己匹配。" : "先用提问打开，再补一句自己的背景。"),
+              "这站要问：" + item.ask.replace("目标岗位", role),
+              warmupBoost || resumeBoost,
+              notes ? "现场备注：" + notes : "现场备注：优先留一条可跟进的信息，不要只拿宣传册。"
+            ].filter(Boolean),
+            focus: item.focus
+          };
+        });
+
+        var openers = [
+          {
+            title: "20 秒开场白",
+            lines: [
+              "你好，我是来找 " + role + " 方向机会的学生，今天想优先了解贵司在校招生里最看重哪些经历。",
+              confidence === "能主动开口" ? "我最近做过一段和岗位最贴近的项目，想请您帮我判断一下表达重点对不对。" : "我先简单介绍一下自己的背景，再请您帮我看我应该重点补哪块。"
+            ]
+          },
+          {
+            title: "针对卡点的补句",
+            lines: [
+              blocker === "不知道怎么开第一句" ? "我先不急着讲太多，想先请问这个岗位在现场最常遇到哪类学生来咨询？" :
+              blocker === "怕被问项目细节" ? "如果方便，我想先知道贵司最看重项目里的哪一层细节，我再重点展开。" :
+              blocker === "怕简历太普通" ? "我知道自己简历还不算特别突出，所以更想先确认贵司最想看到哪种证据。" :
+              "如果后续想继续沟通，今天现场我最好补充哪条信息给您会更有效？"
+            ]
+          },
+          {
+            title: "收尾动作",
+            lines: [
+              "谢谢您，我会按您刚刚提到的重点再改一版简历，想问下后续投递时在邮件或系统里最好怎么备注？",
+              venue === "学院专场宣讲" ? "如果后面还有笔试或群面节奏，今天现场最值得提前准备的一项是什么？" : "今天如果我只能记住一个最关键建议，您希望我带走哪一句？"
+            ]
+          }
+        ];
+
+        var follow = [
+          {
+            title: "会场内立刻做",
+            items: [
+              "每聊完一家，立刻写下岗位名、对方给的一个具体反馈、是否建议继续投递。",
+              "主攻摊位结束后，先去角落整理 90 秒，再决定是否返场二聊。"
+            ]
+          },
+          {
+            title: "离场前做",
+            items: [
+              "至少确认 1 个后续动作：扫码投递、邮件补发、加群或等笔试通知。",
+              "把最强反馈那家单独标星，今晚优先复盘这家。"
+            ]
+          },
+          {
+            title: "今晚回去做",
+            items: [
+              "按现场反馈只改一处最关键的简历信息，避免回去大修到失焦。",
+              "给自己留一条复盘：哪一句开场最顺，哪一句让你卡住。"
+            ]
+          }
+        ];
+
+        return {
+          role: role,
+          route: route,
+          openers: openers,
+          follow: follow,
+          summary: {
+            boothCount: route.length,
+            attackWindow: attackWindow(duration),
+            tone: confidenceTone(confidence),
+            routeLabel: venue + " · " + duration
+          }
+        };
+      }
+      function renderPlan(payload) {
+        if (!payload) return;
+        if (els.boothMetric) els.boothMetric.textContent = String(payload.summary.boothCount);
+        if (els.windowMetric) els.windowMetric.textContent = payload.summary.attackWindow;
+        if (els.toneMetric) els.toneMetric.textContent = payload.summary.tone;
+        if (els.routeTag) els.routeTag.textContent = payload.summary.routeLabel;
+
+        els.routeList.innerHTML = payload.route.map(function (item) {
+          return [
+            '<article class="route-card">',
+            '  <div class="section-head"><div><p class="eyebrow" style="letter-spacing:.08em;">' + escapeHtml(item.timeSlot) + '</p><h3>' + escapeHtml(item.title) + '</h3></div><span class="tag warm">优先看</span></div>',
+            '  <p style="margin-top:8px;">' + escapeHtml(item.detail) + '</p>',
+            '  <ul>' + item.steps.map(function (step) { return '<li>' + escapeHtml(step) + '</li>'; }).join("") + '</ul>',
+            '  <p style="margin-top:10px;"><strong>这站提醒：</strong>' + escapeHtml(item.focus) + '</p>',
+            '</article>'
+          ].join("");
+        }).join("");
+
+        els.scriptList.innerHTML = payload.openers.map(function (item, index) {
+          return [
+            '<article class="script-card">',
+            '  <div class="section-head"><div><p class="eyebrow" style="letter-spacing:.08em;">话术 ' + (index + 1) + '</p><h3>' + escapeHtml(item.title) + '</h3></div><span class="tag cool">可直接说</span></div>',
+            '  <ul>' + item.lines.map(function (line) { return '<li>' + escapeHtml(line) + '</li>'; }).join("") + '</ul>',
+            '</article>'
+          ].join("");
+        }).join("");
+
+        els.followList.innerHTML = payload.follow.map(function (item) {
+          return '<article class="follow-card"><h3>' + escapeHtml(item.title) + '</h3><ul>' + item.items.map(function (line) { return '<li>' + escapeHtml(line) + '</li>'; }).join("") + '</ul></article>';
+        }).join("");
+      }
+      function renderSaved() {
+        if (!els.savedList) return;
+        var runs = read(storageKey, []);
+        els.savedList.innerHTML = runs.length ? runs.map(function (item, index) {
+          return '<article class="saved-card"><div><strong>' + escapeHtml(item.role) + '</strong><span>' + escapeHtml(item.savedAt) + "｜" + escapeHtml(item.routeLabel) + '</span></div><button class="btn" data-drop="' + index + '" type="button">删除</button></article>';
+        }).join("") : '<article class="saved-card"><div><strong>还没有保存的计划</strong><span>每次生成后可以存一轮，方便你比较不同招聘会和不同岗位的路线策略。</span></div></article>';
+        syncSavedMetric();
+      }
+      function savePlan() {
+        var latest = read(latestKey, null);
+        if (!latest) {
+          setStatus("先生成一轮方案，再保存。");
+          return;
+        }
+        var runs = read(storageKey, []);
+        runs.unshift({
+          role: latest.role,
+          routeLabel: latest.summary.routeLabel,
+          savedAt: stamp()
+        });
+        write(storageKey, runs.slice(0, 6));
+        renderSaved();
+        setStatus("这轮突围方案已经保存，下次去别的招聘会还能对比自己的开口和路线。");
+      }
+      function loadSample() {
+        els.roleInput.value = "产品运营 / 校园增长";
+        els.venueInput.value = "大型综合招聘会";
+        els.timeInput.value = "45 分钟";
+        els.resumeInput.value = "能投但不够稳";
+        els.confidenceInput.value = "一般";
+        els.companyInput.value = "互联网平台、教育科技、新消费品牌";
+        els.blockerInput.value = "不知道怎么开第一句";
+        els.notesInput.value = "想先热身两家，再冲一家具备校招生培养体系的公司。";
+        setStatus("样例已加载。现在点“生成突围方案”，看一轮更像现场会用的路线。");
+      }
+      function generatePlan() {
+        var payload = buildRoute();
+        write(latestKey, payload);
+        renderPlan(payload);
+        setStatus("路线已经排好：先去热身摊位把状态打开，再用主攻窗口冲你最想聊的那家，最后用兜底摊位拿反馈。");
+      }
+
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target && target.id === "sampleBtn") loadSample();
+        if (target && target.id === "generateBtn") generatePlan();
+        if (target && target.id === "saveBtn") savePlan();
+        if (target && target.hasAttribute("data-drop")) {
+          var index = Number(target.getAttribute("data-drop"));
+          var runs = read(storageKey, []);
+          runs.splice(index, 1);
+          write(storageKey, runs);
+          renderSaved();
+          setStatus("已删除一条旧计划，保留最近更有参考价值的招聘会记录。");
+        }
+      });
+
+      loadSample();
+      var latest = read(latestKey, null);
+      if (latest) renderPlan(latest); else generatePlan();
+      renderSaved();
+    })();
+  </script>
+</body>
+</html>

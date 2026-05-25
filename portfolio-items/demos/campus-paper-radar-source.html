@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生文献破冰台</title>
+  <style>
+    :root { --ink:#10213a; --muted:#5b6b82; --line:#d7e2ef; --slate:#0f172a; --teal:#0f766e; --sky:#0284c7; --bg:#eff8f7; --panel:#ffffffde; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif; color:var(--ink); background:radial-gradient(circle at 8% 14%, rgba(2,132,199,.16), transparent 22%), radial-gradient(circle at 92% 12%, rgba(15,118,110,.18), transparent 24%), linear-gradient(180deg, #f5fbff 0%, #eefcf7 100%); }
+    button, input, select { font:inherit; }
+    button { cursor:pointer; }
+    .app { width:min(1380px, calc(100% - 28px)); margin:0 auto; padding:24px 0 40px; }
+    .hero { display:grid; grid-template-columns:1.05fr .95fr; gap:18px; }
+    .workspace { display:grid; grid-template-columns:360px minmax(0, 1fr); gap:18px; margin-top:18px; align-items:start; }
+    .panel { border:1px solid rgba(148,163,184,.22); border-radius:30px; background:var(--panel); box-shadow:0 22px 60px rgba(15,23,42,.08); backdrop-filter:blur(14px); }
+    .pad { padding:22px; }
+    .eyebrow { margin:0; color:var(--teal); font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:12px 0 0; font-size:clamp(34px, 5vw, 66px); line-height:.96; letter-spacing:-.06em; }
+    .lead { margin:16px 0 0; max-width:58ch; color:var(--muted); font-size:16px; line-height:1.8; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .chip { border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.12); padding:9px 12px; font-size:12px; font-weight:800; letter-spacing:.04em; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .btn { border:1px solid #dbe7fb; border-radius:18px; background:#fff; padding:12px 15px; color:#334155; font-weight:800; }
+    .btn.primary { border-color:transparent; background:linear-gradient(135deg, var(--slate), var(--teal)); color:#fff; box-shadow:0 18px 34px rgba(15,23,42,.18); }
+    .poster { position:relative; overflow:hidden; min-height:390px; color:#ecfeff; background:linear-gradient(145deg, #0f172a 0%, #0f766e 52%, #22c55e 100%); }
+    .poster::after { content:""; position:absolute; inset:18px; border-radius:28px; border:1px solid rgba(255,255,255,.16); pointer-events:none; }
+    .poster-grid { position:absolute; inset:auto 22px 22px 22px; display:grid; gap:10px; }
+    .poster-note { border-radius:22px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.12); padding:14px 16px; font-size:14px; line-height:1.7; }
+    .poster-note strong { display:block; margin-bottom:4px; font-size:13px; letter-spacing:.04em; }
+    .label { display:block; margin-top:14px; font-size:13px; font-weight:800; color:#1e293b; }
+    input, select { width:100%; margin-top:7px; border:1px solid #d6e2f7; border-radius:16px; background:#fff; padding:12px 13px; color:var(--ink); }
+    .inline { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .status { margin-top:14px; border-radius:18px; border:1px solid #bfdbfe; background:#eff6ff; padding:13px 14px; color:#0369a1; font-size:13px; line-height:1.7; }
+    .metrics { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric { border-radius:22px; border:1px solid #dbe7fb; background:#fff; padding:16px; }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .section-head h2 { margin:8px 0 0; font-size:24px; line-height:1.2; }
+    .muted { color:var(--muted); font-size:13px; line-height:1.7; }
+    .divider { height:1px; margin:14px 0; background:linear-gradient(90deg, rgba(2,132,199,.18), rgba(15,118,110,.04)); }
+    .paper-list, .plan-stack, .saved-list { display:grid; gap:12px; margin-top:16px; }
+    .paper-card, .plan-card, .saved { border-radius:24px; border:1px solid #dce9fa; background:linear-gradient(180deg, #fff, #f7fbff); padding:16px; }
+    .paper-card h3, .plan-card h3 { margin:0; font-size:16px; }
+    .paper-card p, .paper-card li, .plan-card p, .plan-card li, .saved span { color:#3f4f66; font-size:14px; line-height:1.8; }
+    .paper-card ul, .plan-card ul { margin:10px 0 0; padding-left:18px; }
+    .meta-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .mini-pill { display:inline-flex; align-items:center; border-radius:999px; background:#e0f2fe; color:#0369a1; padding:7px 10px; font-size:12px; font-weight:800; }
+    .saved { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .saved strong { display:block; font-size:15px; }
+    .pill { display:inline-flex; align-items:center; border-radius:999px; background:#dcfce7; color:#166534; padding:8px 12px; font-size:12px; font-weight:800; }
+    .full-only { display:block; }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero, body[data-mode="preview"] .workspace, body[data-mode="preview"] .metrics, body[data-mode="preview"] .inline { grid-template-columns:1fr; }
+    @media (max-width: 1080px) { .hero, .workspace, .metrics, .inline { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="app">
+    <section class="hero">
+      <div class="panel pad">
+        <p class="eyebrow">Paper Radar</p>
+        <h1>大学生文献破冰台</h1>
+        <p class="lead">把“搜文献”从焦虑动作改成今晚能起步的第一步。输入主题、课程目的和时间范围，系统会调用公开论文元数据 API，帮你先找真实论文，再判断哪几篇最适合首读，并顺手给出读法与讨论课开口模板。</p>
+        <div class="chips">
+          <span class="chip">Crossref Works API</span>
+          <span class="chip">首读优先级筛选</span>
+          <span class="chip">localStorage shortlist</span>
+        </div>
+        <div class="actions full-only">
+          <button id="sampleBtn" class="btn" type="button">加载样例选题</button>
+          <button id="searchBtn" class="btn primary" type="button">检索真实文献</button>
+          <button id="saveBtn" class="btn" type="button">保存 shortlist</button>
+        </div>
+      </div>
+      <div class="panel poster pad">
+        <p class="eyebrow" style="color:#a7f3d0;">First Read</p>
+        <h2 style="margin:10px 0 0; max-width:10ch; font-size:clamp(30px, 4.8vw, 56px); line-height:1; letter-spacing:-.05em;">先读对 3 篇，再谈“我看过很多”。</h2>
+        <div class="chips">
+          <span class="chip">真实元数据</span>
+          <span class="chip">时间过滤</span>
+          <span class="chip">首读路线</span>
+          <span class="chip">讨论模板</span>
+        </div>
+        <div class="poster-grid">
+          <div class="poster-note"><strong>痛点 01</strong>很多学生搜文献不是搜不到，而是结果太多、标题太硬、看不懂从哪一篇下手。</div>
+          <div class="poster-note"><strong>痛点 02</strong>真正缺的不是“更多链接”，而是一个能告诉你今晚先读什么、为什么先读它、读完怎么开口汇报的工具。</div>
+          <div class="poster-note"><strong>痛点 03</strong>如果接口暂时失败，页面会回退到本地样例论文，保证静态站里也能完整跑完一轮。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel pad full-only">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Search Setup</p>
+            <h2>定义这次检索</h2>
+          </div>
+        </div>
+        <p class="muted">适合课程论文、综述起步、竞赛查资料和答辩前补底层。系统会优先帮你挑“今晚最容易打开”的文献，而不是只看总量。</p>
+        <label class="label">主题关键词<input id="topicInput" value="人工智能 教育 feedback"></label>
+        <div class="inline">
+          <label class="label">你的目标<select id="goalInput"><option selected>课程论文起步</option><option>综述补课</option><option>答辩前补底层</option><option>竞赛找论据</option></select></label>
+          <label class="label">时间范围<select id="windowInput"><option value="3">近 3 年</option><option value="5" selected>近 5 年</option><option value="8">近 8 年</option><option value="0">不限年份</option></select></label>
+        </div>
+        <div class="inline">
+          <label class="label">结果数量<select id="countInput"><option>4</option><option selected>6</option><option>8</option></select></label>
+          <label class="label">阅读时长<select id="timeInput"><option>20 分钟快扫</option><option selected>45 分钟首读</option><option>90 分钟深读</option></select></label>
+        </div>
+        <label class="label">课程/项目备注<input id="courseInput" value="教育技术导论课程论文"></label>
+        <div id="statusBox" class="status">点击“检索真实文献”后，系统会优先走 Crossref；如果接口不可用，会回退到本地样例。</div>
+      </aside>
+
+      <section>
+        <div class="metrics">
+          <article class="metric"><p>检索结果</p><strong id="resultMetric">0</strong></article>
+          <article class="metric"><p>推荐首读</p><strong id="topMetric">-</strong></article>
+          <article class="metric"><p>最新年份</p><strong id="yearMetric">-</strong></article>
+          <article class="metric"><p>已存条目</p><strong id="savedMetric">0</strong></article>
+        </div>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Discovery</p>
+              <h2>先从哪几篇下手</h2>
+            </div>
+            <span id="sourcePill" class="pill">等待检索</span>
+          </div>
+          <div class="divider"></div>
+          <div id="paperList" class="paper-list"></div>
+        </section>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Reading Sprint</p>
+              <h2>今晚首读路线</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="planStack" class="plan-stack"></div>
+        </section>
+
+        <section class="panel pad full-only" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Saved Shortlist</p>
+              <h2>本地文献短名单</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="savedList" class="saved-list"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var shortlistKey = "campus_paper_radar_shortlist_v1";
+      var latestKey = "campus_paper_radar_latest_v1";
+      var fallbackPapers = [
+        {
+          title: "Artificial Intelligence Feedback in Higher Education: A Systematic Review",
+          year: 2024,
+          container: "Computers and Education: Artificial Intelligence",
+          authors: "L. Zhang, M. Chen",
+          doi: "10.1016/j.caeai.2024.100210",
+          url: "https://doi.org/10.1016/j.caeai.2024.100210",
+          abstractHint: "梳理 AI 反馈在高等教育中的使用方式、效果与风险，适合综述起步。",
+          relevance: "综述",
+          openCue: "先看研究对象、反馈类型和效果指标。"
+        },
+        {
+          title: "Student Perceptions of Generative AI Support for Academic Writing",
+          year: 2023,
+          container: "Education and Information Technologies",
+          authors: "J. Kim, H. Park",
+          doi: "10.1007/s10639-023-11941-2",
+          url: "https://doi.org/10.1007/s10639-023-11941-2",
+          abstractHint: "聚焦学生如何看待生成式 AI 对写作的帮助与顾虑，适合课程讨论。",
+          relevance: "学生视角",
+          openCue: "重点抓感知收益、风险和使用情境。"
+        },
+        {
+          title: "Designing Effective Feedback Loops with AI Tutors in College Courses",
+          year: 2022,
+          container: "British Journal of Educational Technology",
+          authors: "A. Singh, R. Patel",
+          doi: "10.1111/bjet.13280",
+          url: "https://doi.org/10.1111/bjet.13280",
+          abstractHint: "讨论课程里如何把 AI 辅导反馈嵌进教学流程，适合竞赛和方案题。",
+          relevance: "教学设计",
+          openCue: "先画出反馈闭环，再摘具体设计原则。"
+        }
+      ];
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        topicInput: $("topicInput"),
+        goalInput: $("goalInput"),
+        windowInput: $("windowInput"),
+        countInput: $("countInput"),
+        timeInput: $("timeInput"),
+        courseInput: $("courseInput"),
+        statusBox: $("statusBox"),
+        resultMetric: $("resultMetric"),
+        topMetric: $("topMetric"),
+        yearMetric: $("yearMetric"),
+        savedMetric: $("savedMetric"),
+        sourcePill: $("sourcePill"),
+        paperList: $("paperList"),
+        planStack: $("planStack"),
+        savedList: $("savedList")
+      };
+
+      function read(key, fallback) { try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (err) { return fallback; } }
+      function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (err) {} }
+      function escapeHtml(value) { return String(value || "").replace(/[&<>"']/g, function (char) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[char]; }); }
+      function setStatus(text) { if (els.statusBox) els.statusBox.textContent = text; }
+      function currentYear() { return new Date().getFullYear(); }
+      function syncSavedMetric() {
+        var list = read(shortlistKey, []);
+        if (els.savedMetric) els.savedMetric.textContent = String(list.length);
+      }
+      function scorePaper(paper, goal) {
+        var ageScore = paper.year ? Math.max(0, 8 - (currentYear() - paper.year)) : 2;
+        var keywordScore = /(review|systematic|survey)/i.test(paper.title) ? 4 : 1;
+        var goalScore = goal === "课程论文起步" ? (paper.abstractHint.indexOf("综述") !== -1 ? 4 : 2) :
+          goal === "综述补课" ? (paper.relevance.indexOf("综述") !== -1 ? 4 : 2) :
+          goal === "答辩前补底层" ? (paper.relevance.indexOf("教学设计") !== -1 ? 4 : 2) : 3;
+        return ageScore + keywordScore + goalScore;
+      }
+      function normalizeCrossrefItem(item) {
+        var authors = Array.isArray(item.author) && item.author.length ? item.author.slice(0, 3).map(function (person) {
+          return [person.given, person.family].filter(Boolean).join(" ");
+        }).join(", ") : "作者信息待补";
+        var published = item.issued && item.issued["date-parts"] && item.issued["date-parts"][0] ? item.issued["date-parts"][0][0] : "";
+        var container = Array.isArray(item["container-title"]) && item["container-title"].length ? item["container-title"][0] : "期刊/会议未标注";
+        return {
+          title: Array.isArray(item.title) && item.title.length ? item.title[0] : "Untitled",
+          year: Number(published) || "",
+          container: container,
+          authors: authors,
+          doi: item.DOI || "",
+          url: item.URL || "",
+          abstractHint: "先看研究对象、变量和结论，再决定要不要深挖方法。",
+          relevance: /(review|systematic|survey)/i.test((item.title || [""])[0]) ? "综述" : "实证/案例",
+          openCue: "先读标题、年份和摘要信号，别一上来就闷头通读全文。"
+        };
+      }
+      function buildPlan(papers) {
+        var goal = els.goalInput ? els.goalInput.value : "课程论文起步";
+        var time = els.timeInput ? els.timeInput.value : "45 分钟首读";
+        var course = els.courseInput ? els.courseInput.value.trim() : "";
+        var top = papers[0];
+        var plan = [
+          {
+            title: "第 1 步：先定今晚目标",
+            items: [
+              "这轮任务是“" + goal + "”，不是把所有结果都收藏。",
+              "你的现实场景是：" + (course || "未填写课程备注") + "。",
+              "建议时长：" + time + "。"
+            ]
+          },
+          {
+            title: "第 2 步：先读第 1 篇",
+            items: [
+              "先开 " + top.title + "。",
+              "优先理由：" + top.relevance + " + " + top.year + " 年，适合做首读入口。",
+              "起手动作：" + top.openCue
+            ]
+          },
+          {
+            title: "第 3 步：抄走课堂可用表达",
+            items: [
+              "开口模板：我先找了一篇 " + top.year + " 年的 " + top.relevance + " 文献，它最有价值的地方是把“" + (els.topicInput ? els.topicInput.value.trim() : "") + "”拆成了更具体的研究问题。",
+              "做笔记时只记三栏：研究对象、核心发现、你能怎么用。",
+              "如果时间不够，至少把题目、年份、方法和结论摘出来。"
+            ]
+          }
+        ];
+        return plan;
+      }
+      function renderPapers(payload) {
+        var papers = payload.items || [];
+        els.resultMetric.textContent = String(papers.length);
+        els.topMetric.textContent = papers.length ? "Top 1" : "-";
+        els.yearMetric.textContent = papers.length ? String(papers[0].year || "-") : "-";
+        els.sourcePill.textContent = payload.source;
+        els.paperList.innerHTML = papers.length ? papers.map(function (paper, index) {
+          return [
+            '<article class="paper-card">',
+            '  <div class="section-head"><div><p class="eyebrow" style="letter-spacing:.08em;">候选 ' + (index + 1) + '</p><h3>' + escapeHtml(paper.title) + '</h3></div><span class="mini-pill">' + escapeHtml(paper.relevance) + '</span></div>',
+            '  <p class="muted" style="margin-top:8px;">' + escapeHtml(paper.authors) + " · " + escapeHtml(paper.container) + " · " + escapeHtml(paper.year) + '</p>',
+            '  <ul><li>' + escapeHtml(paper.abstractHint) + '</li><li>' + escapeHtml(paper.openCue) + '</li></ul>',
+            '  <div class="meta-row"><span class="mini-pill">DOI: ' + escapeHtml(paper.doi || "待补") + '</span>' + (paper.url ? '<a class="mini-pill" href="' + escapeHtml(paper.url) + '" target="_blank" rel="noopener">打开来源</a>' : "") + '</div>',
+            '</article>'
+          ].join("");
+        }).join("") : '<article class="paper-card"><h3>还没有结果</h3><p>先检索一轮，再让系统帮你定“先读哪几篇”。</p></article>';
+
+        var plan = buildPlan(papers.length ? papers : fallbackPapers);
+        els.planStack.innerHTML = plan.map(function (card) {
+          return '<article class="plan-card"><h3>' + escapeHtml(card.title) + '</h3><ul>' + card.items.map(function (item) { return "<li>" + escapeHtml(item) + "</li>"; }).join("") + "</ul></article>";
+        }).join("");
+      }
+      function renderSaved() {
+        if (!els.savedList) return;
+        var list = read(shortlistKey, []);
+        els.savedList.innerHTML = list.length ? list.map(function (item, index) {
+          return '<article class="saved"><div><strong>' + escapeHtml(item.topic) + '</strong><span>' + escapeHtml(item.savedAt) + "｜" + escapeHtml(item.goal) + "｜" + item.items.length + " 篇</span></div><button class=\"btn\" data-drop=\"" + index + "\" type=\"button\">删除</button></article>";
+        }).join("") : '<article class="saved"><div><strong>还没有保存的 shortlist</strong><span>每次筛完文献后可以保存，后面写论文或准备答辩时能直接复用。</span></div></article>';
+        syncSavedMetric();
+      }
+      async function searchPapers() {
+        var topic = (els.topicInput && els.topicInput.value.trim()) || "人工智能 教育 feedback";
+        var count = Number(els.countInput && els.countInput.value || 6);
+        var years = Number(els.windowInput && els.windowInput.value || 5);
+        var goal = els.goalInput ? els.goalInput.value : "课程论文起步";
+        var fromYear = years > 0 ? currentYear() - years : 0;
+        try {
+          var query = "https://api.crossref.org/works?rows=" + count + "&select=title,author,issued,container-title,DOI,URL&query.title=" + encodeURIComponent(topic);
+          if (fromYear) {
+            query += "&filter=from-pub-date:" + fromYear + "-01-01";
+          }
+          var response = await fetch(query, { headers: { "Accept": "application/json" } });
+          if (!response.ok) throw new Error("crossref failed");
+          var data = await response.json();
+          var items = data && data.message && Array.isArray(data.message.items) ? data.message.items.map(normalizeCrossrefItem) : [];
+          if (!items.length) throw new Error("no results");
+          items.sort(function (a, b) { return scorePaper(b, goal) - scorePaper(a, goal); });
+          var payload = { source: "Crossref 实时结果", items: items };
+          write(latestKey, { topic: topic, goal: goal, savedAt: new Date().toLocaleString("zh-CN"), items: items.slice(0, 3) });
+          renderPapers(payload);
+          setStatus("检索完成。先看 Top 1，再决定今晚是否需要深读更多。");
+        } catch (err) {
+          var fallback = fallbackPapers.slice().sort(function (a, b) { return scorePaper(b, goal) - scorePaper(a, goal); });
+          renderPapers({ source: "本地样例回退", items: fallback });
+          write(latestKey, { topic: topic, goal: goal, savedAt: new Date().toLocaleString("zh-CN"), items: fallback.slice(0, 3) });
+          setStatus("Crossref 暂时不可用，已切换到本地样例文献继续生成首读路线。");
+        }
+      }
+      function saveShortlist() {
+        var latest = read(latestKey, null);
+        if (!latest) {
+          setStatus("先检索一轮，再保存 shortlist。");
+          return;
+        }
+        var list = read(shortlistKey, []);
+        list.unshift(latest);
+        write(shortlistKey, list.slice(0, 8));
+        renderSaved();
+        setStatus("这轮 shortlist 已保存到本地。");
+      }
+      function loadSample() {
+        if (els.topicInput) els.topicInput.value = "人工智能 教育 feedback";
+        if (els.goalInput) els.goalInput.value = "课程论文起步";
+        if (els.windowInput) els.windowInput.value = "5";
+        if (els.countInput) els.countInput.value = "6";
+        if (els.timeInput) els.timeInput.value = "45 分钟首读";
+        if (els.courseInput) els.courseInput.value = "教育技术导论课程论文";
+        renderPapers({ source: "样例预载", items: fallbackPapers });
+        setStatus("已加载样例题目。现在可以直接检索真实文献。");
+      }
+
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target.id === "sampleBtn") loadSample();
+        if (target.id === "searchBtn") searchPapers();
+        if (target.id === "saveBtn") saveShortlist();
+        if (target.hasAttribute("data-drop")) {
+          var list = read(shortlistKey, []);
+          list.splice(Number(target.getAttribute("data-drop")), 1);
+          write(shortlistKey, list);
+          renderSaved();
+          setStatus("已删除一个旧 shortlist。");
+        }
+      });
+
+      loadSample();
+      renderSaved();
+      if (mode === "preview") searchPapers();
+    })();
+  </script>
+</body>
+</html>

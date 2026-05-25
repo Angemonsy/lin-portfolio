@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>奇绩怪谈AIQ | 我的文章</title>
+  <title>奇绩怪谈AIQ | 我的文案</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -31,7 +31,7 @@
         <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
         <div class="hidden items-center gap-1 text-sm md:flex">
           <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="index.html">首页</a>
-          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文章</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文案</a>
           <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
           <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
           <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="services.html">服务</a>
@@ -41,7 +41,7 @@
       <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
         <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
           <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="index.html">首页</a>
-          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文章</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文案</a>
           <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
           <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
           <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="services.html">服务</a>
@@ -55,13 +55,14 @@
     <section id="dynamic-page-content" class="mx-auto hidden max-w-6xl px-4 sm:px-6 lg:px-8"></section>
     <section class="site-static mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="reveal rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-slate-50 p-8 md:p-10">
-        <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Blog</p>
-        <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">文章</h1>
-        <p class="mt-3 text-base leading-relaxed text-slate-600">这里记录我正在做的事、正在踩的坑和正在验证的方法。点击卡片将在新标签页打开。</p>
+        <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Copywriting</p>
+        <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">文案</h1>
+        <p class="mt-3 text-base leading-relaxed text-slate-600">这里统一收纳短视频观点、公众号文章、AI 工具思考和成长复盘。点击卡片将在新标签页打开。</p>
       </div>
 
-      <div class="reveal mt-8 flex flex-wrap gap-2" aria-label="文章分类筛选">
+      <div class="reveal mt-8 flex flex-wrap gap-2" aria-label="文案分类筛选">
         <button class="filter-btn is-active" data-filter="全部" type="button">全部</button>
+        <button class="filter-btn" data-filter="短视频文案" type="button">短视频文案</button>
         <button class="filter-btn" data-filter="大学结果" type="button">大学结果</button>
         <button class="filter-btn" data-filter="AI工具" type="button">AI工具</button>
         <button class="filter-btn" data-filter="一人公司" type="button">一人公司</button>
@@ -72,10 +73,10 @@
 
       <div class="reveal mt-5 flex flex-wrap items-center gap-3">
         <button id="blog-search-toggle" class="inline-flex items-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700" type="button" aria-expanded="false" aria-controls="blog-search-wrap">
-          搜索文章
+          搜索文案
         </button>
         <div id="blog-search-wrap" class="hidden w-full max-w-md">
-          <label for="blog-search-input" class="sr-only">输入关键词搜索文章</label>
+          <label for="blog-search-input" class="sr-only">输入关键词搜索文案</label>
           <input id="blog-search-input" type="search" placeholder="输入关键词（标题、摘要、分类、标签）" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100">
         </div>
       </div>
@@ -129,7 +130,8 @@
       var currentQuery = "";
       var allPosts = [];
       var tabGuideMap = {
-        "全部": "你可以按主题浏览，也可以直接搜索关键词快速定位文章。",
+        "全部": "你可以按短视频、文章主题或关键词快速定位文案。",
+        "短视频文案": "把短视频里的核心观点沉淀成可阅读、可分享、可复看的网页版本。",
         "大学结果": "不是大学攻略，是怎么用更少的时间和更聪明的方法，拿到你真正想要的那个结果。",
         "AI工具": "只写我真正用过的工具。不做资讯搬运，只回答三个问题：我怎么用、适合谁、能解决什么。",
         "一人公司": "一个没有团队、没有资金的大学生，怎么用AI和内容，试着跑通属于自己的小生意。",

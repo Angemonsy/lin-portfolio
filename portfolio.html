@@ -31,7 +31,7 @@
         <button data-menu-btn class="rounded-lg border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 md:hidden" type="button" aria-expanded="false" aria-label="打开导航菜单">菜单</button>
         <div class="hidden items-center gap-1 text-sm md:flex">
           <a data-nav-link data-nav-key="index" class="nav-link rounded-lg px-3 py-2" href="index.html">首页</a>
-          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文章</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link rounded-lg px-3 py-2" href="blog.html">文案</a>
           <a data-nav-link data-nav-key="knowledge" class="nav-link rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
           <a data-nav-link data-nav-key="portfolio" class="nav-link rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
           <a data-nav-link data-nav-key="services" class="nav-link rounded-lg px-3 py-2" href="services.html">服务</a>
@@ -41,7 +41,7 @@
       <div data-menu-panel class="mx-auto hidden w-full max-w-6xl px-4 pb-4 sm:px-6 lg:px-8 md:hidden">
         <div class="rounded-2xl border border-slate-200 bg-white/90 p-2 shadow-sm">
           <a data-nav-link data-nav-key="index" class="nav-link block rounded-lg px-3 py-2" href="index.html">首页</a>
-          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文章</a>
+          <a data-nav-link data-nav-key="blog" class="nav-link block rounded-lg px-3 py-2" href="blog.html">文案</a>
           <a data-nav-link data-nav-key="knowledge" class="nav-link block rounded-lg px-3 py-2" href="knowledge.html">知识库</a>
           <a data-nav-link data-nav-key="portfolio" class="nav-link block rounded-lg px-3 py-2" href="portfolio.html">作品集</a>
           <a data-nav-link data-nav-key="services" class="nav-link block rounded-lg px-3 py-2" href="services.html">服务</a>
@@ -58,16 +58,43 @@
         <p class="text-sm font-semibold uppercase tracking-wide text-blue-600">Portfolio</p>
         <h1 class="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl">作品集</h1>
         <p class="mt-3 text-base leading-relaxed text-slate-600">这里不是“摆作品”的页面，而是我把校园里真实问题一个个做成解决方案的记录。点击卡片可看在线预览，部分项目源文件可微信沟通后提供。</p>
+        <div class="mt-4 grid gap-3 md:grid-cols-3">
+          <div class="rounded-2xl border border-blue-100 bg-white/80 px-4 py-3 text-sm leading-relaxed text-slate-700">
+            <p class="text-xs font-semibold tracking-wide text-blue-700">当前原则</p>
+            <p class="mt-1">AI 自动项目默认先进入 <span class="font-semibold text-slate-900">autonomous-ai-lab</span>，不直接占首页位。</p>
+          </div>
+          <div class="rounded-2xl border border-emerald-100 bg-white/80 px-4 py-3 text-sm leading-relaxed text-slate-700">
+            <p class="text-xs font-semibold tracking-wide text-emerald-700">晋级条件</p>
+            <p class="mt-1">只有补齐变更说明、验证结果、可维护性后，才考虑公开展示。</p>
+          </div>
+          <div class="rounded-2xl border border-amber-100 bg-white/80 px-4 py-3 text-sm leading-relaxed text-slate-700">
+            <p class="text-xs font-semibold tracking-wide text-amber-700">浏览顺序</p>
+            <p class="mt-1">先看服务页，再看作品集，最后再看实验室，减少跳页流失。</p>
+          </div>
+        </div>
+        <div class="mt-4 rounded-2xl border border-blue-100 bg-blue-50/80 p-4 text-sm leading-relaxed text-slate-700">
+          <p class="font-semibold text-slate-900">访客路径</p>
+          <ul class="mt-2 grid gap-2 md:grid-cols-3">
+            <li>先看服务页，确认我能帮你解决什么。</li>
+            <li>再看实验室页，确认 AI 自动项目为什么先隔离。</li>
+            <li>只把长期值得展示的项目迁到首页或作品集。</li>
+          </ul>
+        </div>
         <div class="mt-5 flex flex-wrap gap-2 text-xs">
           <span class="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-blue-700">真实场景驱动</span>
           <span class="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700">强调可落地结果</span>
           <span class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-700">持续迭代中</span>
         </div>
         <div class="mt-6 rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm leading-relaxed text-slate-600">
-          <p class="font-semibold text-slate-900">承接规则</p>
-          <p class="mt-2">AI 自动执行的新项目默认进入 <span class="font-semibold text-blue-700">autonomous-ai-lab</span>，只要还在试验、验证或重构阶段，就先不进首页和公开作品集；等到项目稳定、可复用、值得长期展示，并补齐变更说明与验证结果，再迁移过来。</p>
+          <p class="font-semibold text-slate-900">承接与晋级规则</p>
+          <p class="mt-2">AI 自动执行的新内容默认进入 <span class="font-semibold text-blue-700">autonomous-ai-lab</span>，先沉淀优质信息源和可验证实验；只有补齐变更说明与验证结果后，才考虑进入首页或公开作品集。</p>
+          <ul class="mt-3 list-disc space-y-2 pl-5">
+            <li>信息源先看可信度、行动价值和更新稳定性，再决定是否进入栏目。</li>
+            <li>项目实验仍先留在实验室，不直接污染公开展示区。</li>
+            <li>迁移前补齐来源、筛选理由、变更说明与验证结果，避免只展示结论不展示过程。</li>
+          </ul>
           <div class="mt-3 flex flex-wrap gap-2">
-            <a href="portfolio-items/autonomous-ai-lab-business.html" class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">看实验室说明</a>
+            <a href="portfolio-items/autonomous-ai-lab-business.html" class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100">先看实验室说明</a>
             <a href="services.html" class="inline-flex items-center rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">看合作服务</a>
           </div>
         </div>
@@ -166,11 +193,16 @@
         var coverUrl = item.cover || "";
         var storyLine = item.storyLine || "";
         var result = item.result || "";
+        var statusLabel = item.devOnly ? "实验室待晋级" : "公开展示";
+        var statusCls = item.devOnly ? "bg-slate-100 text-slate-700" : "bg-emerald-50 text-emerald-700";
         return [
           '<a target="_blank" rel="noopener" href="' + SiteCommon.resolvePath(item.url, "") + '" class="card-lift reveal rounded-2xl border border-slate-100 bg-white p-5 ' + (extraClass || "") + '">',
           "  " + renderCardPreview(previewUrl, coverUrl, item.title),
           '  <div class="mt-4">',
-          '    <span class="tag-pill ' + tagCls + '">' + item.platform + '</span>',
+          '    <div class="flex flex-wrap gap-2">',
+          '      <span class="tag-pill ' + tagCls + '">' + item.platform + '</span>',
+          '      <span class="tag-pill ' + statusCls + '">' + statusLabel + '</span>',
+          '    </div>',
           '    <h2 class="mt-3 text-lg font-semibold text-slate-900">' + item.title + '</h2>',
           '    <p class="mt-2 text-sm leading-relaxed text-slate-600">' + item.description + '</p>',
           (storyLine ? '    <p class="mt-2 text-xs leading-relaxed text-slate-500"><span class="font-semibold text-slate-700">故事：</span>' + storyLine + '</p>' : ""),

@@ -2,6 +2,15 @@
 window.FALLBACK_DATA = {
   articles: [
     {
+      id: "ai-spend-as-investment-script",
+      title: "AI 付费不是消费，是投资",
+      description: "把“每月花几百块用 AI”讲成一条短视频：成本、时间、判断力和长期复利。",
+      date: "2026-05-03",
+      category: "短视频文案",
+      tags: ["短视频文案", "AI工具", "成长实验"],
+      url: "articles/ai-spend-as-investment-script.html"
+    },
+    {
       id: "ai-6",
       title: "用AI的6个底层认知，我后悔没早点知道",
       description: "用AI的6个底层认知，我后悔没早点知道",
@@ -340,6 +349,42 @@ window.FALLBACK_DATA = {
       devOnly: true
     },
     {
+      id: "campus-paper-radar",
+      platform: "产品方向",
+      title: "大学生文献破冰台",
+      description: "输入论文主题、目标和时间范围后，调用公开论文元数据接口检索真实文献，帮大学生先筛今晚最值得读的几篇，并保存本地 shortlist。",
+      storyLine: "很多大学生不是不愿意看论文，而是刚搜到结果就被一堆题目和术语劝退，最后变成“收藏了但没开始”。",
+      result: "把文献检索做成可运行的学习入口，并用 Crossref API + localStorage 生成首读路线和本地短名单。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-paper-radar-source.html?mode=preview",
+      url: "portfolio-items/campus-paper-radar.html",
+      devOnly: true
+    },
+    {
+      id: "campus-job-fair-sprint",
+      platform: "产品方向",
+      title: "大学生双选会突围台",
+      description: "输入目标岗位、会场规模和简历状态后，生成双选会摊位路线、开口话术、追问问题和会后跟进动作。",
+      storyLine: "很多大学生不是不想抓住线下招聘会，而是一进场就被摊位、人流和紧张感压住，不知道先去哪家、第一句怎么开。",
+      result: "把双选会现场策略做成可运行的前端工具，并用 localStorage 保存最近几轮突围方案。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-job-fair-sprint-source.html?mode=preview",
+      url: "portfolio-items/campus-job-fair-sprint.html",
+      devOnly: true
+    },
+    {
+      id: "campus-recite-survival",
+      platform: "产品方向",
+      title: "大学生期末抽背生存局",
+      description: "输入课程、抽问场景和知识点后，生成随机口头抽背题、追问和救场句，并把卡壳点存进本地错题本。",
+      storyLine: "很多大学生复习时是“眼睛会了，嘴还不会”，真正失分往往发生在老师突然点名抽问、pre 被追问、背诵突然断片的那一下。",
+      result: "把口头输出训练做成可运行的轻量小游戏，并用 localStorage 保存弱点知识点和最佳连击。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-recite-survival-source.html?mode=preview",
+      url: "portfolio-items/campus-recite-survival.html",
+      devOnly: true
+    },
+    {
       id: "shipinhao-thesis-workflow",
       platform: "视频号",
       title: "AI工具实战：论文提纲 20 分钟重构",
@@ -403,15 +448,160 @@ window.FALLBACK_DATA = {
       url: "portfolio-items/private-domain-conversion-funnel.html"
     },
     {
+      id: "campus-class-speak-lab",
+      platform: "产品方向",
+      title: "大学生课堂发言接球局",
+      description: "输入课程类型、准备时长、发言目标和紧张程度后，生成课堂发言任务卡、开口句、接话句、救场句与收尾句，并把高频好句存进本地句库。",
+      storyLine: "很多大学生不是没想法，而是在讨论课、pre 和 seminar 里卡在“第一句怎么开”，最后把能加分的表达机会让过去了。",
+      result: "把课堂发言练习做成可运行的轻量小游戏，并用 localStorage + JSON 导入导出沉淀自己的表达卡片库。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-class-speak-lab-source.html?mode=preview",
+      url: "portfolio-items/campus-class-speak-lab.html",
+      devOnly: true
+    },
+    {
+      id: "campus-meal-decision-lab",
+      platform: "产品方向",
+      title: "大学生吃什么不纠结局",
+      description: "输入校区、预算、人数、口味和赶时间程度后，调用附近餐饮 POI，生成 3 个更稳的吃饭候选、群聊拍板文案与本地 shortlist。",
+      storyLine: "很多大学生不是找不到吃的，而是在“都行”和“随便”里耗掉下课后的黄金 15 分钟，最后每个人都更累。",
+      result: "把校园组饭决策做成可运行的前端工具，并用地图 API + localStorage + JSON 快照保存常用 shortlist。",
+      cover: "",
+      previewUrl: "portfolio-items/demos/campus-meal-decision-lab-source.html?mode=preview",
+      url: "portfolio-items/campus-meal-decision-lab.html",
+      devOnly: true
+    },
+    {
       id: "autonomous-ai-lab",
       platform: "实验室",
-      title: "校园梗玩法实验室（AI自动化）",
-      description: "一个独立沙盒项目：由 AI 自动迭代校园梗玩法，优先验证可玩性、转发率和复玩率，淘汰伪需求。",
-      storyLine: "为了不再堆“看似有用但没人打开”的工具，我把自动化探索收敛到实验室，先跑玩法再迁移。",
-      result: "把大学生真实会玩的方向做成持续更新的实验流水线，保留可复用项目并淘汰低价值尝试。",
-      devOnly: true,
+      title: "AI优质信息源雷达（自动化实验室）",
+      description: "一个独立信息源沙盒：由 AI 定期从 YouTube、B站、MOOC、职业平台和创业平台筛选大学生真正值得看的内容源，沉淀成可更新栏目。",
+      storyLine: "与其继续堆“看似有用但没人打开”的工具，不如把 AI 用来持续找信息、评估信息源、整理成大学生能直接行动的导航。",
+      result: "形成面向学业发展、职业求职、个人规划、个人成长、创业副业的优质信息源池，并保留后续自动更新入口。",
       cover: "",
       url: "portfolio-items/autonomous-ai-lab.html"
+    }
+  ],
+  sourceRadar: [
+    {
+      id: "mit-ocw",
+      platform: "YouTube / 官网",
+      area: "学业发展",
+      sourceName: "MIT OpenCourseWare",
+      url: "https://www.youtube.com/@mitocw",
+      why: "系统性强，适合补大学核心课程、数学、计算机和通识课的底层知识。",
+      bestFor: "课程预习、期末复习、跨专业补基础",
+      cadence: "每月复核课程清单"
+    },
+    {
+      id: "cs50",
+      platform: "YouTube / 官网",
+      area: "学业发展",
+      sourceName: "Harvard CS50",
+      url: "https://www.youtube.com/@cs50",
+      why: "计算机入门内容结构完整，适合非科班学生建立编程、产品和技术表达基础。",
+      bestFor: "AI时代的技术补课、项目入门",
+      cadence: "每月复核新课和项目作业"
+    },
+    {
+      id: "icourse163",
+      platform: "国内MOOC",
+      area: "学业发展",
+      sourceName: "中国大学MOOC",
+      url: "https://www.icourse163.org/",
+      why: "中文高校课程集中，适合把大学课程、考研基础课和证书类学习做成长期学习池。",
+      bestFor: "中文课程补课、证书备考、专业基础",
+      cadence: "每两周复核同领域高分课程"
+    },
+    {
+      id: "li-yongle",
+      platform: "B站",
+      area: "学业发展",
+      sourceName: "李永乐老师官方",
+      url: "https://space.bilibili.com/9458053",
+      why: "把数学、物理和社会热点讲得足够清楚，适合训练解释复杂问题的能力。",
+      bestFor: "通识学习、表达训练、选题灵感",
+      cadence: "每周扫一轮高收藏视频"
+    },
+    {
+      id: "ncss",
+      platform: "官网",
+      area: "职业求职",
+      sourceName: "国家大学生就业服务平台",
+      url: "https://www.ncss.cn/",
+      why: "适合作为校招、政策、基层项目和官方就业信息的底层核验源。",
+      bestFor: "校招政策、基层就业、求职信息核验",
+      cadence: "每周复核政策和招聘专题"
+    },
+    {
+      id: "berkeley-career",
+      platform: "官网",
+      area: "职业求职",
+      sourceName: "Berkeley Career Engagement",
+      url: "https://career.berkeley.edu/",
+      why: "简历、面试、networking、职业探索资料稳定，适合拆成中文求职行动清单。",
+      bestFor: "简历优化、面试准备、职业探索",
+      cadence: "每月复核指南页"
+    },
+    {
+      id: "hbr",
+      platform: "YouTube / 官网",
+      area: "职业求职",
+      sourceName: "Harvard Business Review",
+      url: "https://www.youtube.com/@HarvardBusinessReview",
+      why: "管理、沟通、职业发展和组织协作内容密度高，适合做成职场能力卡片。",
+      bestFor: "职场沟通、管理认知、实习复盘",
+      cadence: "每两周筛选高价值视频"
+    },
+    {
+      id: "life-design",
+      platform: "官网",
+      area: "个人规划",
+      sourceName: "Stanford Life Design Lab",
+      url: "https://lifedesignlab.stanford.edu/resources",
+      why: "把职业和人生规划拆成可实验的问题，适合大学生做方向探索和阶段复盘。",
+      bestFor: "个人规划、路径试错、阶段复盘",
+      cadence: "每月更新一个练习模板"
+    },
+    {
+      id: "crash-course",
+      platform: "YouTube",
+      area: "个人成长",
+      sourceName: "CrashCourse",
+      url: "https://www.youtube.com/@crashcourse",
+      why: "通识内容覆盖广，适合搭建跨学科输入池，避免只刷碎片热点。",
+      bestFor: "通识补课、跨学科选题、英语输入",
+      cadence: "每周挑选一个主题播放列表"
+    },
+    {
+      id: "y-combinator",
+      platform: "YouTube",
+      area: "创业副业",
+      sourceName: "Y Combinator",
+      url: "https://www.youtube.com/@ycombinator",
+      why: "创业方法论直接、案例多，适合把副业想法从灵感拉回用户、产品和增长。",
+      bestFor: "创业入门、MVP验证、增长认知",
+      cadence: "每周复盘一条创业方法视频"
+    },
+    {
+      id: "stanford-ecorner",
+      platform: "YouTube / 官网",
+      area: "创业副业",
+      sourceName: "Stanford eCorner",
+      url: "https://ecorner.stanford.edu/",
+      why: "创业者访谈和课程素材适合沉淀成案例库，帮助判断一个项目是否值得继续做。",
+      bestFor: "创业案例、商业判断、产品叙事",
+      cadence: "每两周整理一个案例"
+    },
+    {
+      id: "freecodecamp",
+      platform: "YouTube / 官网",
+      area: "创业副业",
+      sourceName: "freeCodeCamp",
+      url: "https://www.youtube.com/@freecodecamp",
+      why: "项目式技术教程多，适合把副业技能转成可交付的网页、自动化和数据作品。",
+      bestFor: "技术副业、作品集项目、自动化技能",
+      cadence: "每月挑一个可落地项目"
     }
   ],
   sitePages: {},

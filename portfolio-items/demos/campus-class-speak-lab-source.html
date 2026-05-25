@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生课堂发言接球局 Demo</title>
+  <style>
+    :root {
+      --ink:#111827;
+      --muted:#64748b;
+      --line:#d7dfec;
+      --navy:#1d4ed8;
+      --cyan:#0891b2;
+      --mint:#dff7f5;
+      --paper:#f7fbff;
+      --warm:#fff4df;
+      --danger:#dc2626;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(29,78,216,.18), transparent 26%),
+        radial-gradient(circle at 100% 12%, rgba(8,145,178,.16), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #edf5ff 52%, #f6fbfb 100%);
+    }
+    button, input, select { font:inherit; }
+    button { cursor:pointer; }
+    .shell { width:min(1240px, calc(100% - 28px)); margin:0 auto; padding:24px 0 42px; }
+    .hero { display:grid; grid-template-columns:1.06fr .94fr; gap:18px; }
+    .workspace { margin-top:18px; display:grid; grid-template-columns:320px 1fr; gap:18px; align-items:start; }
+    .card {
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:30px;
+      background:rgba(255,255,255,.9);
+      box-shadow:0 24px 60px rgba(15,23,42,.08);
+      backdrop-filter:blur(10px);
+    }
+    .pad { padding:22px; }
+    .eyebrow {
+      margin:0;
+      color:var(--navy);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    h1 {
+      margin:12px 0 0;
+      font-size:clamp(34px, 5vw, 66px);
+      line-height:1;
+      letter-spacing:-.055em;
+    }
+    .lead {
+      margin:16px 0 0;
+      max-width:60ch;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.8;
+    }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .btn {
+      border:1px solid #cbd5e1;
+      border-radius:18px;
+      background:#fff;
+      padding:12px 15px;
+      color:#334155;
+      font-weight:800;
+    }
+    .btn.primary {
+      border-color:transparent;
+      background:linear-gradient(135deg, var(--navy), var(--cyan));
+      color:#fff;
+      box-shadow:0 12px 22px rgba(29,78,216,.22);
+    }
+    .btn.warn {
+      border-color:#fecaca;
+      background:#fff5f5;
+      color:#b91c1c;
+    }
+    .poster {
+      position:relative;
+      min-height:380px;
+      overflow:hidden;
+      color:#eff6ff;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.16), transparent 17%),
+        radial-gradient(circle at 75% 15%, rgba(255,255,255,.11), transparent 22%),
+        linear-gradient(145deg, #0f172a 0%, #1d4ed8 48%, #0891b2 100%);
+    }
+    .poster::after {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:28px;
+      pointer-events:none;
+    }
+    .badge-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.04em;
+    }
+    .poster-stack {
+      position:absolute;
+      left:28px;
+      right:28px;
+      bottom:28px;
+      display:grid;
+      gap:10px;
+    }
+    .poster-note {
+      border-radius:22px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.12);
+      line-height:1.7;
+      font-size:14px;
+    }
+    .poster-note strong { display:block; font-size:13px; letter-spacing:.04em; }
+    .label { display:block; margin-top:14px; color:#334155; font-size:13px; font-weight:800; }
+    input, select {
+      width:100%;
+      margin-top:7px;
+      border:1px solid #cbd5e1;
+      border-radius:16px;
+      background:#fff;
+      padding:12px 13px;
+      color:var(--ink);
+    }
+    .status {
+      margin-top:14px;
+      border-radius:18px;
+      border:1px solid #dbeafe;
+      background:#f8fbff;
+      padding:13px 14px;
+      color:#475569;
+      font-size:13px;
+      line-height:1.7;
+    }
+    .metrics { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric {
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.96);
+      padding:16px;
+    }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .stack { display:grid; gap:14px; margin-top:14px; }
+    .scenario {
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(245,250,255,.97));
+      padding:20px;
+    }
+    .scenario-top { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .scenario h2 { margin:0; font-size:24px; line-height:1.25; }
+    .scenario p { margin:0; color:var(--muted); font-size:14px; line-height:1.8; }
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:88px;
+      border-radius:999px;
+      padding:7px 12px;
+      background:#e0f2fe;
+      color:#075985;
+      font-size:12px;
+      font-weight:800;
+    }
+    .grid-tiles { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-top:14px; }
+    .tile {
+      min-height:126px;
+      border-radius:22px;
+      padding:14px;
+      border:1px solid #dbe7f0;
+      background:linear-gradient(180deg, #ffffff, #f7fbff);
+    }
+    .tile strong {
+      display:block;
+      color:#334155;
+      font-size:12px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .tile span {
+      display:block;
+      margin-top:8px;
+      color:#475569;
+      font-size:14px;
+      line-height:1.75;
+      white-space:pre-line;
+    }
+    .actions-bar {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+    .history-grid {
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    .mini-title { margin:0; font-size:16px; font-weight:800; }
+    .list { display:grid; gap:10px; margin-top:14px; }
+    .item {
+      border-radius:20px;
+      border:1px solid #dce7f3;
+      background:linear-gradient(180deg, #ffffff, #f7fbff);
+      padding:14px;
+    }
+    .item strong { display:block; font-size:14px; line-height:1.6; }
+    .item span { display:block; margin-top:5px; color:var(--muted); font-size:12px; line-height:1.6; white-space:pre-line; }
+    .subtle {
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+    .empty {
+      border:1px dashed #cbd5e1;
+      border-radius:20px;
+      padding:18px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.8;
+      background:#fbfdff;
+    }
+    .upload-input { display:none; }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero,
+    body[data-mode="preview"] .workspace,
+    body[data-mode="preview"] .metrics,
+    body[data-mode="preview"] .grid-tiles,
+    body[data-mode="preview"] .history-grid { grid-template-columns:1fr; }
+    @media (max-width: 1080px) {
+      .hero, .workspace, .metrics, .history-grid, .grid-tiles { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="shell">
+    <section class="hero">
+      <div class="card pad">
+        <p class="eyebrow">Classroom Speak Lab</p>
+        <h1>大学生课堂发言接球局</h1>
+        <p class="lead">把“老师刚点到你、脑子一片空白”的瞬间，拆成可以接住的结构。输入课程类型、准备时长、发言目标和紧张程度，页面会生成一轮课堂发言任务卡，给你开口句、接话句、救场句和收尾句，同时把高频好句存在本地，随时导出成自己的发言卡片库。</p>
+        <div class="hero-actions full-only">
+          <button id="generateBtn" class="btn primary" type="button">开始一轮发言任务</button>
+          <button id="winBtn" class="btn" type="button">这轮我接住了</button>
+          <button id="skipBtn" class="btn warn" type="button">太难了，换一题</button>
+        </div>
+      </div>
+      <div class="card poster pad">
+        <p class="eyebrow" style="color:#bfdbfe;">Speak Before Overthink</p>
+        <h2 style="margin:10px 0 0; max-width:12ch; font-size:clamp(30px, 4.4vw, 54px); line-height:1.02; letter-spacing:-.05em;">不是背答案，而是练“接住那一下”。</h2>
+        <div class="badge-row">
+          <span class="badge">适合课堂讨论 / pre / seminar</span>
+          <span class="badge">本地保存表达卡片</span>
+          <span class="badge">60 秒完成一轮训练</span>
+        </div>
+        <div class="poster-stack">
+          <div class="poster-note"><strong>开口</strong>先复述问题焦点，再给出立场，不要一上来就讲全部答案。</div>
+          <div class="poster-note"><strong>接话</strong>当别人刚说完时，用“我想补充/我同意但想推进一步”把自己挂到已有内容上。</div>
+          <div class="poster-note"><strong>救场</strong>一旦卡壳，就把问题拆成“现象、原因、例子”三步，先说一格也比沉默强。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="card pad full-only">
+        <p style="margin:0; font-size:15px; font-weight:800;">设置今天的训练模式</p>
+        <p style="margin:10px 0 0; color:var(--muted); font-size:13px; line-height:1.7;">适合课程讨论、平时抢答、案例课发言和 pre 后追问。浏览器会自动保存你的接球记录和收藏句库。</p>
+        <label class="label">课程类型
+          <select id="courseSelect">
+            <option selected>通识讨论课</option>
+            <option>专业案例课</option>
+            <option>课程汇报 / pre</option>
+            <option>导师组会 / seminar</option>
+          </select>
+        </label>
+        <label class="label">你想完成什么
+          <select id="goalSelect">
+            <option selected>至少说出一次有价值补充</option>
+            <option>练习反驳但不冒犯</option>
+            <option>接住老师追问</option>
+            <option>把观点说得更像样</option>
+          </select>
+        </label>
+        <label class="label">准备时长
+          <select id="prepSelect">
+            <option>临时被点名</option>
+            <option selected>提前看过一点</option>
+            <option>认真准备过</option>
+          </select>
+        </label>
+        <label class="label">紧张程度
+          <select id="stressSelect">
+            <option>还行，能开口</option>
+            <option selected>有点紧张</option>
+            <option>很容易卡壳</option>
+          </select>
+        </label>
+        <label class="label">想贴近的身份
+          <input id="personaInput" value="一个想说得体面、不想太冒头的普通同学">
+        </label>
+        <div id="statusBox" class="status">准备好了。先生成一轮任务卡，再决定这球接不接。</div>
+      </aside>
+
+      <section>
+        <div class="metrics">
+          <article class="metric"><p>当前连击</p><strong id="metricStreak">0</strong></article>
+          <article class="metric"><p>累计接住</p><strong id="metricWins">0</strong></article>
+          <article class="metric"><p>已存句卡</p><strong id="metricSaved">0</strong></article>
+          <article class="metric"><p>今日轮次</p><strong id="metricRounds">0</strong></article>
+        </div>
+
+        <div class="stack">
+          <article class="scenario">
+            <div class="scenario-top">
+              <div>
+                <p class="eyebrow">Current Round</p>
+                <h2 id="scenarioTitle">先生成一轮课堂发言任务</h2>
+              </div>
+              <span id="difficultyBadge" class="pill">待开始</span>
+            </div>
+            <p id="scenarioSummary" style="margin-top:12px;">系统会根据课程类型、准备程度和紧张程度，生成一个更像真实课堂的发言场景。</p>
+            <div class="grid-tiles">
+              <article class="tile">
+                <strong>开口句</strong>
+                <span id="openerText">点“开始一轮发言任务”后出现。</span>
+              </article>
+              <article class="tile">
+                <strong>接话句</strong>
+                <span id="bridgeText">用来挂接老师问题或同学刚说完的内容。</span>
+              </article>
+              <article class="tile">
+                <strong>救场句</strong>
+                <span id="rescueText">卡壳时先稳住，再慢慢补内容。</span>
+              </article>
+              <article class="tile">
+                <strong>收尾句</strong>
+                <span id="closeText">别把话说散，最后要有一个能落地的结束动作。</span>
+              </article>
+            </div>
+            <div class="actions-bar full-only">
+              <button id="savePhraseBtn" class="btn" type="button">收藏这轮句卡</button>
+              <button id="copyPhraseBtn" class="btn" type="button">复制整轮话术</button>
+            </div>
+          </article>
+
+          <div class="history-grid full-only">
+            <section class="card pad">
+              <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+                <div>
+                  <p class="eyebrow">Saved Library</p>
+                  <h3 class="mini-title">本地句卡库</h3>
+                </div>
+                <div class="hero-actions" style="margin-top:0;">
+                  <button id="exportBtn" class="btn" type="button">导出 JSON</button>
+                  <label class="btn" for="importInput">导入 JSON</label>
+                  <button id="clearSavedBtn" class="btn warn" type="button">清空句卡</button>
+                </div>
+              </div>
+              <input id="importInput" class="upload-input" type="file" accept="application/json">
+              <div id="savedList" class="list"></div>
+            </section>
+
+            <section class="card pad">
+              <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+                <div>
+                  <p class="eyebrow">Round History</p>
+                  <h3 class="mini-title">最近接球记录</h3>
+                </div>
+                <p class="subtle">“接住了”会叠加连击；“换一题”会重置当前连击。</p>
+              </div>
+              <div id="historyList" class="list"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var body = document.body;
+      var params = new URLSearchParams(window.location.search);
+      if (params.get("mode") === "preview") {
+        body.setAttribute("data-mode", "preview");
+      }
+
+      var storageKey = "campus-class-speak-lab-state";
+      var winBtn = document.getElementById("winBtn");
+      var skipBtn = document.getElementById("skipBtn");
+      var generateBtn = document.getElementById("generateBtn");
+      var savePhraseBtn = document.getElementById("savePhraseBtn");
+      var copyPhraseBtn = document.getElementById("copyPhraseBtn");
+      var exportBtn = document.getElementById("exportBtn");
+      var clearSavedBtn = document.getElementById("clearSavedBtn");
+      var importInput = document.getElementById("importInput");
+
+      var courseSelect = document.getElementById("courseSelect");
+      var goalSelect = document.getElementById("goalSelect");
+      var prepSelect = document.getElementById("prepSelect");
+      var stressSelect = document.getElementById("stressSelect");
+      var personaInput = document.getElementById("personaInput");
+
+      var scenarioTitle = document.getElementById("scenarioTitle");
+      var scenarioSummary = document.getElementById("scenarioSummary");
+      var difficultyBadge = document.getElementById("difficultyBadge");
+      var openerText = document.getElementById("openerText");
+      var bridgeText = document.getElementById("bridgeText");
+      var rescueText = document.getElementById("rescueText");
+      var closeText = document.getElementById("closeText");
+      var statusBox = document.getElementById("statusBox");
+      var savedList = document.getElementById("savedList");
+      var historyList = document.getElementById("historyList");
+
+      var metricStreak = document.getElementById("metricStreak");
+      var metricWins = document.getElementById("metricWins");
+      var metricSaved = document.getElementById("metricSaved");
+      var metricRounds = document.getElementById("metricRounds");
+
+      var topicPool = {
+        "通识讨论课": [
+          "老师刚问：这个现象背后的关键变量到底是什么？",
+          "同学给了一个很常见的答案，但有点空泛，你要不要补一层？",
+          "老师希望大家把理论和校园案例挂起来，不想只听概念定义。        "
+        ],
+        "专业案例课": [
+          "案例分析到一半，老师突然追问：如果资源受限，你会优先改哪一步？",
+          "前一个同学只讲了现象，没有给方法，你可以补一刀。",
+          "老师在等一个更贴近现实约束的回答，不想听标准教科书句子。        "
+        ],
+        "课程汇报 / pre": [
+          "你刚讲完一页 PPT，老师追问：这个结论为什么成立？",
+          "组员回答后留了口子，你需要把逻辑补完整。",
+          "台下同学提出质疑，你要在 20 秒里先稳住场面。        "
+        ],
+        "导师组会 / seminar": [
+          "导师问：你这部分和已有研究相比，新增量在哪？",
+          "别人刚讲完文献综述，现在轮到你提一个推进问题。",
+          "组会上最怕答太虚，你得给出一条更像研究动作的回应。        "
+        ]
+      };
+
+      var openerTemplates = [
+        "我先试着抓一下问题核心：{topic}",
+        "我想先接着刚才的讨论往前推一步，重点可能在于 {topic}",
+        "如果先不急着给大答案，我觉得可以先从 {topic} 这个点切进去。"
+      ];
+      var bridgeTemplates = [
+        "我同意前面提到的现象，但如果往下拆，可能要看 {goal}",
+        "我想补充的不是结论，而是一个判断路径：先看 {prep}，再看具体例子。",
+        "如果把这个问题放回课堂语境里，我会先围绕 {goal} 组织一句。"
+      ];
+      var rescueTemplates = [
+        "我可能还没想完整，但我先给一个方向：至少可以从 {stress} 这个限制开始看。",
+        "如果先不展开全部细节，我觉得最稳的回答是先说明 {goal}，再补例子。",
+        "我先给一个不完全但能落地的判断：在 {prep} 的情况下，优先说清楚一条原因。"
+      ];
+      var closeTemplates = [
+        "所以我现在的结论会先落在这里，如果需要，我可以再补一个具体例子。",
+        "我会先回答到这个层级：方向是明确的，后面可以继续展开数据或案例。",
+        "先说到这一步的话，至少能把问题的主线和判断标准交代清楚。"
+      ];
+
+      function pick(list, seed) {
+        return list[seed % list.length];
+      }
+
+      function normalizeTopic(topic) {
+        return topic.replace(/\s+/g, " ").trim().replace(/。+$/, "");
+      }
+
+      function loadState() {
+        try {
+          var raw = localStorage.getItem(storageKey);
+          if (!raw) {
+            return { streak: 0, totalWins: 0, roundCount: 0, savedPhrases: [], history: [], currentRound: null };
+          }
+          var parsed = JSON.parse(raw);
+          parsed.savedPhrases = Array.isArray(parsed.savedPhrases) ? parsed.savedPhrases : [];
+          parsed.history = Array.isArray(parsed.history) ? parsed.history : [];
+          return parsed;
+        } catch (error) {
+          return { streak: 0, totalWins: 0, roundCount: 0, savedPhrases: [], history: [], currentRound: null };
+        }
+      }
+
+      var state = loadState();
+
+      function saveState() {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+      }
+
+      function renderMetrics() {
+        metricStreak.textContent = state.streak || 0;
+        metricWins.textContent = state.totalWins || 0;
+        metricSaved.textContent = state.savedPhrases.length;
+        metricRounds.textContent = state.roundCount || 0;
+      }
+
+      function renderSavedList() {
+        if (!savedList) {
+          return;
+        }
+        if (!state.savedPhrases.length) {
+          savedList.innerHTML = '<div class="empty">还没有收藏句卡。先打一轮，再把觉得顺手的话术存进自己的课堂发言库。</div>';
+          return;
+        }
+        savedList.innerHTML = state.savedPhrases.slice().reverse().map(function (item) {
+          return '<article class="item"><strong>' + item.title + '</strong><span>' + item.opener + '\n' + item.bridge + '\n' + item.rescue + '\n' + item.close + '</span></article>';
+        }).join("");
+      }
+
+      function renderHistory() {
+        if (!historyList) {
+          return;
+        }
+        if (!state.history.length) {
+          historyList.innerHTML = '<div class="empty">还没有训练记录。你每接住一轮，系统会把主题和结果记在这里。</div>';
+          return;
+        }
+        historyList.innerHTML = state.history.slice().reverse().map(function (item) {
+          var status = item.outcome === "win" ? "接住了" : "换题了";
+          return '<article class="item"><strong>' + item.title + ' · ' + status + '</strong><span>' + item.summary + '\n' + item.time + '</span></article>';
+        }).join("");
+      }
+
+      function setRound(round) {
+        state.currentRound = round;
+        scenarioTitle.textContent = round.title;
+        scenarioSummary.textContent = round.summary;
+        difficultyBadge.textContent = round.difficulty;
+        openerText.textContent = round.opener;
+        bridgeText.textContent = round.bridge;
+        rescueText.textContent = round.rescue;
+        closeText.textContent = round.close;
+        statusBox.textContent = "这轮建议：先用开口句稳住，再接一刀自己的判断。接住了就点“这轮我接住了”，不顺就直接换题。";
+        saveState();
+      }
+
+      function buildRound() {
+        var course = courseSelect.value;
+        var goal = goalSelect.value;
+        var prep = prepSelect.value;
+        var stress = stressSelect.value;
+        var persona = personaInput.value.trim() || "一个想在课堂上说得体面的普通同学";
+        var roundIndex = (state.roundCount || 0) + state.savedPhrases.length + state.history.length + 1;
+        var topic = normalizeTopic(pick(topicPool[course], roundIndex));
+        var difficulty = stress === "很容易卡壳" ? "低压模式" : (prep === "认真准备过" ? "进阶模式" : "标准模式");
+        var round = {
+          title: course + " · " + goal,
+          summary: "场景："
+            + topic
+            + " 你的出发点是“" + persona + "”。准备程度是“" + prep + "”，紧张程度是“" + stress + "”。",
+          difficulty: difficulty,
+          opener: pick(openerTemplates, roundIndex).replace("{topic}", topic),
+          bridge: pick(bridgeTemplates, roundIndex + 1).replace("{goal}", goal).replace("{prep}", prep),
+          rescue: pick(rescueTemplates, roundIndex + 2).replace("{stress}", stress).replace("{goal}", goal).replace("{prep}", prep),
+          close: pick(closeTemplates, roundIndex + 3),
+          topic: topic
+        };
+        state.roundCount = (state.roundCount || 0) + 1;
+        setRound(round);
+        renderMetrics();
+      }
+
+      function pushHistory(outcome) {
+        if (!state.currentRound) {
+          return;
+        }
+        state.history.push({
+          title: state.currentRound.title,
+          summary: state.currentRound.topic,
+          outcome: outcome,
+          time: new Date().toLocaleString("zh-CN", { hour12: false })
+        });
+        state.history = state.history.slice(-8);
+        saveState();
+        renderHistory();
+      }
+
+      function collectCurrentBundle() {
+        if (!state.currentRound) {
+          return "";
+        }
+        return [
+          "场景：" + state.currentRound.title,
+          "开口句：" + state.currentRound.opener,
+          "接话句：" + state.currentRound.bridge,
+          "救场句：" + state.currentRound.rescue,
+          "收尾句：" + state.currentRound.close
+        ].join("\n");
+      }
+
+      function copyText(text, successMessage) {
+        if (!text) {
+          statusBox.textContent = "当前还没有可复制内容，先生成一轮任务卡。";
+          return;
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            statusBox.textContent = successMessage;
+          }, function () {
+            statusBox.textContent = "复制失败了，可以手动选择页面里的句子。";
+          });
+          return;
+        }
+        statusBox.textContent = "当前环境不支持自动复制，可以手动选择页面里的句子。";
+      }
+
+      if (generateBtn) {
+        generateBtn.addEventListener("click", buildRound);
+      }
+
+      if (winBtn) {
+        winBtn.addEventListener("click", function () {
+          if (!state.currentRound) {
+            buildRound();
+            return;
+          }
+          state.streak = (state.streak || 0) + 1;
+          state.totalWins = (state.totalWins || 0) + 1;
+          pushHistory("win");
+          renderMetrics();
+          statusBox.textContent = "这轮记为“接住了”。连击 +1，继续打一轮，训练临场开口的肌肉记忆。";
+          saveState();
+          buildRound();
+        });
+      }
+
+      if (skipBtn) {
+        skipBtn.addEventListener("click", function () {
+          if (!state.currentRound) {
+            buildRound();
+            return;
+          }
+          state.streak = 0;
+          pushHistory("skip");
+          renderMetrics();
+          statusBox.textContent = "这轮直接换掉，不硬扛。当前连击已清零，下一题重新开始。";
+          saveState();
+          buildRound();
+        });
+      }
+
+      if (savePhraseBtn) {
+        savePhraseBtn.addEventListener("click", function () {
+          if (!state.currentRound) {
+            statusBox.textContent = "还没有生成句卡，先打一轮。";
+            return;
+          }
+          state.savedPhrases.push({
+            title: state.currentRound.title,
+            opener: state.currentRound.opener,
+            bridge: state.currentRound.bridge,
+            rescue: state.currentRound.rescue,
+            close: state.currentRound.close
+          });
+          state.savedPhrases = state.savedPhrases.slice(-12);
+          saveState();
+          renderMetrics();
+          renderSavedList();
+          statusBox.textContent = "这一轮句卡已经存进本地，可以慢慢沉淀成你自己的课堂发言模板。";
+        });
+      }
+
+      if (copyPhraseBtn) {
+        copyPhraseBtn.addEventListener("click", function () {
+          copyText(collectCurrentBundle(), "整轮话术已经复制，可以直接拿去练口头表达。");
+        });
+      }
+
+      if (exportBtn) {
+        exportBtn.addEventListener("click", function () {
+          var payload = JSON.stringify({
+            exportedAt: new Date().toISOString(),
+            project: "campus-class-speak-lab",
+            savedPhrases: state.savedPhrases,
+            history: state.history
+          }, null, 2);
+          var blob = new Blob([payload], { type: "application/json" });
+          var link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = "campus-class-speak-lab.json";
+          link.click();
+          URL.revokeObjectURL(link.href);
+          statusBox.textContent = "已导出 JSON，可以留作自己的课堂表达句库备份。";
+        });
+      }
+
+      if (clearSavedBtn) {
+        clearSavedBtn.addEventListener("click", function () {
+          state.savedPhrases = [];
+          saveState();
+          renderMetrics();
+          renderSavedList();
+          statusBox.textContent = "本地句卡已经清空，训练记录仍会单独保留。";
+        });
+      }
+
+      if (importInput) {
+        importInput.addEventListener("change", function (event) {
+          var file = event.target.files && event.target.files[0];
+          if (!file) {
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function () {
+            try {
+              var parsed = JSON.parse(reader.result);
+              if (Array.isArray(parsed.savedPhrases)) {
+                state.savedPhrases = parsed.savedPhrases.slice(-12);
+              }
+              if (Array.isArray(parsed.history)) {
+                state.history = parsed.history.slice(-8);
+              }
+              saveState();
+              renderMetrics();
+              renderSavedList();
+              renderHistory();
+              statusBox.textContent = "JSON 已导入，本地句库和最近记录都更新了。";
+            } catch (error) {
+              statusBox.textContent = "导入失败，文件不是可识别的 JSON。";
+            }
+          };
+          reader.readAsText(file, "utf-8");
+          event.target.value = "";
+        });
+      }
+
+      renderMetrics();
+      renderSavedList();
+      renderHistory();
+      if (state.currentRound) {
+        setRound(state.currentRound);
+      }
+    })();
+  </script>
+</body>
+</html>

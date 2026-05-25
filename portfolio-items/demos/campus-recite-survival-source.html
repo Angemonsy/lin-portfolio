@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大学生期末抽背生存局</title>
+  <style>
+    :root { --ink:#082f49; --muted:#475569; --line:#dbeafe; --paper:#f8fbff; --accent:#2563eb; --accent-2:#0f766e; --warn:#dc2626; --deep:#0f172a; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:"Noto Sans SC","Microsoft YaHei",Arial,sans-serif; color:var(--ink); background:radial-gradient(circle at 12% 8%, rgba(96,165,250,.20), transparent 24%), radial-gradient(circle at 88% 12%, rgba(45,212,191,.16), transparent 24%), linear-gradient(180deg, #eff6ff 0%, #ffffff 42%, #ecfeff 100%); }
+    button, input, select, textarea { font:inherit; }
+    button { cursor:pointer; }
+    .app { width:min(1380px, calc(100% - 28px)); margin:0 auto; padding:24px 0 40px; }
+    .hero { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .workspace { display:grid; grid-template-columns:360px minmax(0, 1fr); gap:18px; margin-top:18px; align-items:start; }
+    .panel { border:1px solid rgba(37,99,235,.14); border-radius:30px; background:rgba(255,255,255,.9); box-shadow:0 22px 50px rgba(15,23,42,.08); backdrop-filter:blur(14px); overflow:hidden; }
+    .pad { padding:22px; }
+    .eyebrow { margin:0; color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:12px 0 0; font-size:clamp(34px, 5vw, 66px); line-height:.95; letter-spacing:-.06em; max-width:10ch; }
+    .lead { margin:16px 0 0; max-width:58ch; color:var(--muted); font-size:16px; line-height:1.8; }
+    .chips, .actions, .meta-row { display:flex; flex-wrap:wrap; gap:10px; }
+    .chips { margin-top:18px; }
+    .chip { border-radius:999px; border:1px solid rgba(37,99,235,.14); background:rgba(255,255,255,.78); padding:9px 12px; font-size:12px; font-weight:800; letter-spacing:.04em; }
+    .actions { margin-top:18px; }
+    .btn { border:none; border-radius:18px; background:#fff; padding:12px 15px; color:#334155; font-weight:800; box-shadow:inset 0 0 0 1px rgba(37,99,235,.14); }
+    .btn.primary { background:linear-gradient(135deg, var(--deep), var(--accent)); color:#fff; box-shadow:0 18px 34px rgba(37,99,235,.18); }
+    .arena { position:relative; min-height:390px; color:#eff6ff; background:linear-gradient(145deg,#082f49 0%,#2563eb 58%,#0f766e 100%); }
+    .arena::after { content:""; position:absolute; inset:18px; border-radius:28px; border:1px solid rgba(255,255,255,.16); pointer-events:none; }
+    .arena-grid { position:absolute; inset:20px; background:
+      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size:70px 70px,70px 70px; opacity:.4; border-radius:28px; }
+    .arena-content { position:relative; z-index:1; }
+    .arena-cards { display:grid; gap:10px; margin-top:22px; }
+    .arena-note { border-radius:22px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.12); padding:14px 16px; font-size:14px; line-height:1.7; }
+    .arena-note strong { display:block; margin-bottom:4px; font-size:13px; letter-spacing:.04em; }
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .section-head h2 { margin:8px 0 0; font-size:24px; line-height:1.2; }
+    .muted { color:var(--muted); font-size:13px; line-height:1.7; }
+    .label { display:block; margin-top:14px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#1d4ed8; }
+    input, select, textarea { width:100%; margin-top:7px; border:1px solid #dbeafe; border-radius:16px; background:#f8fbff; padding:12px 13px; color:#0f172a; }
+    textarea { min-height:88px; resize:vertical; }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:rgba(37,99,235,.42); box-shadow:0 0 0 4px rgba(96,165,250,.14); }
+    .inline { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .status { margin-top:14px; border-radius:18px; border:1px solid #bfdbfe; background:#eff6ff; padding:13px 14px; color:#1d4ed8; font-size:13px; line-height:1.7; }
+    .metrics { display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
+    .metric { border-radius:22px; border:1px solid #dbeafe; background:#fff; padding:16px; }
+    .metric p { margin:0; color:var(--muted); font-size:12px; font-weight:700; }
+    .metric strong { display:block; margin-top:10px; font-size:30px; letter-spacing:-.04em; }
+    .divider { height:1px; margin:14px 0; background:linear-gradient(90deg, rgba(37,99,235,.18), rgba(15,118,110,.08)); }
+    .question-card, .result-card, .saved-card, .weak-card { border-radius:24px; border:1px solid #dbeafe; background:linear-gradient(180deg, #fff, #f8fbff); padding:16px; }
+    .question-card h3, .result-card h3, .weak-card h3 { margin:0; font-size:16px; }
+    .question-card p, .question-card li, .result-card li, .saved-card span, .weak-card li { color:#334155; font-size:14px; line-height:1.8; }
+    .question-card ul, .result-card ul, .weak-card ul { margin:10px 0 0; padding-left:18px; }
+    .tag { display:inline-flex; align-items:center; border-radius:999px; padding:8px 11px; font-size:12px; font-weight:800; }
+    .tag.cool { background:#dbeafe; color:#1d4ed8; }
+    .tag.good { background:#ccfbf1; color:#115e59; }
+    .tag.warn { background:#fee2e2; color:#b91c1c; }
+    .question-shell { display:grid; gap:14px; }
+    .question-shell strong { font-size:24px; line-height:1.3; color:#0f172a; }
+    .timer-bar { height:10px; border-radius:999px; background:#dbeafe; overflow:hidden; }
+    .timer-fill { height:100%; width:100%; background:linear-gradient(90deg, #22c55e, #2563eb, #ef4444); transition:width .4s linear; }
+    .cta-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+    .saved-card { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .saved-card strong { display:block; font-size:15px; }
+    .full-only { display:block; }
+    body[data-mode="preview"] .full-only { display:none !important; }
+    body[data-mode="preview"] .hero, body[data-mode="preview"] .workspace, body[data-mode="preview"] .metrics, body[data-mode="preview"] .inline { grid-template-columns:1fr; }
+    @media (max-width: 1080px) { .hero, .workspace, .metrics, .inline { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body data-mode="full">
+  <main class="app">
+    <section class="hero">
+      <div class="panel pad">
+        <p class="eyebrow">Recite Survival</p>
+        <h1>大学生期末抽背生存局</h1>
+        <p class="lead">把“我明明看过但一抽背就脑袋空白”的瞬间，改造成可训练的闯关场。你给出课程、抽问场景和知识点，系统负责随机出题、追问、给救场句，并把你最容易卡壳的点单独存下来。</p>
+        <div class="chips">
+          <span class="chip">随机抽问</span>
+          <span class="chip">倒计时追问</span>
+          <span class="chip">错题本</span>
+        </div>
+        <div class="actions full-only">
+          <button id="sampleBtn" class="btn" type="button">加载样例知识点</button>
+          <button id="startBtn" class="btn primary" type="button">开始抽背一轮</button>
+          <button id="saveBtn" class="btn" type="button">保存错题快照</button>
+        </div>
+      </div>
+      <div class="panel arena pad">
+        <div class="arena-grid"></div>
+        <div class="arena-content">
+          <p class="eyebrow" style="color:#bfdbfe;">Oral Drill</p>
+          <h2 style="margin:10px 0 0; max-width:10ch; font-size:clamp(30px, 4.8vw, 56px); line-height:1; letter-spacing:-.05em;">考试前最怕的不是不会，是突然张嘴不会。</h2>
+          <div class="chips">
+            <span class="chip" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.12);">课堂抽查</span>
+            <span class="chip" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.12);">pre 追问</span>
+            <span class="chip" style="border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.12);">期末口试</span>
+          </div>
+          <div class="arena-cards">
+            <div class="arena-note"><strong>痛点 01</strong>很多复习只停留在“看懂了”，没有练过 30 秒内怎么把概念完整说出口。</div>
+            <div class="arena-note"><strong>痛点 02</strong>老师追问一层，最容易断的不是知识，而是表达顺序和临场组织能力。</div>
+            <div class="arena-note"><strong>痛点 03</strong>真正该复盘的是那些你总想跳过、但一被问就卡住的知识点。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel pad full-only">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Setup</p>
+            <h2>定义这轮抽背</h2>
+          </div>
+        </div>
+        <p class="muted">适合课堂抽查、口头 pre、思政背诵、外语背题和期末老师随机追问。系统不是替你记忆，而是帮你把“输出这一下”练出来。</p>
+        <label class="label">课程 / 场景<input id="courseInput" value="教育心理学 · 期末口头抽查"></label>
+        <div class="inline">
+          <label class="label">抽问模式<select id="sceneInput"><option selected>期末口头抽查</option><option>课堂随机点名</option><option>pre 追问加码</option><option>英语/思政背诵</option></select></label>
+          <label class="label">难度<select id="difficultyInput"><option>保命模式</option><option selected>正常发挥</option><option>老师追问模式</option></select></label>
+        </div>
+        <div class="inline">
+          <label class="label">每题时长<select id="timeInput"><option>35 秒</option><option selected>45 秒</option><option>60 秒</option></select></label>
+          <label class="label">自信度<select id="confidenceInput"><option>一抽就慌</option><option selected>一般</option><option>基本能说</option></select></label>
+        </div>
+        <label class="label">知识点（每行一个）<textarea id="topicsInput">最近发展区
+形成性评价
+建构主义学习观
+元认知策略
+最近一次课堂案例</textarea></label>
+        <label class="label">老师最爱怎么问<select id="teacherInput"><option selected>先解释定义，再举例</option><option>先说作用，再谈风险</option><option>先联系课堂案例</option><option>先比较相近概念</option></select></label>
+        <div id="statusBox" class="status">先点“开始抽背一轮”。系统会生成题目、追问、救场句，并在你卡住时把知识点存入本地弱点池。</div>
+      </aside>
+
+      <section>
+        <div class="metrics">
+          <article class="metric"><p>当前连击</p><strong id="streakMetric">0</strong></article>
+          <article class="metric"><p>已过题数</p><strong id="clearMetric">0</strong></article>
+          <article class="metric"><p>剩余时间</p><strong id="timeMetric">-</strong></article>
+          <article class="metric"><p>弱点条目</p><strong id="weakMetric">0</strong></article>
+        </div>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Live Round</p>
+              <h2>当前抽问</h2>
+            </div>
+            <span id="roundTag" class="tag cool">等待开局</span>
+          </div>
+          <div class="divider"></div>
+          <div class="timer-bar"><div id="timerFill" class="timer-fill"></div></div>
+          <div id="questionPanel" class="question-shell" style="margin-top:14px;"></div>
+          <div class="cta-row full-only">
+            <button id="passBtn" class="btn primary" type="button">我答出来了</button>
+            <button id="stuckBtn" class="btn" type="button">我卡住了</button>
+            <button id="skipBtn" class="btn" type="button">换一道</button>
+          </div>
+        </section>
+
+        <section class="panel pad" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Round Debrief</p>
+              <h2>这一轮该怎么补</h2>
+            </div>
+            <span class="tag good">即时复盘</span>
+          </div>
+          <div class="divider"></div>
+          <div id="resultPanel" class="result-card"></div>
+        </section>
+
+        <section class="panel pad full-only" style="margin-top:18px;">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Weak Bank</p>
+              <h2>本地错题本</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div id="weakList" class="saved-list"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var mode = new URLSearchParams(location.search).get("mode") === "preview" ? "preview" : "full";
+      document.body.setAttribute("data-mode", mode);
+
+      var weakKey = "campus_recite_survival_weak_v1";
+      var latestKey = "campus_recite_survival_latest_v1";
+      var bestKey = "campus_recite_survival_best_v1";
+      var timer = null;
+      var state = {
+        queue: [],
+        index: 0,
+        streak: 0,
+        cleared: 0,
+        timeLeft: 0,
+        perQuestion: 45,
+        current: null,
+        history: []
+      };
+
+      var scenePatterns = {
+        "期末口头抽查": {
+          openers: ["请你直接解释一下", "如果现在口头考试先抽到", "老师只给你一次机会定义"],
+          followUps: ["如果同学听不懂，你会怎么再讲一遍？", "这个知识点最容易和什么混淆？", "考试里如果只留一句，你会保留哪一句？"]
+        },
+        "课堂随机点名": {
+          openers: ["如果这节课突然点到你，请回答", "老师临时抽问", "现在请你用 30 秒讲清楚"],
+          followUps: ["能不能接着举一个课上案例？", "它和上周讲的内容怎么连起来？", "如果要记到笔记里，关键词会是什么？"]
+        },
+        "pre 追问加码": {
+          openers: ["pre 结束后老师追问", "如果老师不满意你刚才的解释，继续追问", "评委接着问你"],
+          followUps: ["这个概念落到你的案例里意味着什么？", "如果反过来质疑它，有什么局限？", "你怎么证明自己不是只背定义？"]
+        },
+        "英语/思政背诵": {
+          openers: ["如果现在开始背诵", "老师让你口头复述", "请你不用看稿说出"],
+          followUps: ["如果忘词了，你会怎样不中断地接下去？", "这里最容易漏掉的关键词是什么？", "你能不能换个说法继续表达？"]
+        }
+      };
+      var rescueTemplates = [
+        "我先用最简单的话把定义说清楚，再补细节。",
+        "如果要先抓重点，我会先说对象、作用和一个例子。",
+        "这部分我先讲核心意思，再把容易混淆的地方补上。",
+        "我先不急着展开，先给出一句能保底的概括。 "
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var els = {
+        courseInput: $("courseInput"),
+        sceneInput: $("sceneInput"),
+        difficultyInput: $("difficultyInput"),
+        timeInput: $("timeInput"),
+        confidenceInput: $("confidenceInput"),
+        topicsInput: $("topicsInput"),
+        teacherInput: $("teacherInput"),
+        statusBox: $("statusBox"),
+        streakMetric: $("streakMetric"),
+        clearMetric: $("clearMetric"),
+        timeMetric: $("timeMetric"),
+        weakMetric: $("weakMetric"),
+        roundTag: $("roundTag"),
+        timerFill: $("timerFill"),
+        questionPanel: $("questionPanel"),
+        resultPanel: $("resultPanel"),
+        weakList: $("weakList")
+      };
+
+      function read(key, fallback) { try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (err) { return fallback; } }
+      function write(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (err) {} }
+      function escapeHtml(value) { return String(value || "").replace(/[&<>"']/g, function (char) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[char]; }); }
+      function setStatus(text) { if (els.statusBox) els.statusBox.textContent = text; }
+      function pad(num) { return String(num).padStart(2, "0"); }
+      function stamp() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+      function shuffle(list) {
+        var copy = list.slice();
+        for (var i = copy.length - 1; i > 0; i -= 1) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = copy[i];
+          copy[i] = copy[j];
+          copy[j] = temp;
+        }
+        return copy;
+      }
+      function parseSeconds(label) {
+        return Number(String(label).replace(/[^\d]/g, "")) || 45;
+      }
+      function topicLines() {
+        return (els.topicsInput.value || "").split(/\r?\n/).map(function (item) { return item.trim(); }).filter(Boolean);
+      }
+      function syncWeakMetric() {
+        if (els.weakMetric) els.weakMetric.textContent = String(read(weakKey, []).length);
+      }
+      function buildQuestion(topic, index) {
+        var scene = els.sceneInput.value;
+        var teacher = els.teacherInput.value;
+        var confidence = els.confidenceInput.value;
+        var difficulty = els.difficultyInput.value;
+        var pattern = scenePatterns[scene] || scenePatterns["期末口头抽查"];
+        var opener = pattern.openers[index % pattern.openers.length];
+        var follow = pattern.followUps[(index + 1) % pattern.followUps.length];
+        var tone = confidence === "一抽就慌" ? "先给一句最短定义，再补例子。" : confidence === "基本能说" ? "先亮观点，再给例子和边界。" : "先定义，再展开一层。";
+        var difficultyHint = difficulty === "老师追问模式" ? "追问会更尖锐，准备比较和局限。" : difficulty === "保命模式" ? "先保住一句准确定义。" : "先求完整，再求漂亮。";
+        return {
+          topic: topic,
+          prompt: opener + "“" + topic + "”。",
+          followUp: follow,
+          rescue: rescueTemplates[index % rescueTemplates.length],
+          coach: teacher + "。 " + tone + " " + difficultyHint
+        };
+      }
+      function renderQuestion() {
+        if (!state.current) {
+          els.questionPanel.innerHTML = '<article class="question-card"><h3>还没开始</h3><p>先开一轮抽背。系统会按你的知识点随机出题，并把卡壳点留下来。</p></article>';
+          return;
+        }
+        els.questionPanel.innerHTML = [
+          '<article class="question-card">',
+          '  <div class="section-head"><div><p class="eyebrow" style="letter-spacing:.08em;">题目 ' + (state.index + 1) + '</p><strong>' + escapeHtml(state.current.prompt) + '</strong></div><span class="tag cool">' + escapeHtml(els.sceneInput.value) + '</span></div>',
+          '  <ul>',
+          '    <li>老师可能继续问：' + escapeHtml(state.current.followUp) + '</li>',
+          '    <li>这一题的口头顺序：' + escapeHtml(state.current.coach) + '</li>',
+          '    <li>卡住时先说：' + escapeHtml(state.current.rescue) + '</li>',
+          '  </ul>',
+          '</article>'
+        ].join("");
+      }
+      function renderResult(summary) {
+        var best = read(bestKey, 0);
+        if (!summary) {
+          els.resultPanel.innerHTML = '<h3>等你打完第一轮</h3><ul><li>通过题目后会生成连击和建议。</li><li>卡住的知识点会自动进入本地错题本。</li><li>最佳连击会被单独记录。</li></ul>';
+          return;
+        }
+        els.resultPanel.innerHTML = [
+          '<h3>' + escapeHtml(summary.title) + '</h3>',
+          '<ul>',
+          '  <li>本轮通过 ' + summary.cleared + ' 题，当前连击 ' + summary.streak + '，历史最佳 ' + best + '。</li>',
+          '  <li>最先补的知识点：' + escapeHtml(summary.focus || "无") + '。</li>',
+          '  <li>下一轮建议：' + escapeHtml(summary.tip) + '</li>',
+          '</ul>'
+        ].join("");
+      }
+      function renderWeakList() {
+        if (!els.weakList) return;
+        var list = read(weakKey, []);
+        els.weakList.innerHTML = list.length ? list.map(function (item, index) {
+          return '<article class="saved-card"><div><strong>' + escapeHtml(item.topic) + '</strong><span>' + escapeHtml(item.course) + "｜" + escapeHtml(item.savedAt) + "｜" + escapeHtml(item.reason) + '</span></div><button class="btn" data-drop="' + index + '" type="button">删除</button></article>';
+        }).join("") : '<article class="saved-card"><div><strong>还没有错题</strong><span>卡住一次就留一条，后面专门补这些总是张嘴断掉的知识点。</span></div></article>';
+        syncWeakMetric();
+      }
+      function updateMetrics() {
+        els.streakMetric.textContent = String(state.streak);
+        els.clearMetric.textContent = String(state.cleared);
+        els.timeMetric.textContent = state.current ? (state.timeLeft + "s") : "-";
+        syncWeakMetric();
+      }
+      function updateTimerFill() {
+        if (!state.current) {
+          els.timerFill.style.width = "100%";
+          return;
+        }
+        var pct = Math.max(0, Math.min(100, (state.timeLeft / state.perQuestion) * 100));
+        els.timerFill.style.width = pct + "%";
+      }
+      function stopTimer() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+      function finishRound(message) {
+        stopTimer();
+        var best = Math.max(read(bestKey, 0), state.streak);
+        write(bestKey, best);
+        var weak = read(weakKey, []);
+        var focus = weak.length ? weak[0].topic : (state.current ? state.current.topic : "");
+        write(latestKey, {
+          course: els.courseInput.value.trim(),
+          savedAt: stamp(),
+          streak: state.streak,
+          cleared: state.cleared,
+          weakCount: weak.length
+        });
+        els.roundTag.textContent = "本轮结束";
+        renderResult({
+          title: message || "这一轮结束了",
+          cleared: state.cleared,
+          streak: state.streak,
+          focus: focus,
+          tip: weak.length ? "优先把错题本前 2 条重新讲一遍，再开下一轮。" : "说明你已经能把核心知识点说出口，下一轮可以调高难度。"
+        });
+        state.current = null;
+        updateMetrics();
+        updateTimerFill();
+        renderQuestion();
+        setStatus(message || "本轮已结束。");
+      }
+      function pushWeak(topic, reason) {
+        var list = read(weakKey, []);
+        list.unshift({
+          topic: topic,
+          reason: reason,
+          course: els.courseInput.value.trim() || "未命名课程",
+          savedAt: stamp()
+        });
+        write(weakKey, list.slice(0, 12));
+        renderWeakList();
+      }
+      function nextQuestion() {
+        stopTimer();
+        if (state.index >= state.queue.length) {
+          finishRound("题库打完了，这轮抽背过关。");
+          return;
+        }
+        state.current = state.queue[state.index];
+        state.timeLeft = state.perQuestion;
+        els.roundTag.textContent = "第 " + (state.index + 1) + " 题";
+        renderQuestion();
+        updateMetrics();
+        updateTimerFill();
+        timer = setInterval(function () {
+          state.timeLeft -= 1;
+          updateMetrics();
+          updateTimerFill();
+          if (state.timeLeft <= 0) {
+            pushWeak(state.current.topic, "超时没说完");
+            state.streak = 0;
+            state.history.push({ topic: state.current.topic, result: "timeout" });
+            state.index += 1;
+            setStatus("这题超时了，已加入错题本。");
+            nextQuestion();
+          }
+        }, 1000);
+      }
+      function startRound() {
+        var topics = topicLines();
+        if (!topics.length) {
+          setStatus("至少输入 1 个知识点再开始。");
+          return;
+        }
+        state.queue = shuffle(topics).map(buildQuestion).slice(0, Math.min(topics.length, 6));
+        state.index = 0;
+        state.streak = 0;
+        state.cleared = 0;
+        state.history = [];
+        state.perQuestion = parseSeconds(els.timeInput.value);
+        setStatus("抽背开始。先别追求完美，先把一句保底定义说出口。");
+        renderResult(null);
+        nextQuestion();
+      }
+      function markPass() {
+        if (!state.current) return;
+        state.streak += 1;
+        state.cleared += 1;
+        state.history.push({ topic: state.current.topic, result: "pass" });
+        state.index += 1;
+        setStatus("这题过了，继续下一题。");
+        nextQuestion();
+      }
+      function markStuck(reason) {
+        if (!state.current) return;
+        pushWeak(state.current.topic, reason);
+        state.streak = 0;
+        state.history.push({ topic: state.current.topic, result: "stuck" });
+        state.index += 1;
+        setStatus("已把卡壳点加入本地错题本。");
+        nextQuestion();
+      }
+      function saveSnapshot() {
+        var latest = read(latestKey, null);
+        if (!latest) {
+          setStatus("先完成一轮，再保存快照。");
+          return;
+        }
+        pushWeak("本轮快照：连击 " + latest.streak + " / 通过 " + latest.cleared + " 题", "复盘记录");
+        setStatus("本轮快照已追加到本地错题本。");
+      }
+      function loadSample() {
+        els.courseInput.value = "教育心理学 · 期末口头抽查";
+        els.sceneInput.value = "期末口头抽查";
+        els.difficultyInput.value = "正常发挥";
+        els.timeInput.value = "45 秒";
+        els.confidenceInput.value = "一般";
+        els.teacherInput.value = "先解释定义，再举例";
+        els.topicsInput.value = "最近发展区\n形成性评价\n建构主义学习观\n元认知策略\n最近一次课堂案例";
+        renderQuestion();
+        renderResult(null);
+        setStatus("已加载样例知识点。可以直接开局。");
+      }
+
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        if (target.id === "sampleBtn") loadSample();
+        if (target.id === "startBtn") startRound();
+        if (target.id === "passBtn") markPass();
+        if (target.id === "stuckBtn") markStuck("主动标记卡壳");
+        if (target.id === "skipBtn") markStuck("跳过这题");
+        if (target.id === "saveBtn") saveSnapshot();
+        if (target.hasAttribute("data-drop")) {
+          var list = read(weakKey, []);
+          list.splice(Number(target.getAttribute("data-drop")), 1);
+          write(weakKey, list);
+          renderWeakList();
+          setStatus("已删除一条旧错题。");
+        }
+      });
+
+      loadSample();
+      renderWeakList();
+      updateMetrics();
+      updateTimerFill();
+      if (mode === "preview") startRound();
+      window.addEventListener("beforeunload", stopTimer);
+    })();
+  </script>
+</body>
+</html>
