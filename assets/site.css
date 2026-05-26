@@ -416,18 +416,42 @@ body {
   bottom: 8px;
   width: 116px;
   height: 178px;
+  overflow: visible;
   transform: scaleX(var(--kunki-facing));
   transform-origin: 50% 100%;
   transition: transform 0.28s ease;
 }
 
 .kunki-companion__photo {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(0 12px 14px rgba(15, 23, 42, 0.18));
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+}
+
+.kunki-companion__photo--body,
+.kunki-companion__photo--leg {
+  opacity: 0;
+}
+
+.kunki-companion__photo--body {
+  clip-path: inset(0 0 39% 0);
+}
+
+.kunki-companion__photo--leg-left {
+  clip-path: polygon(26% 54%, 52% 54%, 52% 100%, 26% 100%);
+  transform-origin: 41% 58%;
+}
+
+.kunki-companion__photo--leg-right {
+  clip-path: polygon(48% 54%, 74% 54%, 74% 100%, 48% 100%);
+  transform-origin: 59% 58%;
 }
 
 .kunki-companion__head {
@@ -618,21 +642,28 @@ body {
 }
 
 .kunki-companion.is-walking .kunki-companion__figure {
-  animation: kunki-walk-body 0.62s ease-in-out infinite;
+  animation: kunki-walk-body 0.54s ease-in-out infinite;
+}
+
+.kunki-companion.is-walking .kunki-companion__photo--idle {
+  opacity: 0;
+}
+
+.kunki-companion.is-walking .kunki-companion__photo--body,
+.kunki-companion.is-walking .kunki-companion__photo--leg {
+  opacity: 1;
 }
 
 .kunki-companion.is-walking .kunki-companion__shadow {
-  animation: kunki-shadow-pulse 0.62s ease-in-out infinite;
+  animation: kunki-shadow-pulse 0.54s ease-in-out infinite;
 }
 
-.kunki-companion.is-walking .kunki-companion__arm--left,
-.kunki-companion.is-walking .kunki-companion__leg--right {
-  animation: kunki-step-a 0.62s ease-in-out infinite;
+.kunki-companion.is-walking .kunki-companion__photo--leg-left {
+  animation: kunki-leg-forward 0.54s ease-in-out infinite;
 }
 
-.kunki-companion.is-walking .kunki-companion__arm--right,
-.kunki-companion.is-walking .kunki-companion__leg--left {
-  animation: kunki-step-b 0.62s ease-in-out infinite;
+.kunki-companion.is-walking .kunki-companion__photo--leg-right {
+  animation: kunki-leg-back 0.54s ease-in-out infinite;
 }
 
 .kunki-companion.is-sitting .kunki-companion__figure {
@@ -721,33 +752,33 @@ body {
 @keyframes kunki-walk-body {
   0%,
   100% {
-    transform: scaleX(var(--kunki-facing)) translateY(0) rotate(-1deg);
+    transform: scaleX(var(--kunki-facing)) translateY(0) rotate(-0.8deg);
   }
 
   50% {
-    transform: scaleX(var(--kunki-facing)) translateY(-5px) rotate(1deg);
+    transform: scaleX(var(--kunki-facing)) translateY(-6px) rotate(0.8deg);
   }
 }
 
-@keyframes kunki-step-a {
+@keyframes kunki-leg-forward {
   0%,
   100% {
-    transform: rotate(24deg) translateY(0);
+    transform: translateX(-2px) rotate(8deg);
   }
 
   50% {
-    transform: rotate(-24deg) translateY(3px);
+    transform: translateX(4px) rotate(-11deg) translateY(3px);
   }
 }
 
-@keyframes kunki-step-b {
+@keyframes kunki-leg-back {
   0%,
   100% {
-    transform: rotate(-24deg) translateY(3px);
+    transform: translateX(4px) rotate(-11deg) translateY(3px);
   }
 
   50% {
-    transform: rotate(24deg) translateY(0);
+    transform: translateX(-2px) rotate(8deg);
   }
 }
 
