@@ -615,28 +615,28 @@ window.FALLBACK_DATA = {
       placeholder: "微信二维码占位"
     },
     shipinhao: {
-      name: "视频号：奇绩怪谈AIQ",
+      name: "视频号：我是林kunki",
       liveImagePath: "photo/视频号二维码.png",
       imagePath: "assets/qr-shipinhao.png",
       hint: "打开微信扫一扫，关注我的视频号",
       placeholder: "视频号二维码占位"
     },
     xiaohongshu: {
-      name: "小红书：奇绩怪谈AIQ",
+      name: "小红书：我是林kunki",
       liveImagePath: "photo/小红书二维码.png",
       imagePath: "assets/qr-xiaohongshu.png",
       hint: "打开小红书扫码或微信扫一扫查看账号",
       placeholder: "小红书二维码占位"
     },
     gongzhonghao: {
-      name: "公众号：奇绩怪谈AIQ",
+      name: "公众号：我是林kunki",
       liveImagePath: "photo/公众号二维码.png",
       imagePath: "assets/qr-gongzhonghao.png",
       hint: "打开微信扫一扫，关注我的公众号",
       placeholder: "公众号二维码占位"
     },
     douyin: {
-      name: "抖音：奇绩怪谈AIQ",
+      name: "抖音：我是林kunki",
       liveImagePath: "photo/抖音二维码.png",
       imagePath: "assets/qr-douyin.png",
       hint: "打开抖音扫一扫，关注我的账号",

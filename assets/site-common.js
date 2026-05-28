@@ -258,7 +258,7 @@
       if (!page || !page.contentHtml) return;
 
       if (page.title) {
-        document.title = "奇绩怪谈AIQ | " + page.title;
+        document.title = "我是林kunki | " + page.title;
       }
 
       container.innerHTML = [
