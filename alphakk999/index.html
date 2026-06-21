@@ -452,7 +452,7 @@ const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onTog
 const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) => {
     const hasImages = images && images.length > 0;
     const loopImages = hasImages ? [...images, ...images] : [];
-    const duration = Math.min(70, Math.max(5, (images?.length || 4) * 0.22)) + 's';
+    const duration = Math.min(240, Math.max(8, (images?.length || 4) * 2)) + 's';
     return (
         <section className={`rounded-3xl border mb-6 overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100 shadow-xl'}`}>
             <div className="flex items-center justify-between gap-3 px-4 py-3">
