@@ -416,7 +416,7 @@ const BeastAvatar = ({ levelIndex, isAbsorbing }) => {
 ═══════════════════════════════════════════ */
 const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onToggle, slogan }) => {
     const count = images && images.length > 0 ? images.length : 4;
-    const duration = Math.min(80, Math.max(10, count * 1.2)) + 's';
+    const duration = Math.min(180, Math.max(24, count * 4)) + 's';
     return (
         <>
             <button onClick={onToggle} className={`fixed top-1/2 -translate-y-1/2 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 ${isOpen ? 'opacity-0 pointer-events-none translate-x-full' : 'opacity-100'} ${side === 'left' ? 'left-6' : 'right-6'} ${isDarkMode ? 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700' : 'bg-white text-slate-500 hover:text-slate-900 border border-slate-200 shadow-md'}`}>
