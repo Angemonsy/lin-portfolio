@@ -461,7 +461,7 @@ const GALLERY_MANTRAS = [
     '没人会替你变强，所有心动都要靠战果兑换。'
 ];
 
-const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete, onOpen }) => {
+const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete, onOpen, isCollapsed, onToggleCollapse }) => {
     const hasImages = images && images.length > 0;
     const loopImages = hasImages ? [...images, ...images] : [];
     const duration = Math.min(240, Math.max(8, (images?.length || 4) * 2)) + 's';
@@ -481,7 +481,21 @@ const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete, on
                     <input type="file" accept="image/*" multiple className="hidden" onChange={onUpload} />
                     <i className="fas fa-upload mr-1" />上传
                 </label>
+                <button onClick={onToggleCollapse} className={`shrink-0 w-10 h-10 rounded-xl border text-xs transition-all active:scale-95 ${isDarkMode ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-50 text-slate-600 border-slate-200'}`} title={isCollapsed ? '展开相册' : '折叠相册'}>
+                    <i className={`fas ${isCollapsed ? 'fa-eye' : 'fa-eye-slash'}`} />
+                </button>
             </div>
+            {isCollapsed ? (
+                <button onClick={onToggleCollapse} className={`w-full border-t px-4 py-5 text-left transition-all ${isDarkMode ? 'border-slate-800 bg-slate-950/70 hover:bg-slate-900' : 'border-slate-100 bg-slate-50 hover:bg-slate-100'}`}>
+                    <div className="flex items-center justify-between gap-4">
+                        <div>
+                            <p className={`text-[10px] font-black uppercase tracking-widest ${textSub}`}>Gallery Hidden</p>
+                            <p className={`text-xs font-bold opacity-60 ${textSub}`}>相册已折叠，点击恢复图片流</p>
+                        </div>
+                        <i className="fas fa-eye text-emerald-500" />
+                    </div>
+                </button>
+            ) : (
             <div className={`relative h-64 sm:h-72 overflow-hidden border-t ${isDarkMode ? 'border-slate-800 bg-slate-950/70' : 'border-slate-100 bg-slate-50'}`}>
                 {hasImages ? (
                     <div className="h-full flex gap-3 py-3 px-4 scrolling-gallery" style={{ animationDuration: duration }}>
@@ -503,6 +517,7 @@ const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete, on
                     </div>
                 )}
             </div>
+            )}
         </section>
     );
 });
@@ -4128,6 +4143,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const [rightImages, setRightImages] = useState([]);
     const [galleryImages, setGalleryImages] = useState([]);
     const [galleryLightboxIndex, setGalleryLightboxIndex] = useState(-1);
+    const [isGalleryCollapsed, setIsGalleryCollapsed] = useState(() => LS.get('a8_gallery_collapsed', false));
     const nowDate = new Date();
 
     const syncCurrentDayState = useCallback((hist) => {
@@ -4412,6 +4428,13 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             return (prev + dir + galleryImages.length) % galleryImages.length;
         });
     }, [galleryImages.length]);
+    const toggleGalleryCollapsed = useCallback(() => {
+        setIsGalleryCollapsed(prev => {
+            const next = !prev;
+            LS.set('a8_gallery_collapsed', next);
+            return next;
+        });
+    }, []);
 
     /* ── Sidebar toggles ── */
     const toggleLeftSidebar = useCallback(() => setIsLeftSidebarOpen(p => { LS.set('a8_sidebar_left', !p); return !p; }), []);
@@ -4642,6 +4665,8 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                     onUpload={handleGalleryUpload}
                     onDelete={handleDeleteGalleryImage}
                     onOpen={openGalleryLightbox}
+                    isCollapsed={isGalleryCollapsed}
+                    onToggleCollapse={toggleGalleryCollapsed}
                 />
 
                 {/* ──── 顶部核心数字 ──── */}
