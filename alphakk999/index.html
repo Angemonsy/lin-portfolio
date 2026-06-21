@@ -283,7 +283,9 @@ const saveToDB = async (key, value) => {
 const getFromDB = async (key) => {
     try { const db = await initDB(); return new Promise((resolve) => { const req = db.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get(key); req.onsuccess = (e) => resolve(e.target.result || []); req.onerror = () => resolve([]); }); } catch(err) { return []; }
 };
-const compressImageFile = (file, maxSide = 1100, quality = 0.72) => new Promise((resolve, reject) => {
+const GALLERY_MAX_IMAGES = 300;
+const GALLERY_MAX_UPLOAD_PER_PICK = 300;
+const compressImageFile = (file, maxSide = 900, quality = 0.58) => new Promise((resolve, reject) => {
     if (!file.type.startsWith('image/')) return reject(new Error('请选择图片文件'));
     const reader = new FileReader();
     reader.onload = () => {
@@ -410,7 +412,7 @@ const BeastAvatar = ({ levelIndex, isAbsorbing }) => {
 ═══════════════════════════════════════════ */
 const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onToggle, slogan }) => {
     const count = images && images.length > 0 ? images.length : 4;
-    const duration = Math.max(20, count * 4) + 's';
+    const duration = Math.min(80, Math.max(10, count * 1.2)) + 's';
     return (
         <>
             <button onClick={onToggle} className={`fixed top-1/2 -translate-y-1/2 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 ${isOpen ? 'opacity-0 pointer-events-none translate-x-full' : 'opacity-100'} ${side === 'left' ? 'left-6' : 'right-6'} ${isDarkMode ? 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700' : 'bg-white text-slate-500 hover:text-slate-900 border border-slate-200 shadow-md'}`}>
@@ -450,7 +452,7 @@ const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onTog
 const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) => {
     const hasImages = images && images.length > 0;
     const loopImages = hasImages ? [...images, ...images] : [];
-    const duration = Math.max(22, (images?.length || 4) * 5) + 's';
+    const duration = Math.min(90, Math.max(8, (images?.length || 4) * 0.75)) + 's';
     return (
         <section className={`rounded-3xl border mb-6 overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100 shadow-xl'}`}>
             <div className="flex items-center justify-between gap-3 px-4 py-3">
@@ -460,7 +462,7 @@ const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) 
                     </div>
                     <div className="min-w-0">
                         <p className={`text-[10px] font-black uppercase tracking-widest ${textSub}`}>Cloud Gallery</p>
-                        <p className={`text-[9px] font-bold opacity-50 ${textSub}`}>{images.length}/60 · 本机相册</p>
+                        <p className={`text-[9px] font-bold opacity-50 ${textSub}`}>{images.length}/{GALLERY_MAX_IMAGES} · 本机相册</p>
                     </div>
                 </div>
                 <label className={`shrink-0 cursor-pointer px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 ${isDarkMode ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/30' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
@@ -4306,14 +4308,18 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         e.target.value = '';
         if (!files.length) return;
         try {
-            const nextImages = await Promise.all(files.slice(0, 8).map(async (file) => ({
-                id: `g_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-                src: await compressImageFile(file),
-                name: file.name,
-                createdAt: new Date().toISOString()
-            })));
+            const pickedFiles = files.slice(0, GALLERY_MAX_UPLOAD_PER_PICK);
+            const nextImages = [];
+            for (const file of pickedFiles) {
+                nextImages.push({
+                    id: `g_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+                    src: await compressImageFile(file),
+                    name: file.name,
+                    createdAt: new Date().toISOString()
+                });
+            }
             setGalleryImages(prev => {
-                const updated = [...nextImages, ...(prev || [])].slice(0, 60);
+                const updated = [...nextImages, ...(prev || [])].slice(0, GALLERY_MAX_IMAGES);
                 saveToDB('gallery_images', updated);
                 return updated;
             });
