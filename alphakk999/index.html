@@ -727,24 +727,76 @@ const KPIModal = ({ isOpen, onClose, kpi, onSave, isDarkMode }) => {
 /* ═══════════════════════════════════════════
    Review Modal (结构化复盘)
 ═══════════════════════════════════════════ */
-const ReviewModal = ({ isOpen, onClose, dateStr, existing, onSave, isDarkMode }) => {
-    const [form, setForm] = useState({ wins:'', fails:'', tomorrow:'', mood:3 });
-    useEffect(() => { if (isOpen) setForm(existing || { wins:'', fails:'', tomorrow:'', mood:3 }); }, [isOpen]);
+const ReviewModal = ({ isOpen, onClose, dateStr, existing, onSave, reviews, history, isDarkMode, onSelectDate }) => {
+    const todayD = new Date(dateStr.replace(/-/g,'/'));
+    const [selectedDate, setSelectedDate] = useState(todayD);
+    const [year, setYear] = useState(todayD.getFullYear());
+    const [month, setMonth] = useState(todayD.getMonth());
+    const [form, setForm] = useState({ plaintext:'', wins:'', fails:'', tomorrow:'', mood:3 });
+    useEffect(() => {
+        if (isOpen) {
+            const d = todayD;
+            setSelectedDate(d);
+            setYear(d.getFullYear());
+            setMonth(d.getMonth());
+            const base = existing || { plaintext:'', wins:'', fails:'', tomorrow:'', mood:3 };
+            // 兼容旧数据没有 plaintext
+            setForm({ plaintext:'', wins:'', fails:'', tomorrow:'', mood:3, ...base });
+        }
+    }, [isOpen]);
     if (!isOpen) return null;
+    const handleDateSelect = (d) => {
+        setSelectedDate(d);
+        const k = dateKey(d);
+        // 加载历史复盘
+        const rev = reviews[k] || null;
+        const base = rev || { plaintext:'', wins:'', fails:'', tomorrow:'', mood:3 };
+        setForm({ plaintext:'', wins:'', fails:'', tomorrow:'', mood:3, ...base });
+        if (onSelectDate) onSelectDate(k);
+    };
+    const handlePrevMonth = () => {
+        let ny = year, nm = month - 1;
+        if (nm < 0) { nm = 11; ny--; }
+        setYear(ny); setMonth(nm);
+    };
+    const handleNextMonth = () => {
+        let ny = year, nm = month + 1;
+        if (nm > 11) { nm = 0; ny++; }
+        setYear(ny); setMonth(nm);
+    };
     const MOODS = ['😞','😐','🙂','😎','🔥'];
     const card = isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200';
     const ta = isDarkMode ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-600' : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400';
     return (
         <div className="fixed inset-0 z-[400] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
-            <div className={`w-full max-w-lg rounded-2xl p-6 shadow-2xl border ${card}`} onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-5">
-                    <div>
-                        <h3 className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>今日结构化复盘</h3>
-                        <p className="text-[10px] text-slate-500 mt-0.5">{dateStr}</p>
+            <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 shadow-2xl border ${card}`} onClick={e => e.stopPropagation()}>
+                <div className="flex justify-between items-start mb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <div>
+                            <h3 className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>复盘编辑</h3>
+                            <p className="text-[10px] text-slate-500 mt-0.5">{dateKey(selectedDate)}</p>
+                        </div>
+                        {/* 年月选择器 */}
+                        <div className="flex items-center gap-2">
+                            <button onClick={handlePrevMonth} className={`p-1 rounded ${ta} text-xs w-7 h-7 flex items-center justify-center`}><i className="fas fa-chevron-left" /></button>
+                            <span className={`text-xs font-bold ${isDarkMode?'text-slate-200':'text-slate-800'}`}>{year} 年 {month+1} 月</span>
+                            <button onClick={handleNextMonth} className={`p-1 rounded ${ta} text-xs w-7 h-7 flex items-center justify-center`}><i className="fas fa-chevron-right" /></button>
+                        </div>
                     </div>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><i className="fas fa-times" /></button>
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 -mt-1"><i className="fas fa-times" /></button>
+                </div>
+                {/* 日历日期选择 */}
+                <div className={`mb-5 p-3 rounded-xl border ${isDarkMode?'border-slate-800':'border-slate-200'}`}>
+                    <MiniCalendarMonth year={year} month={month} history={history} onSelectDate={handleDateSelect} selectedDateStr={dateKey(selectedDate)} />
                 </div>
                 <div className="space-y-4">
+                    {/* 新增纯文本自由输入 */}
+                    <div>
+                        <label className="text-xs font-black uppercase tracking-widest mb-1.5 block text-amber-600">📝 纯文本复盘（可选，自由输入）</label>
+                        <textarea rows={4} value={form.plaintext} onChange={e => setForm(p => ({ ...p, plaintext: e.target.value }))}
+                            placeholder="不想用模板就直接在这里写完整复盘文字... 模板和纯文本文字可以同时保存" className={`w-full border rounded-xl p-3 text-sm outline-none resize-none transition-colors ${ta}`} />
+                    </div>
+                    {/* 原有结构化模板 */}
                     {[
                         { key:'wins', label:'🏆 今日胜利 / 收获', color:'text-emerald-500', ph:'今天推进了什么？有什么好结果？...' },
                         { key:'fails', label:'⚠️ 踩坑 / 待改进', color:'text-red-500', ph:'哪里没做好？下次怎么避免？...' },
@@ -768,7 +820,7 @@ const ReviewModal = ({ isOpen, onClose, dateStr, existing, onSave, isDarkMode })
                 </div>
                 <div className="flex gap-3 mt-5">
                     <button onClick={onClose} className={`flex-1 py-3 rounded-xl border text-sm font-bold ${isDarkMode ? 'border-slate-700 text-slate-400 hover:text-white' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}>关闭</button>
-                    <button onClick={() => { onSave(form); onClose(); }} className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-500 shadow-lg">保存复盘</button>
+                    <button onClick={() => { onSave(dateKey(selectedDate), form); onClose(); }} className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-500 shadow-lg">保存复盘</button>
                 </div>
             </div>
         </div>
@@ -4015,6 +4067,611 @@ const CompanyDashboard = ({ kpi, onEdit, onOpenProjects, onEditAcademic, project
 };
 
 /* ═══════════════════════════════════════════
+   Battle Log Modal（即时记录弹层）
+═══════════════════════════════════════════ */
+const BattleLogModal = ({ isOpen, onClose, battleLogs, onAdd, onDelete, isDarkMode }) => {
+    const [input, setInput] = useState('');
+    const inputRef = useRef(null);
+    useEffect(() => { if (isOpen && inputRef.current) setTimeout(()=>inputRef.current.focus(),100); }, [isOpen]);
+    if (!isOpen) return null;
+    const card = isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200';
+    const ta = isDarkMode ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-600' : 'bg-slate-50 border-slate-200 text-slate-900';
+    const todayKey = today();
+    const todayLogs = battleLogs[todayKey] || [];
+    // 最近 7 天历史
+    const recentDates = [];
+    for (let i=1; i<=7; i++) {
+        const d = new Date(); d.setDate(d.getDate()-i);
+        const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        if (battleLogs[k] && battleLogs[k].length) recentDates.push({ k, logs: battleLogs[k] });
+    }
+    const submit = () => {
+        if (!input.trim()) return;
+        onAdd(input);
+        setInput('');
+    };
+    return (
+        <div className="fixed inset-0 z-[450] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+            <div className={`w-full max-w-xl max-h-[85vh] flex flex-col rounded-2xl shadow-2xl border ${card}`} onClick={e=>e.stopPropagation()}>
+                <div className="flex justify-between items-center px-5 py-4 border-b shrink-0" style={{ borderColor: isDarkMode?'#1e293b':'#e2e8f0' }}>
+                    <div className="flex items-center gap-2">
+                        <i className="fas fa-scroll text-indigo-500" />
+                        <h3 className={`text-base font-black ${isDarkMode?'text-white':'text-slate-900'}`}>Battle Log · 即时记录</h3>
+                        <span className="text-[10px] text-slate-500">{todayKey}</span>
+                    </div>
+                    <button onClick={onClose} className="text-slate-400 hover:text-red-500 p-1"><i className="fas fa-times" /></button>
+                </div>
+                {/* 输入区域置顶 */}
+                <div className="px-5 py-4 border-b shrink-0" style={{ borderColor: isDarkMode?'#1e293b':'#e2e8f0' }}>
+                    <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)}
+                        onKeyDown={e=>{ if(e.key==='Enter' && (e.metaKey||e.ctrlKey)){ e.preventDefault(); submit(); } }}
+                        rows={3} placeholder="此刻在想什么 / 在做什么 / 刚发生了什么？(⌘+Enter 提交)"
+                        className={`w-full border rounded-xl p-3 text-sm outline-none resize-none ${ta}`} />
+                    <div className="flex gap-2 mt-2">
+                        <button onClick={submit} disabled={!input.trim()}
+                            className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-bold text-sm transition-all">
+                            <i className="fas fa-paper-plane mr-2" /> 记录
+                        </button>
+                    </div>
+                </div>
+                {/* 日志列表 */}
+                <div className="flex-1 overflow-y-auto px-5 py-3 space-y-3">
+                    <div>
+                        <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${isDarkMode?'text-slate-500':'text-slate-400'}`}>今天 · {todayLogs.length} 条</div>
+                        {todayLogs.length === 0 ? (
+                            <div className={`text-center py-6 text-xs italic opacity-40 ${isDarkMode?'text-slate-500':'text-slate-400'}`}>暂无记录。在上方写下第一条吧。</div>
+                        ) : (
+                            <div className="space-y-2">
+                                {todayLogs.map((log, idx) => (
+                                    <div key={idx} className={`p-3 rounded-xl text-sm flex gap-3 group ${isDarkMode?'bg-slate-800/60 text-slate-300':'bg-slate-50 text-slate-700'}`}>
+                                        <span className="text-xs font-mono font-bold opacity-50 pt-0.5 text-blue-500 shrink-0">{log.time}</span>
+                                        <p className="flex-1 opacity-90 leading-relaxed break-words whitespace-pre-wrap">{log.content}</p>
+                                        {onDelete && <button onClick={()=>onDelete(todayKey, idx)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 text-xs shrink-0"><i className="fas fa-trash" /></button>}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    {recentDates.length > 0 && (
+                        <div>
+                            <div className={`text-[10px] font-black uppercase tracking-widest mb-2 mt-4 ${isDarkMode?'text-slate-500':'text-slate-400'}`}>历史 · 近 7 天</div>
+                            <div className="space-y-3">
+                                {recentDates.map(({ k, logs }) => (
+                                    <div key={k}>
+                                        <div className="text-[10px] font-mono opacity-60 mb-1">{k} · {logs.length} 条</div>
+                                        <div className="space-y-1.5">
+                                            {logs.map((log, idx) => (
+                                                <div key={idx} className={`p-2 rounded-lg text-xs flex gap-2 ${isDarkMode?'bg-slate-800/30 text-slate-400':'bg-slate-50/60 text-slate-600'}`}>
+                                                    <span className="font-mono opacity-50 shrink-0">{log.time}</span>
+                                                    <p className="flex-1 leading-relaxed break-words whitespace-pre-wrap">{log.content}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ═══════════════════════════════════════════
+   可视化：30 天完成率折线 + 主线雷达/仪表盘 + XP 累计曲线
+═══════════════════════════════════════════ */
+const TrendsModal = ({ isOpen, onClose, history, reviews, moneyRecords, contents, bodyLogs, isDarkMode }) => {
+    if (!isOpen) return null;
+    const card = isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200';
+
+    // 30 天完成率
+    const days30 = Array.from({length:30}, (_,i)=>{
+        const d = new Date(); d.setDate(d.getDate()-(29-i));
+        const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const dayH = history[k] || {};
+        const done = PLAN_DATA.filter(t=>dayH[t.id]).length;
+        const pct = Math.round((done/PLAN_DATA.length)*100);
+        let xp = 0;
+        PLAN_DATA.forEach(t=>{ if(dayH[t.id]) xp += t.xp||1; });
+        return { k, label:`${d.getMonth()+1}/${d.getDate()}`, pct, done, xp, date:d };
+    });
+    // 累计 XP
+    let cum = 0;
+    const xpCum = days30.map(d=>{ cum += d.xp; return { ...d, cum }; });
+    const maxCum = Math.max(...xpCum.map(d=>d.cum), 1);
+
+    // 主线 30 天完成率
+    const lineKeys = Object.keys(LINES);
+    const lineStat30 = {};
+    lineKeys.forEach(lk=>{
+        const lineTasks = PLAN_DATA.filter(t=>t.line===lk);
+        let done = 0, total = lineTasks.length * 30;
+        days30.forEach(d=>{
+            const dayH = history[d.k] || {};
+            lineTasks.forEach(t=>{ if(dayH[t.id]) done++; });
+        });
+        lineStat30[lk] = total ? Math.round(done/total*100) : 0;
+    });
+
+    // 心情趋势（近 30 天）
+    const moodData = days30.map(d=>{
+        const r = reviews[d.k];
+        return { k:d.k, label:d.label, mood: r ? r.mood : null };
+    });
+    const moodCount = moodData.filter(m=>m.mood!==null).length;
+
+    // 现金流月度
+    const moneyByMonth = {};
+    (moneyRecords||[]).forEach(r=>{
+        if(!r.date) return;
+        const m = r.date.slice(0,7);
+        if(!moneyByMonth[m]) moneyByMonth[m] = { income:0, expense:0 };
+        if(r.type==='income') moneyByMonth[m].income += Number(r.amount||0);
+        else moneyByMonth[m].expense += Number(r.amount||0);
+    });
+    const monthKeys = Object.keys(moneyByMonth).sort().slice(-6);
+
+    // 内容状态饼图
+    const contentStatus = { idea:0, draft:0, published:0 };
+    (contents||[]).forEach(c=>{
+        const s = c.status || 'idea';
+        if(contentStatus[s]!==undefined) contentStatus[s]++;
+    });
+    const totalC = Object.values(contentStatus).reduce((a,b)=>a+b,0);
+
+    // 体重曲线（近 30 天）
+    const weightData = days30.map(d=>{
+        const log = (bodyLogs||[]).find(b=>b.date===d.k && b.weight);
+        return { k:d.k, label:d.label, weight: log ? Number(log.weight) : null };
+    });
+    const validWeights = weightData.filter(w=>w.weight!==null).map(w=>w.weight);
+    const wMin = validWeights.length ? Math.min(...validWeights) : 0;
+    const wMax = validWeights.length ? Math.max(...validWeights) : 0;
+
+    // SVG 折线生成器
+    const sparkline = (data, color, height=60) => {
+        const w = 320, h = height, pad = 6;
+        if(!data.length) return null;
+        const vals = data.map(d=>d.pct||0);
+        const max = Math.max(...vals, 100);
+        const step = (w-pad*2)/(data.length-1 || 1);
+        const points = vals.map((v,i)=>{
+            const x = pad + i*step;
+            const y = h-pad - (v/max)*(h-pad*2);
+            return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(' ');
+        const areaPoints = `${pad},${h-pad} ${points} ${pad + (data.length-1)*step},${h-pad}`;
+        return (
+            <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">
+                <defs>
+                    <linearGradient id={`g-${color.replace('#','')}`} x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stopColor={color} stopOpacity="0.4" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                    </linearGradient>
+                </defs>
+                <polygon points={areaPoints} fill={`url(#g-${color.replace('#','')})`} />
+                <polyline points={points} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                {vals.map((v,i)=>{
+                    const x = pad + i*step;
+                    const y = h-pad - (v/max)*(h-pad*2);
+                    return <circle key={i} cx={x} cy={y} r={v===Math.max(...vals)?2.5:1} fill={color} />;
+                })}
+            </svg>
+        );
+    };
+
+    // 仪表盘
+    const Gauge = ({ value, color, label }) => {
+        const r = 36, c = 2*Math.PI*r;
+        const pct = Math.min(100, Math.max(0, value));
+        const dash = (pct/100)*c;
+        return (
+            <div className="flex flex-col items-center">
+                <svg width="90" height="90" viewBox="0 0 90 90">
+                    <circle cx="45" cy="45" r={r} fill="none" stroke={isDarkMode?'#1e293b':'#e2e8f0'} strokeWidth="8" />
+                    <circle cx="45" cy="45" r={r} fill="none" stroke={color} strokeWidth="8" strokeLinecap="round"
+                        strokeDasharray={`${dash} ${c}`} transform="rotate(-90 45 45)" style={{transition:'stroke-dasharray 0.6s ease'}} />
+                    <text x="45" y="48" textAnchor="middle" dominantBaseline="middle" fontSize="18" fontWeight="900" fill={color}>{pct}<tspan fontSize="9">%</tspan></text>
+                </svg>
+                <div className="text-[10px] font-black mt-1" style={{ color }}>{label}</div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="fixed inset-0 z-[480] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+            <div className={`w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border ${card}`} onClick={e=>e.stopPropagation()}>
+                <div className="flex justify-between items-center px-5 py-4 border-b sticky top-0 z-10 backdrop-blur-md" style={{ borderColor: isDarkMode?'#1e293b':'#e2e8f0', background: isDarkMode?'rgba(2,6,23,0.85)':'rgba(255,255,255,0.92)' }}>
+                    <div className="flex items-center gap-2">
+                        <i className="fas fa-chart-line text-purple-500" />
+                        <h3 className={`text-base font-black ${isDarkMode?'text-white':'text-slate-900'}`}>数据可视化 · 最近 30 天</h3>
+                    </div>
+                    <button onClick={onClose} className="text-slate-400 hover:text-red-500 p-1"><i className="fas fa-times" /></button>
+                </div>
+
+                <div className="p-5 space-y-6">
+                    {/* 总览仪表盘 */}
+                    <section>
+                        <div className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isDarkMode?'text-slate-400':'text-slate-500'}`}>📊 四大主线 · 30 天达成率</div>
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                            {Object.entries(LINES).map(([k, line])=>(
+                                <Gauge key={k} value={lineStat30[k]||0} color={line.color} label={line.label.replace('线','')} />
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* 30 天完成率折线 */}
+                    <section className={`p-4 rounded-2xl border ${isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50/50 border-slate-100'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                            <div>
+                                <div className={`text-xs font-black ${isDarkMode?'text-white':'text-slate-900'}`}>📈 每日完成率</div>
+                                <div className={`text-[10px] ${isDarkMode?'text-slate-500':'text-slate-400'}`}>平均 {Math.round(days30.reduce((s,d)=>s+d.pct,0)/days30.length)}% · 最高 {Math.max(...days30.map(d=>d.pct))}%</div>
+                            </div>
+                            <i className="fas fa-chart-area text-emerald-500 opacity-50" />
+                        </div>
+                        {sparkline(days30, '#10b981', 80)}
+                    </section>
+
+                    {/* XP 累计 */}
+                    <section className={`p-4 rounded-2xl border ${isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50/50 border-slate-100'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                            <div>
+                                <div className={`text-xs font-black ${isDarkMode?'text-white':'text-slate-900'}`}>⚡ XP 累计成长曲线</div>
+                                <div className={`text-[10px] ${isDarkMode?'text-slate-500':'text-slate-400'}`}>30 天累计 {xpCum[xpCum.length-1].cum} XP · 日均 {Math.round(xpCum[xpCum.length-1].cum/30)} XP</div>
+                            </div>
+                            <i className="fas fa-bolt text-amber-500 opacity-50" />
+                        </div>
+                        {sparkline(xpCum.map(d=>({...d, pct:Math.round(d.cum/maxCum*100)})), '#f59e0b', 80)}
+                    </section>
+
+                    {/* 心情趋势 */}
+                    <section className={`p-4 rounded-2xl border ${isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50/50 border-slate-100'}`}>
+                        <div className="flex items-center justify-between mb-3">
+                            <div>
+                                <div className={`text-xs font-black ${isDarkMode?'text-white':'text-slate-900'}`}>🎭 心情趋势</div>
+                                <div className={`text-[10px] ${isDarkMode?'text-slate-500':'text-slate-400'}`}>{moodCount} 天有复盘记录 · 平均 {moodCount?(moodData.filter(m=>m.mood!==null).reduce((s,m)=>s+m.mood,0)/moodCount).toFixed(1):'—'}/4</div>
+                            </div>
+                            <i className="fas fa-brain text-purple-500 opacity-50" />
+                        </div>
+                        <div className="flex items-end gap-1 h-16">
+                            {moodData.map((m,i)=>(
+                                <div key={i} className="flex-1 flex flex-col justify-end h-full" title={m.k+(m.mood!==null?` · ${['😞','😐','🙂','😎','🔥'][m.mood]}`:'')}>
+                                    {m.mood!==null ? (
+                                        <div className="rounded-t" style={{
+                                            height:`${(m.mood/4)*100}%`,
+                                            background:['#ef4444','#f59e0b','#10b981','#3b82f6','#a855f7'][m.mood],
+                                            opacity:0.85
+                                        }}></div>
+                                    ) : (
+                                        <div className={`h-1 rounded-t ${isDarkMode?'bg-slate-800':'bg-slate-200'}`}></div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <div className={`flex justify-between mt-1 text-[8px] font-mono opacity-50 ${isDarkMode?'text-slate-500':'text-slate-400'}`}>
+                            <span>{moodData[0].label}</span>
+                            <span>{moodData[15].label}</span>
+                            <span>{moodData[29].label}</span>
+                        </div>
+                    </section>
+
+                    {/* 现金流 + 内容状态 双栏 */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <section className={`p-4 rounded-2xl border ${isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50/50 border-slate-100'}`}>
+                            <div className={`text-xs font-black mb-3 ${isDarkMode?'text-white':'text-slate-900'}`}>💰 月度现金流</div>
+                            {monthKeys.length === 0 ? (
+                                <div className="text-center py-4 text-[10px] opacity-40">暂无数据</div>
+                            ) : (
+                                <div className="space-y-2">
+                                    {monthKeys.map(mk=>{
+                                        const d = moneyByMonth[mk];
+                                        const max = Math.max(d.income, d.expense, 1);
+                                        return (
+                                            <div key={mk}>
+                                                <div className="flex justify-between text-[10px] font-mono mb-0.5"><span className="opacity-60">{mk}</span><span className="font-black text-emerald-500">净 ¥{d.income-d.expense}</span></div>
+                                                <div className="flex gap-1 h-3">
+                                                    <div className="flex-1 rounded-l" style={{background:'#10b981', opacity:0.3+0.7*d.income/max}} title={`收 ¥${d.income}`}></div>
+                                                    <div className="flex-1 rounded-r" style={{background:'#ef4444', opacity:0.3+0.7*d.expense/max}} title={`支 ¥${d.expense}`}></div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </section>
+                        <section className={`p-4 rounded-2xl border ${isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50/50 border-slate-100'}`}>
+                            <div className={`text-xs font-black mb-3 ${isDarkMode?'text-white':'text-slate-900'}`}>🎬 内容流水线状态</div>
+                            {totalC === 0 ? (
+                                <div className="text-center py-4 text-[10px] opacity-40">暂无内容</div>
+                            ) : (
+                                <div className="flex items-center gap-4">
+                                    <svg width="80" height="80" viewBox="0 0 80 80">
+                                        {(() => {
+                                            const segs = [
+                                                { v:contentStatus.idea, c:'#8b5cf6', l:'选题' },
+                                                { v:contentStatus.draft, c:'#f59e0b', l:'制作' },
+                                                { v:contentStatus.published, c:'#10b981', l:'已发' },
+                                            ];
+                                            let acc = 0;
+                                            const r = 30, cx=40, cy=40, circ = 2*Math.PI*r;
+                                            return segs.map((s,i)=>{
+                                                const pct = s.v/totalC;
+                                                const len = circ*pct;
+                                                const offset = -acc*circ;
+                                                acc += pct;
+                                                return <circle key={i} cx={cx} cy={cy} r={r} fill="none" stroke={s.c} strokeWidth="14"
+                                                    strokeDasharray={`${len} ${circ}`} strokeDashoffset={offset} transform={`rotate(-90 ${cx} ${cy})`} />;
+                                            });
+                                        })()}
+                                        <text x="40" y="44" textAnchor="middle" fontSize="14" fontWeight="900" fill={isDarkMode?'#fff':'#0f172a'}>{totalC}</text>
+                                    </svg>
+                                    <div className="flex-1 space-y-1 text-[10px]">
+                                        {[
+                                            { v:contentStatus.idea, c:'#8b5cf6', l:'选题' },
+                                            { v:contentStatus.draft, c:'#f59e0b', l:'制作中' },
+                                            { v:contentStatus.published, c:'#10b981', l:'已发布' },
+                                        ].map(s=>(
+                                            <div key={s.l} className="flex items-center justify-between">
+                                                <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full" style={{background:s.c}}></div><span className="opacity-70">{s.l}</span></div>
+                                                <span className="font-bold font-mono">{s.v} ({totalC?Math.round(s.v/totalC*100):0}%)</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </section>
+                    </div>
+
+                    {/* 体重曲线 */}
+                    {validWeights.length > 0 && (
+                        <section className={`p-4 rounded-2xl border ${isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50/50 border-slate-100'}`}>
+                            <div className="flex items-center justify-between mb-2">
+                                <div>
+                                    <div className={`text-xs font-black ${isDarkMode?'text-white':'text-slate-900'}`}>💪 体重变化 · 30 天</div>
+                                    <div className={`text-[10px] ${isDarkMode?'text-slate-500':'text-slate-400'}`}>区间 {wMin}-{wMax}kg · {validWeights.length} 条记录</div>
+                                </div>
+                                <i className="fas fa-dumbbell text-emerald-500 opacity-50" />
+                            </div>
+                            {(() => {
+                                const w=320, h=80, pad=6;
+                                const valid = weightData.filter(d=>d.weight!==null);
+                                if (valid.length < 2) return <div className="text-center text-[10px] opacity-40 py-4">至少需要 2 条记录</div>;
+                                const min = wMin, max = wMax, range = max-min || 1;
+                                const step = (w-pad*2)/(weightData.length-1);
+                                const pts = weightData.map((d,i)=>{
+                                    if (d.weight===null) return null;
+                                    const x = pad + i*step;
+                                    const y = h-pad - ((d.weight-min)/range)*(h-pad*2);
+                                    return { x, y, weight:d.weight };
+                                }).filter(Boolean);
+                                const line = pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+                                return (
+                                    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">
+                                        <polyline points={line} fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        {pts.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="2.5" fill="#10b981" />)}
+                                    </svg>
+                                );
+                            })()}
+                        </section>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ═══════════════════════════════════════════
+   备忘录 / DDL 看板
+═══════════════════════════════════════════ */
+const MemoBoard = memo(({ memos, onSave, isDarkMode, card, sub, textMain, textSub }) => {
+    const [showAll, setShowAll] = useState(false);
+    const [adding, setAdding] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [form, setForm] = useState({ title:'', project:'', deadline:'', note:'' });
+
+    const reset = () => { setForm({ title:'', project:'', deadline:'', note:'' }); setAdding(false); setEditId(null); };
+
+    const submit = () => {
+        if (!form.title.trim()) return;
+        if (editId) {
+            onSave((memos||[]).map(m => m.id===editId ? { ...m, ...form } : m));
+        } else {
+            onSave([...(memos||[]), { id:'memo'+Date.now(), done:false, created_at:today(), ...form }]);
+        }
+        reset();
+    };
+
+    const toggle = (id) => onSave((memos||[]).map(m => m.id===id ? { ...m, done:!m.done } : m));
+    const remove = (id) => onSave((memos||[]).filter(m => m.id!==id));
+    const startEdit = (m) => { setForm({ title:m.title||'', project:m.project||'', deadline:m.deadline||'', note:m.note||'' }); setEditId(m.id); setAdding(true); };
+
+    const sorted = [...(memos||[])].sort((a,b)=>{
+        if (a.done !== b.done) return a.done ? 1 : -1;
+        if (!a.deadline && !b.deadline) return 0;
+        if (!a.deadline) return 1;
+        if (!b.deadline) return -1;
+        return a.deadline.localeCompare(b.deadline);
+    });
+    const visible = showAll ? sorted : sorted.slice(0, 3);
+    const pendingCount = (memos||[]).filter(m => !m.done).length;
+    const urgentCount = (memos||[]).filter(m => !m.done && m.deadline && (new Date(m.deadline) - new Date()) < 3*24*60*60*1000).length;
+
+    const dayDiff = (dl) => {
+        if (!dl) return null;
+        const target = new Date(dl); target.setHours(0,0,0,0);
+        const dn = new Date(); dn.setHours(0,0,0,0);
+        return Math.ceil((target-dn)/(1000*60*60*24));
+    };
+
+    return (
+        <section className={`${card} rounded-2xl p-4 mb-4`}>
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                    <i className="fas fa-thumbtack text-amber-500 text-xs" />
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${textSub}`}>备忘录 · DDL</span>
+                    {pendingCount > 0 && <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">{pendingCount}</span>}
+                    {urgentCount > 0 && <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-red-100 text-red-700 animate-pulse">紧急{urgentCount}</span>}
+                </div>
+                <button onClick={()=>{ reset(); setAdding(true); }}
+                    className="text-xs font-bold text-amber-500 hover:text-amber-400 transition-colors">
+                    <i className="fas fa-plus" /> 添加
+                </button>
+            </div>
+
+            {adding && (
+                <div className={`rounded-xl p-3 mb-3 border ${sub}`}>
+                    <input type="text" placeholder="标题（必填，如：交毕业论文初稿）" value={form.title} onChange={e=>setForm(p=>({...p,title:e.target.value}))}
+                        className={`w-full mb-2 rounded-lg px-3 py-2 text-sm outline-none border ${isDarkMode?'bg-slate-900 border-slate-700 text-white':'bg-white border-slate-200'}`} />
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                        <input type="text" placeholder="项目/分类" value={form.project} onChange={e=>setForm(p=>({...p,project:e.target.value}))}
+                            className={`rounded-lg px-3 py-2 text-xs outline-none border ${isDarkMode?'bg-slate-900 border-slate-700 text-white':'bg-white border-slate-200'}`} />
+                        <input type="date" value={form.deadline} onChange={e=>setForm(p=>({...p,deadline:e.target.value}))}
+                            className={`rounded-lg px-3 py-2 text-xs outline-none border ${isDarkMode?'bg-slate-900 border-slate-700 text-white':'bg-white border-slate-200'}`} />
+                    </div>
+                    <textarea rows={2} placeholder="备注（这事干嘛、注意事项...）" value={form.note} onChange={e=>setForm(p=>({...p,note:e.target.value}))}
+                        className={`w-full mb-2 rounded-lg px-3 py-2 text-xs outline-none border ${isDarkMode?'bg-slate-900 border-slate-700 text-white':'bg-white border-slate-200'}`} />
+                    <div className="flex gap-2">
+                        <button onClick={submit} className="flex-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-white text-xs font-black py-2 transition-colors">{editId?'保存修改':'添加'}</button>
+                        <button onClick={reset} className={`px-3 rounded-lg text-xs font-bold ${textSub} ${sub} hover:opacity-80 transition`}>取消</button>
+                    </div>
+                </div>
+            )}
+
+            {sorted.length === 0 ? (
+                <div className={`text-center py-6 text-xs italic opacity-40 ${textSub}`}>
+                    暂无备忘事项。点击右上角"添加"记录第一条重要 DDL。
+                </div>
+            ) : (
+                <div className="space-y-1.5">
+                    {visible.map(m => {
+                        const dd = dayDiff(m.deadline);
+                        const urgent = dd !== null && dd <= 3 && !m.done;
+                        const overdue = dd !== null && dd < 0 && !m.done;
+                        return (
+                            <div key={m.id}
+                                className={`flex items-center gap-2.5 p-2.5 rounded-xl border transition-all ${m.done ? 'opacity-50 ' + (isDarkMode?'bg-slate-900/40 border-slate-800':'bg-slate-50 border-slate-100') : overdue ? 'border-red-300 bg-red-50/50' : urgent ? 'border-amber-300 bg-amber-50/40' : sub}`}>
+                                <button onClick={()=>toggle(m.id)}
+                                    className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center transition-all ${m.done?'bg-emerald-500 border-emerald-500 text-white':'border-slate-300 hover:border-emerald-400'}`}>
+                                    {m.done && <i className="fas fa-check text-[9px]" />}
+                                </button>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <span className={`text-sm font-bold ${m.done?'line-through ' + textSub:textMain}`}>{m.title}</span>
+                                        {m.project && <span className={`text-[9px] font-black px-1.5 py-0.5 rounded ${isDarkMode?'bg-slate-800 text-slate-400':'bg-slate-200 text-slate-600'}`}>{m.project}</span>}
+                                    </div>
+                                    {(m.deadline || m.note) && (
+                                        <div className={`text-[10px] mt-0.5 flex gap-2 flex-wrap ${textSub}`}>
+                                            {m.deadline && (
+                                                <span className={`font-mono font-bold ${overdue?'text-red-500':urgent?'text-amber-600':''}`}>
+                                                    <i className="fas fa-clock mr-1 opacity-60" />
+                                                    {m.deadline}{dd!==null && (overdue?` · 已逾期${-dd}天`:dd===0?' · 今天截止':` · 还剩${dd}天`)}
+                                                </span>
+                                            )}
+                                            {m.note && <span className="truncate opacity-80">· {m.note}</span>}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex gap-1 shrink-0">
+                                    <button onClick={()=>startEdit(m)} className={`p-1.5 rounded hover:bg-slate-200/50 ${textSub}`}><i className="fas fa-pen text-[10px]" /></button>
+                                    <button onClick={()=>remove(m.id)} className={`p-1.5 rounded hover:bg-red-100 text-red-400 hover:text-red-600`}><i className="fas fa-trash text-[10px]" /></button>
+                                </div>
+                            </div>
+                        );
+                    })}
+                    {sorted.length > 3 && (
+                        <button onClick={()=>setShowAll(v=>!v)}
+                            className={`w-full text-xs font-bold py-1.5 rounded-lg ${textSub} hover:opacity-80 transition`}>
+                            {showAll ? '收起' : `展开全部 ${sorted.length} 条`} <i className={`fas fa-chevron-${showAll?'up':'down'} text-[9px] ml-1`} />
+                        </button>
+                    )}
+                </div>
+            )}
+        </section>
+    );
+});
+
+/* ═══════════════════════════════════════════
+   分区入口卡片 + 抽屉
+═══════════════════════════════════════════ */
+const LineHubCard = memo(({ zone, isDarkMode, card, textSub, onOpen }) => {
+    const { label, slogan, color, icon, stats } = zone;
+    return (
+        <button onClick={onOpen}
+            className={`${card} relative overflow-hidden rounded-2xl p-4 text-left transition-all hover:scale-[1.02] active:scale-[0.98] group border`}
+            style={{ borderColor: color + '40' }}>
+            <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-10 group-hover:opacity-20 transition-opacity"
+                style={{ background: color, transform:'translate(30%,-30%)' }} />
+            <div className="flex items-center gap-2 mb-2 relative z-10">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: color + '22' }}>
+                    <i className={`fas ${icon} text-sm`} style={{ color }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                    <div className="text-sm font-black truncate" style={{ color }}>{label}</div>
+                    <div className={`text-[9px] opacity-60 truncate ${textSub}`}>{slogan}</div>
+                </div>
+                <i className="fas fa-chevron-right text-xs opacity-30" style={{ color }} />
+            </div>
+            <div className="flex gap-3 flex-wrap relative z-10 mt-2">
+                {stats.map((s,i)=>(
+                    <div key={i} className="flex flex-col">
+                        <span className="text-[9px] font-black uppercase tracking-widest opacity-50" style={{ color }}>{s.label}</span>
+                        <span className={`text-sm font-black tabular-nums ${isDarkMode?'text-slate-200':'text-slate-800'}`}>{s.value}</span>
+                    </div>
+                ))}
+            </div>
+        </button>
+    );
+});
+
+const LineHubDrawer = ({ isOpen, onClose, zone, isDarkMode, card, sub, textMain, textSub }) => {
+    if (!isOpen || !zone) return null;
+    return (
+        <div className="fixed inset-0 z-[380] flex items-center justify-center p-4" style={{ background:'rgba(0,0,0,0.6)' }} onClick={onClose}>
+            <div className={`w-full max-w-2xl rounded-3xl border shadow-2xl overflow-hidden ${card} max-h-[80vh] flex flex-col animate-[slideUp_0.2s_ease-out]`} onClick={e=>e.stopPropagation()}>
+                <div className="flex justify-center pt-3 pb-1 shrink-0"><div className={`w-12 h-1.5 rounded-full ${isDarkMode?'bg-slate-700':'bg-slate-300'}`} /></div>
+                <div className="px-5 pt-2 pb-4 flex items-center justify-between shrink-0" style={{ borderBottom:`1px solid ${zone.color}22` }}>
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: zone.color+'22' }}>
+                            <i className={`fas ${zone.icon} text-base`} style={{ color: zone.color }} />
+                        </div>
+                        <div>
+                            <div className="text-base font-black" style={{ color: zone.color }}>{zone.label}</div>
+                            <div className={`text-[10px] ${textSub} opacity-70`}>{zone.slogan}</div>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className={`p-2 rounded-lg ${sub} ${textSub} hover:text-red-500`}>
+                        <i className="fas fa-times" />
+                    </button>
+                </div>
+                <div className="px-5 py-4 overflow-y-auto flex-1">
+                    {zone.groups.map((grp, gi) => (
+                        <div key={gi} className="mb-5 last:mb-0">
+                            {grp.label && <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${textSub} opacity-60`}>{grp.label}</div>}
+                            <div className="grid grid-cols-2 gap-2">
+                                {grp.items.map((it,i)=>(
+                                    <button key={i} onClick={()=>{ it.action(); }}
+                                        className={`flex items-center gap-2.5 p-3 rounded-xl border transition-all hover:scale-[1.02] active:scale-95 ${sub}`}
+                                        style={{ borderColor: (it.color||zone.color)+'33' }}>
+                                        <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: (it.color||zone.color)+'22' }}>
+                                            <i className={`fas ${it.icon} text-sm`} style={{ color: it.color||zone.color }} />
+                                        </div>
+                                        <div className="flex-1 min-w-0 text-left">
+                                            <div className={`text-sm font-black ${textMain}`}>{it.label}</div>
+                                            {it.sub && <div className={`text-[10px] ${textSub} opacity-70 truncate`}>{it.sub}</div>}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ═══════════════════════════════════════════
    主 App
 ═══════════════════════════════════════════ */
 const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, onLogout = null }) => {
@@ -4092,6 +4749,12 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     // LEVEL MAP + HUB
     const [showLevelMap, setShowLevelMap] = useState(false);
     const [showHub, setShowHub] = useState(false);
+    // NEW: 备忘录 & 分区抽屉
+    const [memos, setMemos] = useState(() => LS.get('a8_memos', []));
+    const saveMemos = useCallback((next) => { setMemos(next); LS.set('a8_memos', next); }, []);
+    const [activeZoneKey, setActiveZoneKey] = useState(null);
+    const [showBattleLog, setShowBattleLog] = useState(false);
+    const [showTrends, setShowTrends] = useState(false);
     // G: 番茄历史记录
     const [pomodoroLog, setPomodoroLog] = useState(() => normalizePomodoroLog(LS.get('a8_pomo_log', [])));
     const todayPomos = pomodoroLog.filter(p => p.date === today());
@@ -4182,6 +4845,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         const restoredCountdowns = readSource('countdowns', 'a8_countdowns', DEFAULT_COUNTDOWNS);
         const restoredTaskOrder = readSource('taskOrder', 'a8_task_order', PLAN_DATA.map(t=>t.id));
         const restoredTheme = readSource('theme', 'a8_theme_v2', 'light');
+        const restoredMemos = readSource('memos', 'a8_memos', []);
 
         setHistory(normalizedHistory);
         setReviews(normalizedReviews);
@@ -4202,6 +4866,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         setCountdowns(restoredCountdowns);
         setTaskOrder(restoredTaskOrder);
         setTheme(restoredTheme);
+        setMemos(restoredMemos);
 
         LS.set('a8_history', normalizedHistory);
         LS.set('a8_reviews', normalizedReviews);
@@ -4222,6 +4887,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         LS.set('a8_countdowns', restoredCountdowns);
         LS.set('a8_task_order', restoredTaskOrder);
         LS.set('a8_theme_v2', restoredTheme);
+        LS.set('a8_memos', restoredMemos);
 
         syncCurrentDayState(normalizedHistory);
         calcStreak(normalizedHistory);
@@ -4351,10 +5017,26 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         setLogInput('');
     }, [logInput, battleLogs]);
 
-    /* ── Review save ── */
-    const saveReview = useCallback((form) => {
+    const addLogText = useCallback((text) => {
+        if (!text || !text.trim()) return;
         const k = today();
-        const newR = { ...reviews, [k]: form };
+        const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+        const newLogs = { ...battleLogs, [k]: [{ time, content: text }, ...(battleLogs[k]||[])] };
+        setBattleLogs(newLogs);
+        LS.set('a8_logs', newLogs);
+    }, [battleLogs]);
+
+    const deleteLogAt = useCallback((dateKey, idx) => {
+        const arr = battleLogs[dateKey] || [];
+        const next = arr.filter((_,i)=>i!==idx);
+        const newLogs = { ...battleLogs, [dateKey]: next };
+        setBattleLogs(newLogs);
+        LS.set('a8_logs', newLogs);
+    }, [battleLogs]);
+
+    /* ── Review save ── */
+    const saveReview = useCallback((dateKey, form) => {
+        const newR = { ...reviews, [dateKey]: form };
         setReviews(newR);
         LS.set('a8_reviews', newR);
     }, [reviews]);
@@ -4441,7 +5123,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const toggleRightSidebar = useCallback(() => setIsRightSidebarOpen(p => { LS.set('a8_sidebar_right', !p); return !p; }), []);
 
     /* ── Export / Import ── */
-        const getAllData = () => ({ history, reviews, battleLogs, kpi, customTasks, targetTitle, targetDate, projects, contents, moneyRecords, schools, weeks, bodyLogs, contacts, timelineNodes, countdowns, pomodoroLog, taskOrder, theme });
+        const getAllData = () => ({ history, reviews, battleLogs, kpi, customTasks, targetTitle, targetDate, projects, contents, moneyRecords, schools, weeks, bodyLogs, contacts, timelineNodes, countdowns, pomodoroLog, taskOrder, theme, memos });
     useEffect(() => {
         if (!hasHydrated || !onCloudSave) return;
         setCloudSaveState('saving');
@@ -4477,6 +5159,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         if (d.pomodoroLog) { const p = normalizePomodoroLog(d.pomodoroLog); setPomodoroLog(p); LS.set('a8_pomo_log', p); }
         if (d.taskOrder) { setTaskOrder(d.taskOrder); LS.set('a8_task_order', d.taskOrder); }
         if (d.theme) { setTheme(d.theme); LS.set('a8_theme_v2', d.theme); }
+        if (d.memos) { setMemos(d.memos); LS.set('a8_memos', d.memos); }
         window.location.reload();
     };
 
@@ -4524,7 +5207,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             {/* ── Modals ── */}
             <FocusTimer isOpen={showFocus} onClose={() => setShowFocus(false)} />
             <KPIModal isOpen={showKPI} onClose={() => setShowKPI(false)} kpi={kpi} onSave={saveKPI} isDarkMode={isDarkMode} />
-            <ReviewModal isOpen={showReview} onClose={() => setShowReview(false)} dateStr={today()} existing={todayReview} onSave={saveReview} isDarkMode={isDarkMode} />
+            <ReviewModal isOpen={showReview} onClose={() => setShowReview(false)} dateStr={today()} existing={todayReview} reviews={reviews} history={history} onSave={saveReview} isDarkMode={isDarkMode} />
             <CalendarModal isOpen={showCalendar} onClose={() => setShowCalendar(false)} history={history} reviews={reviews} customTasks={customTasks} onUpdateHistory={handleUpdateHistory} onAddCustomTask={handleAddCustomTask} onDeleteCustomTask={handleDeleteCustomTask} />
             <DataCoreModal isOpen={showData} onClose={() => setShowData(false)} getAllData={getAllData} onRestore={onRestore} isDarkMode={isDarkMode} />
             <ProjectModal isOpen={showProjects} onClose={() => setShowProjects(false)} projects={projects} onSave={saveProjects} isDarkMode={isDarkMode} />
@@ -4537,6 +5220,8 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             <BodyStatsModal isOpen={showBody} onClose={() => setShowBody(false)} bodyLogs={bodyLogs} onSave={saveBody} isDarkMode={isDarkMode} />
             <MoodAnalyticsModal isOpen={showMood} onClose={() => setShowMood(false)} reviews={reviews} history={history} isDarkMode={isDarkMode} />
             <NetworkMapModal isOpen={showNetwork} onClose={() => setShowNetwork(false)} contacts={contacts} onSave={saveContacts} isDarkMode={isDarkMode} />
+            <BattleLogModal isOpen={showBattleLog} onClose={()=>setShowBattleLog(false)} battleLogs={battleLogs} onAdd={addLogText} onDelete={deleteLogAt} isDarkMode={isDarkMode} />
+            <TrendsModal isOpen={showTrends} onClose={()=>setShowTrends(false)} history={history} reviews={reviews} moneyRecords={moneyRecords} contents={contents} bodyLogs={bodyLogs} isDarkMode={isDarkMode} />
             <GalleryLightbox
                 images={galleryImages}
                 index={galleryLightboxIndex}
@@ -4706,41 +5391,125 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                 {/* ──── 一人公司 KPI ──── */}
                                 <CompanyDashboard kpi={kpi} onEdit={() => setShowKPI(true)} onOpenProjects={() => setShowProjects(true)} onEditAcademic={() => setShowAcademic(true)} projects={projects} isDarkMode={isDarkMode} />
 
-                {/* ──── 工具中心快捷入口 ──── */}
-                <div className={`${card} rounded-2xl p-4 mb-4`}>
-                    <div className="flex justify-between items-center mb-3">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${textSub}`}>一人公司 · 工具中心</span>
+                {/* ──── 📝 备忘录 / DDL（高优置顶）──── */}
+                <MemoBoard memos={memos} onSave={saveMemos} isDarkMode={isDarkMode} card={card} sub={sub} textMain={textMain} textSub={textSub} />
+
+                {/* ──── 4 大分区入口（替代原 12 按钮工具中心）──── */}
+                {(() => {
+                    const incomeTotal = moneyRecords.filter(r=>r.type==='income').reduce((s,r)=>s+Number(r.amount||0),0);
+                    const expenseTotal = moneyRecords.filter(r=>r.type==='expense').reduce((s,r)=>s+Number(r.amount||0),0);
+                    const zones = [
+                        {
+                            key:'review',
+                            label:'每日复盘 · 觉醒线',
+                            slogan:'复盘是杠杆，每天必做',
+                            color:'#8b5cf6',
+                            icon:'fa-book-open',
+                            stats:[
+                                { label:'已复盘', value:Object.keys(reviews||{}).length+'天' },
+                                { label:'连续', value:streak+'天' },
+                                { label:'今日XP', value:totalXP },
+                            ],
+                            groups:[
+                                { label:'今日', items:[
+                                    { icon:'fa-pen',     label:'结构化复盘', sub:'胜利/踩坑/明日 + 纯文本', action:()=>setShowReview(true) },
+                                    { icon:'fa-scroll', label:'Battle Log', sub:'即时记录想法', action:()=>setShowBattleLog(true) },
+                                ]},
+                                { label:'趋势 · 总结', items:[
+                                    { icon:'fa-chart-line', label:'数据可视化', sub:'30天折线 · 仪表盘', color:'#a855f7', action:()=>setShowTrends(true) },
+                                    { icon:'fa-brain',  label:'情绪分析', sub:'心情趋势曲线', color:'#a855f7', action:()=>setShowMood(true) },
+                                    { icon:'fa-trophy', label:'月度战报', sub:'自动生成总结', color:'#f59e0b', action:()=>setShowReport(true) },
+                                    { icon:'fa-calendar-alt', label:'历史日历', sub:'回看每日完成', color:'#3b82f6', action:()=>setShowCalendar(true) },
+                                ]},
+                            ]
+                        },
+                        {
+                            key:'image_social',
+                            label:'形象 & 社交线',
+                            slogan:'变帅 · 健身 · 表达 · 实战',
+                            color:'#10b981',
+                            icon:'fa-fire-alt',
+                            stats:[
+                                { label:'体能记录', value:bodyLogs.length+'条' },
+                                { label:'人脉', value:contacts.length+'人' },
+                            ],
+                            groups:[
+                                { label:'形象线 · 自我升级', items:[
+                                    { icon:'fa-dumbbell', label:'体能追踪', sub:`${bodyLogs.length}条记录`, color:'#10b981', action:()=>setShowBody(true) },
+                                    { icon:'fa-magic',    label:'变帅打卡', sub:'形象进化记录', color:'#10b981', action:()=>setShowReview(true) },
+                                ]},
+                                { label:'社交线 · 关系经营', items:[
+                                    { icon:'fa-network-wired', label:'人脉图谱', sub:`${contacts.length} 位联系人`, color:'#f43f5e', action:()=>setShowNetwork(true) },
+                                    { icon:'fa-comments',      label:'表达/两性训练', sub:'每日复盘登记', color:'#f43f5e', action:()=>setShowReview(true) },
+                                ]},
+                            ]
+                        },
+                        {
+                            key:'biz',
+                            label:'商业成交线',
+                            slogan:'内容 · 数据 · 现金流 · 项目',
+                            color:'#f59e0b',
+                            icon:'fa-bolt',
+                            stats:[
+                                { label:'内容', value:contents.length+'条' },
+                                { label:'已发', value:contents.filter(c=>c.status==='published').length },
+                                { label:'净流', value:'¥'+(incomeTotal-expenseTotal) },
+                            ],
+                            groups:[
+                                { label:'内容流水线', items:[
+                                    { icon:'fa-film',        label:'内容流水线', sub:`${contents.length} 条选题`, color:'#8b5cf6', action:()=>setShowContent(true) },
+                                    { icon:'fa-chart-line',  label:'数据分析',   sub:`${contents.filter(c=>c.status==='published').length} 已发`, color:'#a855f7', action:()=>setShowAnalytics(true) },
+                                ]},
+                                { label:'现金流 · 项目 · 节奏', items:[
+                                    { icon:'fa-coins',           label:'现金流',     sub:`收 ¥${incomeTotal} / 支 ¥${expenseTotal}`, color:'#10b981', action:()=>setShowMoney(true) },
+                                    { icon:'fa-project-diagram', label:'商业项目',   sub:`${projects.filter(p=>p.status==='active').length} 个在跑`, color:'#f59e0b', action:()=>setShowProjects(true) },
+                                    { icon:'fa-chess',           label:'周作战室',   sub:'本周目标 + 复盘', color:'#6366f1', action:()=>setShowWeekly(true) },
+                                ]},
+                            ]
+                        },
+                        {
+                            key:'academic',
+                            label:'学习学业线',
+                            slogan:'输入 · 学业 · 保研 · 关键节点',
+                            color:'#3b82f6',
+                            icon:'fa-university',
+                            stats:[
+                                { label:'目标校', value:schools.length+'所' },
+                                { label:'保研节点', value:`${timelineNodes.filter(n=>n.done).length}/${timelineNodes.length}` },
+                                { label:'倒计时', value:countdowns.length+'个' },
+                            ],
+                            groups:[
+                                { label:'保研主线', items:[
+                                    { icon:'fa-university', label:'目标院校', sub:`${schools.length} 所`, color:'#3b82f6', action:()=>setShowSchools(true) },
+                                    { icon:'fa-route',      label:'保研时间线', sub:`${timelineNodes.filter(n=>n.done).length}/${timelineNodes.length} 节点`, color:'#6366f1', action:()=>setShowTimeline(true) },
+                                ]},
+                                { label:'学业 · 倒计时', items:[
+                                    { icon:'fa-graduation-cap', label:'学业 KPI', sub:'课程/六级/论文', color:'#3b82f6', action:()=>setShowAcademic(true) },
+                                    { icon:'fa-clock',          label:'多倒计时', sub:`${countdowns.length} 个`, color:'#3b82f6', action:()=>setShowMultiCD(true) },
+                                ]},
+                            ]
+                        },
+                    ];
+                    return (
+                        <div className="mb-4">
+                            <div className="flex items-center gap-2 mb-3 px-1">
+                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${textSub}`}>四大主线 · 点入查看子模块</span>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {zones.map(z => (
+                                    <LineHubCard key={z.key} zone={z} isDarkMode={isDarkMode} card={card} textSub={textSub} onOpen={()=>setActiveZoneKey(z.key)} />
+                                ))}
+                            </div>
+                            <LineHubDrawer
+                                isOpen={!!activeZoneKey}
+                                onClose={()=>setActiveZoneKey(null)}
+                                zone={zones.find(z=>z.key===activeZoneKey)}
+                                isDarkMode={isDarkMode} card={card} sub={sub} textMain={textMain} textSub={textSub}
+                            />
                         </div>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2">
-                        {[
-                            { icon:'fa-film',            label:'内容流水线', sub:`${contents.length}条`,  action:()=>setShowContent(true),   bg:'#8b5cf620', color:'#8b5cf6' },
-                            { icon:'fa-chart-line',      label:'数据分析',   sub:`${contents.filter(c=>c.status==='published').length}已发`, action:()=>setShowAnalytics(true), bg:'#a855f720', color:'#a855f7' },
-                            { icon:'fa-coins',           label:'现金流',     sub:`¥${moneyRecords.filter(r=>r.type==='income').reduce((s,r)=>s+Number(r.amount||0),0)}`, action:()=>setShowMoney(true), bg:'#10b98120', color:'#10b981' },
-                            { icon:'fa-university',      label:'目标院校',   sub:`${schools.length}所`,   action:()=>setShowSchools(true),   bg:'#3b82f620', color:'#3b82f6' },
-                            { icon:'fa-route',           label:'保研时间线', sub:`${timelineNodes.filter(n=>n.done).length}/${timelineNodes.length}`, action:()=>setShowTimeline(true), bg:'#6366f120', color:'#6366f1' },
-                            { icon:'fa-chess',           label:'周作战室',   sub:'周目标',               action:()=>setShowWeekly(true),    bg:'#6366f120', color:'#6366f1' },
-                            { icon:'fa-dumbbell',        label:'体能追踪',   sub:`${bodyLogs.length}条`,  action:()=>setShowBody(true),      bg:'#10b98120', color:'#10b981' },
-                            { icon:'fa-brain',           label:'情绪分析',   sub:'心情趋势',             action:()=>setShowMood(true),      bg:'#a855f720', color:'#a855f7' },
-                            { icon:'fa-network-wired',   label:'人脉图谱',   sub:`${contacts.length}人`,  action:()=>setShowNetwork(true),   bg:'#f43f5e20', color:'#f43f5e' },
-                            { icon:'fa-project-diagram', label:'商业项目',   sub:`${projects.filter(p=>p.status==='active').length}在跑`, action:()=>setShowProjects(true), bg:'#f59e0b20', color:'#f59e0b' },
-                            { icon:'fa-trophy',          label:'月度战报',   sub:'自动生成',             action:()=>setShowReport(true),    bg:'#f59e0b20', color:'#f59e0b' },
-                            { icon:'fa-clock',           label:'多倒计时',   sub:`${countdowns.length}个`, action:()=>setShowMultiCD(true),  bg:'#3b82f620', color:'#3b82f6' },
-                        ].map((item, i) => (
-                            <button key={i} onClick={item.action}
-                                className={`rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105 active:scale-95 border`}
-                                style={{ background: item.bg, borderColor: item.color + '40' }}>
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: item.color + '25' }}>
-                                    <i className={`fas ${item.icon} text-xs`} style={{ color: item.color }} />
-                                </div>
-                                <span className="text-[9px] font-black text-center leading-tight" style={{ color: item.color }}>{item.label}</span>
-                                <span className={`text-[8px] font-bold ${textSub}`}>{item.sub}</span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                    );
+                })()}
 
                 {/* ──── 7天热力 ──── */}
                 <div className={`${card} rounded-2xl p-4 mb-6`}>
@@ -4989,56 +5758,50 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                     );
                 })()}
 
-                {/* ──── 结构化复盘 + Battle Log ──── */}
-                <section className={`${card} rounded-3xl p-6 mb-8`}>
-                    <div className="flex items-center justify-between mb-4">
+                {/* ──── 今日复盘快照（紧凑版，详细在分区抽屉里）──── */}
+                <section className={`${card} rounded-3xl p-5 mb-8`}>
+                    <div className="flex items-center justify-between mb-3">
                         <h2 className={`text-sm font-black flex items-center gap-2 uppercase tracking-widest opacity-60 ${textSub}`}>
-                            <i className="fas fa-book-open text-indigo-500" /> 今日复盘
+                            <i className="fas fa-book-open text-indigo-500" /> 今日复盘快照
                         </h2>
-                        <button onClick={() => setShowReview(true)}
-                            className={`text-xs font-black flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${todayReview ? 'text-emerald-600 bg-emerald-50 border border-emerald-200' : 'text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100'}`}>
-                            <i className={`fas ${todayReview ? 'fa-check-circle' : 'fa-pen'} text-xs`} />
-                            {todayReview ? `已复盘 ${MOODS[todayReview.mood]}` : '开始结构化复盘'}
-                        </button>
-                    </div>
-                    {todayReview && (
-                        <div className="grid grid-cols-3 gap-2 mb-4">
-                            {[
-                                { key:'wins', label:'🏆 胜利', bg: isDarkMode ? 'bg-emerald-900/20 border-emerald-800' : 'bg-emerald-50 border-emerald-100', text: isDarkMode ? 'text-emerald-400' : 'text-emerald-700' },
-                                { key:'fails', label:'⚠️ 踩坑', bg: isDarkMode ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-100', text: isDarkMode ? 'text-red-400' : 'text-red-700' },
-                                { key:'tomorrow', label:'➡️ 明日', bg: isDarkMode ? 'bg-blue-900/20 border-blue-800' : 'bg-blue-50 border-blue-100', text: isDarkMode ? 'text-blue-400' : 'text-blue-700' },
-                            ].map(({ key, label, bg, text }) => (
-                                <div key={key} className={`rounded-xl p-3 border ${bg}`}>
-                                    <p className={`text-[9px] font-black uppercase mb-1.5 ${text}`}>{label}</p>
-                                    <p className={`text-xs leading-relaxed line-clamp-3 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{todayReview[key] || '—'}</p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    {/* Battle Logs */}
-                    <div className={`border-t pt-4 ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
-                        <h3 className={`text-xs font-black mb-3 opacity-50 uppercase tracking-widest ${textSub}`}><i className="fas fa-scroll-old mr-1" />Battle Logs (Today)</h3>
-                        <div className="mb-4 space-y-2 max-h-48 overflow-y-auto pr-1">
-                            {todaysLogs.length === 0
-                                ? <div className={`text-center py-5 text-xs italic opacity-30 ${textSub}`}>暂无记录。记录此刻的想法...</div>
-                                : todaysLogs.map((log, idx) => (
-                                    <div key={idx} className={`p-3 rounded-xl text-sm flex gap-3 fade-in-up ${isDarkMode ? 'bg-slate-800/50 text-slate-300' : 'bg-slate-50 text-slate-700'}`}>
-                                        <span className="text-xs font-mono font-bold opacity-50 pt-0.5 text-blue-500 shrink-0">{log.time}</span>
-                                        <p className="opacity-90 leading-relaxed break-words">{log.content}</p>
-                                    </div>
-                                ))
-                            }
-                        </div>
                         <div className="flex gap-2">
-                            <input type="text" value={logInput} onChange={e => setLogInput(e.target.value)}
-                                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addLog(); } }}
-                                placeholder="输入当前状态/复盘 (回车发送)..."
-                                className={`flex-1 p-4 rounded-xl border focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm ${isDarkMode ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-600' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
-                            <button onClick={addLog} className="p-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-all active:scale-95 shadow-lg shadow-blue-500/20">
-                                <i className="fas fa-paper-plane" />
+                            <button onClick={() => setShowBattleLog(true)}
+                                className={`text-xs font-black flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all text-blue-600 bg-blue-50 border border-blue-200 hover:bg-blue-100`}>
+                                <i className="fas fa-scroll text-xs" /> Battle Log {todaysLogs.length>0 && <span className="text-[9px]">({todaysLogs.length})</span>}
+                            </button>
+                            <button onClick={() => setShowReview(true)}
+                                className={`text-xs font-black flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${todayReview ? 'text-emerald-600 bg-emerald-50 border border-emerald-200' : 'text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100'}`}>
+                                <i className={`fas ${todayReview ? 'fa-check-circle' : 'fa-pen'} text-xs`} />
+                                {todayReview ? `已复盘 ${MOODS[todayReview.mood]}` : '开始复盘'}
                             </button>
                         </div>
                     </div>
+                    {todayReview ? (
+                        <>
+                            {todayReview.plaintext && (
+                                <div className={`rounded-xl p-3 mb-3 border ${isDarkMode?'bg-amber-900/10 border-amber-900/30':'bg-amber-50/60 border-amber-100'}`}>
+                                    <p className={`text-[9px] font-black uppercase mb-1 ${isDarkMode?'text-amber-400':'text-amber-700'}`}>📝 自由复盘</p>
+                                    <p className={`text-xs leading-relaxed line-clamp-3 ${isDarkMode?'text-slate-300':'text-slate-700'} whitespace-pre-wrap`}>{todayReview.plaintext}</p>
+                                </div>
+                            )}
+                            <div className="grid grid-cols-3 gap-2">
+                                {[
+                                    { key:'wins', label:'🏆 胜利', bg: isDarkMode ? 'bg-emerald-900/20 border-emerald-800' : 'bg-emerald-50 border-emerald-100', text: isDarkMode ? 'text-emerald-400' : 'text-emerald-700' },
+                                    { key:'fails', label:'⚠️ 踩坑', bg: isDarkMode ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-100', text: isDarkMode ? 'text-red-400' : 'text-red-700' },
+                                    { key:'tomorrow', label:'➡️ 明日', bg: isDarkMode ? 'bg-blue-900/20 border-blue-800' : 'bg-blue-50 border-blue-100', text: isDarkMode ? 'text-blue-400' : 'text-blue-700' },
+                                ].map(({ key, label, bg, text }) => (
+                                    <div key={key} className={`rounded-xl p-3 border ${bg}`}>
+                                        <p className={`text-[9px] font-black uppercase mb-1.5 ${text}`}>{label}</p>
+                                        <p className={`text-xs leading-relaxed line-clamp-3 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>{todayReview[key] || '—'}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        <div className={`text-center py-6 text-xs italic opacity-50 ${textSub}`}>
+                            还没复盘 · 点右上「开始复盘」or「Battle Log」开始记录
+                        </div>
+                    )}
                 </section>
 
                 <footer className={`text-center py-12 opacity-20 text-[8px] font-black tracking-[0.5em] uppercase ${textSub}`}>Success Is The Only Option — v9.0 · Full Arsenal</footer>
@@ -5072,48 +5835,22 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                 </button>
             </div>
 
-            {/* ──── 底部导航 ──── */}
+            {/* ──── 底部导航（精简版：5 个核心入口）──── */}
             <div className="fixed bottom-0 left-0 right-0 z-50 bottom-nav">
                 <div className="max-w-2xl mx-auto px-2 pb-3">
                     <div className={`${card} rounded-2xl p-1.5`}>
-                        {/* 第一行：核心导航 */}
-                        <div className="flex items-center gap-1 mb-1">
+                        <div className="flex items-center gap-1">
                             {[
-                                { icon:'fa-home',         label:'主页',    action: null,                         color:'text-slate-500' },
-                                { icon:'fa-chart-bar',    label:'KPI',     action: () => setShowKPI(true),       color:'text-amber-500' },
+                                { icon:'fa-home',         label:'主页',    action: () => window.scrollTo({top:0,behavior:'smooth'}), color:'text-slate-500' },
                                 { icon:'fa-book-open',    label:'复盘',    action: () => setShowReview(true),    color:'text-indigo-500' },
+                                { icon:'fa-search',       label:'搜索',    action: () => setShowSearch(true),    color:'text-purple-500' },
                                 { icon:'fa-calendar-alt', label:'日历',    action: () => setShowCalendar(true),  color:'text-blue-500' },
                                 { icon:'fa-database',     label:'数据',    action: () => setShowData(true),      color:'text-slate-500' },
                             ].map((tab, i) => (
                                 <button key={i} onClick={tab.action || (() => {})}
-                                    className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-xl transition-all ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'} ${tab.color}`}>
-                                    <i className={`fas ${tab.icon} text-xs`} />
-                                    <span className="text-[8px] font-bold">{tab.label}</span>
-                                </button>
-                            ))}
-                        </div>
-                        {/* 第二行：功能模块快捷入口 */}
-                        <div className={`border-t pt-1 flex gap-1 overflow-x-auto scrollbar-none ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}
-                            style={{scrollbarWidth:'none', msOverflowStyle:'none'}}>
-                            {[
-                                { icon:'fa-film',         label:'内容',    action: () => setShowContent(true),   color:'#8b5cf6' },
-                                { icon:'fa-chart-line',  label:'分析',    action: () => setShowAnalytics(true), color:'#a855f7' },
-                                { icon:'fa-coins',        label:'现金流',  action: () => setShowMoney(true),     color:'#10b981' },
-                                { icon:'fa-university',   label:'目标校',  action: () => setShowSchools(true),   color:'#3b82f6' },
-                                { icon:'fa-route',        label:'保研线',  action: () => setShowTimeline(true),  color:'#6366f1' },
-                                { icon:'fa-chess',        label:'周计划',  action: () => setShowWeekly(true),    color:'#6366f1' },
-                                { icon:'fa-dumbbell',     label:'体能',    action: () => setShowBody(true),      color:'#10b981' },
-                                { icon:'fa-brain',        label:'情绪',    action: () => setShowMood(true),      color:'#a855f7' },
-                                { icon:'fa-network-wired',label:'人脉',    action: () => setShowNetwork(true),   color:'#f43f5e' },
-                                { icon:'fa-project-diagram', label:'项目', action: () => setShowProjects(true),  color:'#f59e0b' },
-                                { icon:'fa-trophy',       label:'月报',    action: () => setShowReport(true),    color:'#f59e0b' },
-                                { icon:'fa-clock',        label:'倒计时',  action: () => setShowMultiCD(true),   color:'#3b82f6' },
-                            ].map((tab, i) => (
-                                <button key={i} onClick={tab.action}
-                                    className={`shrink-0 flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-all ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
-                                    style={{ color: tab.color }}>
-                                    <i className={`fas ${tab.icon} text-xs`} />
-                                    <span className="text-[8px] font-bold whitespace-nowrap">{tab.label}</span>
+                                    className={`flex-1 flex flex-col items-center gap-0.5 py-2 rounded-xl transition-all ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'} ${tab.color}`}>
+                                    <i className={`fas ${tab.icon} text-sm`} />
+                                    <span className="text-[9px] font-bold">{tab.label}</span>
                                 </button>
                             ))}
                         </div>
