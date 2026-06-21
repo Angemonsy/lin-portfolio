@@ -36,6 +36,10 @@
         .scrolling-gallery { animation: scroll-horizontal linear infinite; width: max-content; will-change: transform; }
         .scrolling-gallery:hover { animation-play-state: paused; }
         .sidebar-mask { mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent); }
+        @keyframes lightbox-in { from { opacity: 0; transform: scale(0.96) translateY(12px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .gallery-lightbox-in { animation: lightbox-in 0.22s ease-out both; }
+        @keyframes heat-sweep { 0% { transform: translateX(-120%); opacity: 0; } 20% { opacity: 0.9; } 100% { transform: translateX(120%); opacity: 0; } }
+        .gallery-heat-sweep { animation: heat-sweep 2.4s ease-in-out infinite; }
 
         @keyframes shockwave { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); transform: scale(1); } 50% { box-shadow: 0 0 0 20px rgba(16,185,129,0); transform: scale(1.02); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); transform: scale(1); } }
         .task-shockwave { animation: shockwave 0.6s cubic-bezier(0,0,0.2,1); }
@@ -449,7 +453,15 @@ const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onTog
     );
 });
 
-const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) => {
+const GALLERY_MANTRAS = [
+    '想要的女人很美好，想要的东西很贵，想去的地方很远。',
+    '你想要，别人也想要。凭什么最后是你？',
+    '只能胜出，不能退场。今天少一点软弱，明天多一点筹码。',
+    '别把欲望讲给世界听，把结果砸到世界面前。',
+    '没人会替你变强，所有心动都要靠战果兑换。'
+];
+
+const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete, onOpen }) => {
     const hasImages = images && images.length > 0;
     const loopImages = hasImages ? [...images, ...images] : [];
     const duration = Math.min(240, Math.max(8, (images?.length || 4) * 2)) + 's';
@@ -474,9 +486,11 @@ const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) 
                 {hasImages ? (
                     <div className="h-full flex gap-3 py-3 px-4 scrolling-gallery" style={{ animationDuration: duration }}>
                         {loopImages.map((img, i) => (
-                            <div key={`${img.id || i}-${i}`} className="relative h-full aspect-[4/5] sm:aspect-[3/4] rounded-2xl overflow-hidden shrink-0 shadow-xl border border-white/10 group">
+                            <div key={`${img.id || i}-${i}`} onClick={() => onOpen(i % images.length)} role="button" tabIndex="0"
+                                className="relative h-full aspect-[4/5] sm:aspect-[3/4] rounded-2xl overflow-hidden shrink-0 shadow-xl border border-white/10 group cursor-pointer active:scale-95 transition-transform">
                                 <img src={img.src || img} className="w-full h-full object-cover" loading="lazy" />
-                                <button onClick={() => onDelete(img.id)} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/55 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <button onClick={(e) => { e.stopPropagation(); onDelete(img.id); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white opacity-80 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                     <i className="fas fa-trash text-xs" />
                                 </button>
                             </div>
@@ -492,6 +506,60 @@ const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) 
         </section>
     );
 });
+
+const GalleryLightbox = ({ images, index, onClose, onMove }) => {
+    const image = index >= 0 ? images[index] : null;
+    const mantra = GALLERY_MANTRAS[index >= 0 ? index % GALLERY_MANTRAS.length : 0];
+    useEffect(() => {
+        if (!image) return;
+        const onKey = (e) => {
+            if (e.key === 'Escape') onClose();
+            if (e.key === 'ArrowLeft') onMove(-1);
+            if (e.key === 'ArrowRight') onMove(1);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [image, onClose, onMove]);
+    if (!image) return null;
+    return (
+        <div className="fixed inset-0 z-[700] bg-black/95 text-white flex flex-col" onClick={onClose}>
+            <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.28),transparent_38%),linear-gradient(135deg,rgba(245,158,11,0.18),transparent_45%,rgba(16,185,129,0.12))]" />
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-600 via-amber-400 to-emerald-400 gallery-heat-sweep pointer-events-none" />
+            <div className="relative z-10 flex items-center justify-between px-4 py-4">
+                <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.35em] text-red-400">Desire Check</p>
+                    <p className="text-[10px] font-bold text-slate-400">{index + 1}/{images.length}</p>
+                </div>
+                <button onClick={onClose} className="w-11 h-11 rounded-full bg-white/10 border border-white/15 text-white active:scale-95">
+                    <i className="fas fa-times" />
+                </button>
+            </div>
+            <div className="relative z-10 flex-1 flex items-center justify-center px-3 pb-2" onClick={(e) => e.stopPropagation()}>
+                {images.length > 1 && (
+                    <button onClick={() => onMove(-1)} className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/45 border border-white/15 text-white active:scale-95">
+                        <i className="fas fa-chevron-left" />
+                    </button>
+                )}
+                <img src={image.src || image} className="gallery-lightbox-in max-w-full max-h-full object-contain rounded-2xl shadow-[0_0_70px_rgba(239,68,68,0.22)] border border-white/10" />
+                {images.length > 1 && (
+                    <button onClick={() => onMove(1)} className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/45 border border-white/15 text-white active:scale-95">
+                        <i className="fas fa-chevron-right" />
+                    </button>
+                )}
+            </div>
+            <div className="relative z-10 px-5 pb-7 pt-3" onClick={(e) => e.stopPropagation()}>
+                <div className="gallery-lightbox-in rounded-2xl border border-red-500/30 bg-slate-950/85 p-4 shadow-[0_0_40px_rgba(220,38,38,0.18)]">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-300 mb-2">Fuel</p>
+                    <p className="text-lg font-black italic leading-snug text-white">{mantra}</p>
+                    <div className="mt-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-red-300">
+                        <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                        看见欲望，然后拿结果配得上它
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 /* ═══════════════════════════════════════════
    Focus Timer (番茄)
@@ -4059,6 +4127,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const [leftImages, setLeftImages] = useState([]);
     const [rightImages, setRightImages] = useState([]);
     const [galleryImages, setGalleryImages] = useState([]);
+    const [galleryLightboxIndex, setGalleryLightboxIndex] = useState(-1);
     const nowDate = new Date();
 
     const syncCurrentDayState = useCallback((hist) => {
@@ -4334,7 +4403,15 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             saveToDB('gallery_images', updated);
             return updated;
         });
+        setGalleryLightboxIndex(-1);
     }, []);
+    const openGalleryLightbox = useCallback((idx) => setGalleryLightboxIndex(idx), []);
+    const moveGalleryLightbox = useCallback((dir) => {
+        setGalleryLightboxIndex(prev => {
+            if (!galleryImages.length) return -1;
+            return (prev + dir + galleryImages.length) % galleryImages.length;
+        });
+    }, [galleryImages.length]);
 
     /* ── Sidebar toggles ── */
     const toggleLeftSidebar = useCallback(() => setIsLeftSidebarOpen(p => { LS.set('a8_sidebar_left', !p); return !p; }), []);
@@ -4437,6 +4514,12 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             <BodyStatsModal isOpen={showBody} onClose={() => setShowBody(false)} bodyLogs={bodyLogs} onSave={saveBody} isDarkMode={isDarkMode} />
             <MoodAnalyticsModal isOpen={showMood} onClose={() => setShowMood(false)} reviews={reviews} history={history} isDarkMode={isDarkMode} />
             <NetworkMapModal isOpen={showNetwork} onClose={() => setShowNetwork(false)} contacts={contacts} onSave={saveContacts} isDarkMode={isDarkMode} />
+            <GalleryLightbox
+                images={galleryImages}
+                index={galleryLightboxIndex}
+                onClose={() => setGalleryLightboxIndex(-1)}
+                onMove={moveGalleryLightbox}
+            />
             <GlobalSearch isOpen={showSearch} onClose={()=>setShowSearch(false)}
                 contents={contents} schools={schools} contacts={contacts} reviews={reviews}
                 moneyRecords={moneyRecords} weeks={weeks} bodyLogs={bodyLogs}
@@ -4558,6 +4641,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                     textSub={textSub}
                     onUpload={handleGalleryUpload}
                     onDelete={handleDeleteGalleryImage}
+                    onOpen={openGalleryLightbox}
                 />
 
                 {/* ──── 顶部核心数字 ──── */}
