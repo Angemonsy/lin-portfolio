@@ -31,7 +31,13 @@ function getEnv(context, key, fallback = '') {
 
 function getKv(context) {
   const env = context?.env || {};
-  return env.A8_KV || getGlobal('A8_KV') || getGlobal('a8_kv') || getGlobal('my_kv') || getGlobal('kv');
+  return env.A8_KV
+    || env.alphakk
+    || getGlobal('A8_KV')
+    || getGlobal('alphakk')
+    || getGlobal('a8_kv')
+    || getGlobal('my_kv')
+    || getGlobal('kv');
 }
 
 function requireKv(context) {
