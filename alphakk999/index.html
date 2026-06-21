@@ -33,7 +33,7 @@
         .scrolling-sidebar { animation: scroll-vertical linear infinite; }
         .scrolling-sidebar:hover { animation-play-state: paused; }
         @keyframes scroll-horizontal { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .scrolling-gallery { animation: scroll-horizontal linear infinite; }
+        .scrolling-gallery { animation: scroll-horizontal linear infinite; width: max-content; will-change: transform; }
         .scrolling-gallery:hover { animation-play-state: paused; }
         .sidebar-mask { mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent); }
 
@@ -452,7 +452,7 @@ const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onTog
 const CloudGallery = memo(({ images, isDarkMode, textSub, onUpload, onDelete }) => {
     const hasImages = images && images.length > 0;
     const loopImages = hasImages ? [...images, ...images] : [];
-    const duration = Math.min(90, Math.max(8, (images?.length || 4) * 0.75)) + 's';
+    const duration = Math.min(70, Math.max(5, (images?.length || 4) * 0.22)) + 's';
     return (
         <section className={`rounded-3xl border mb-6 overflow-hidden ${isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100 shadow-xl'}`}>
             <div className="flex items-center justify-between gap-3 px-4 py-3">
