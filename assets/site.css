@@ -749,6 +749,183 @@ body {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+.kunki-chat {
+  position: absolute;
+  right: 88px;
+  bottom: 116px;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(520px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(147, 197, 253, 0.7);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 58px rgba(15, 23, 42, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(12px, 8px, 0) scale(0.96);
+  transform-origin: right bottom;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.kunki-chat.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.kunki-chat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.95), rgba(255, 255, 255, 0.95));
+}
+
+.kunki-chat__eyebrow {
+  margin: 0 0 0.1rem;
+  color: #2563eb;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kunki-chat__head h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.kunki-chat__close {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 999px;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.kunki-chat__close:hover {
+  border-color: rgba(37, 99, 235, 0.55);
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.kunki-chat__log {
+  min-height: 180px;
+  max-height: 310px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  overflow-y: auto;
+  padding: 0.9rem;
+  background: #f8fafc;
+}
+
+.kunki-chat__message {
+  max-width: 86%;
+  padding: 0.62rem 0.72rem;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 14px;
+  color: #1e293b;
+  background: #fff;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.kunki-chat__message--user {
+  align-self: flex-end;
+  border-color: rgba(96, 165, 250, 0.75);
+  border-bottom-right-radius: 5px;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.kunki-chat__message--ai {
+  align-self: flex-start;
+  border-bottom-left-radius: 5px;
+}
+
+.kunki-chat__form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+  background: #fff;
+}
+
+.kunki-chat__form textarea {
+  width: 100%;
+  min-height: 2.65rem;
+  max-height: 6rem;
+  resize: vertical;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 12px;
+  padding: 0.62rem 0.7rem;
+  color: #0f172a;
+  background: #fff;
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  outline: none;
+}
+
+.kunki-chat__form textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
+}
+
+.kunki-chat__form button {
+  align-self: end;
+  min-height: 2.65rem;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 0.9rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 800;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.kunki-chat__form button:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.kunki-chat__form button:disabled,
+.kunki-chat__form textarea:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.kunki-chat__status {
+  min-height: 1.45rem;
+  margin: 0;
+  padding: 0 0.85rem 0.72rem;
+  color: #64748b;
+  background: #fff;
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
 @keyframes kunki-walk-body {
   0%,
   100% {
@@ -1907,6 +2084,22 @@ body {
     bottom: 92px;
     width: min(214px, calc(100vw - 108px));
     font-size: 0.78rem;
+  }
+
+  .kunki-chat {
+    right: 0;
+    bottom: 108px;
+    width: min(330px, calc(100vw - 28px));
+    max-height: min(500px, calc(100vh - 138px));
+  }
+
+  .kunki-chat__log {
+    min-height: 160px;
+    max-height: 260px;
+  }
+
+  .kunki-chat__form {
+    grid-template-columns: 1fr;
   }
 
   .copy-roi-formula {
