@@ -726,7 +726,9 @@
               chatHistory.push({ role: "user", content: text });
               chatHistory.push({ role: "assistant", content: reply });
               chatHistory = chatHistory.slice(-8);
-              if (data.remaining !== undefined) {
+              if (Array.isArray(data.sources) && data.sources.length) {
+                setChatStatus("已参考 " + data.sources.length + " 个公开书架片段");
+              } else if (data.remaining !== undefined) {
                 setChatStatus("今日还可发送 " + data.remaining + " 条");
               }
             })
