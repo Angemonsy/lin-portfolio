@@ -1,5 +1,5 @@
-const CACHE_NAME = 'alpha-rebirth-v3-private';
-const APP_ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
+const CACHE_NAME = 'alpha-rebirth-v4-cloud-workspace';
+const APP_ASSETS = ['./', './index.html', './workspace-cloud.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_ASSETS)));

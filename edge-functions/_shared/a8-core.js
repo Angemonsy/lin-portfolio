@@ -1,6 +1,9 @@
 const DEFAULT_SESSION_DAYS = 365;
 const DEFAULT_LOCK_MINUTES = 10;
 const MAX_LOGIN_ATTEMPTS = 5;
+const MAX_KNOWLEDGE_SNAPSHOT_BYTES = 100 * 1024;
+const KNOWLEDGE_SNAPSHOT_KEY = 'a8_knowledge_snapshot_private';
+const KNOWLEDGE_PREVIOUS_KEY = 'a8_knowledge_snapshot_previous';
 
 const encoder = new TextEncoder();
 
@@ -53,6 +56,22 @@ async function readJson(request) {
     return await request.json();
   } catch {
     return {};
+  }
+}
+
+async function readLimitedJson(request, maxBytes = MAX_KNOWLEDGE_SNAPSHOT_BYTES) {
+  const text = await request.text();
+  if (encoder.encode(text).byteLength > maxBytes) {
+    const error = new Error('安全快照超过 100 KB 限制');
+    error.status = 413;
+    throw error;
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    const error = new Error('安全快照不是有效 JSON');
+    error.status = 400;
+    throw error;
   }
 }
 
@@ -133,6 +152,82 @@ function optionsResponse() {
       'x-robots-tag': 'noindex, nofollow, noarchive'
     }
   });
+}
+
+function findForbiddenKnowledgeField(value, trail = []) {
+  if (!value || typeof value !== 'object') return null;
+  const forbidden = new Set([
+    'path',
+    'homePath',
+    'folderPath',
+    'content',
+    'excerpt',
+    'resolvedLinks',
+    'backlinks',
+    'wikilinks',
+    'searchText',
+    'prompt',
+    'token'
+  ]);
+  for (const [key, child] of Object.entries(value)) {
+    if (forbidden.has(key)) return [...trail, key].join('.');
+    if (typeof child === 'string' && (
+      child.includes('/Users/')
+      || child.includes('file://')
+      || /^[A-Za-z]:\\/.test(child)
+    )) {
+      return [...trail, key].join('.');
+    }
+    const nested = findForbiddenKnowledgeField(child, [...trail, key]);
+    if (nested) return nested;
+  }
+  return null;
+}
+
+async function validateKnowledgePackage(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return { error: '安全快照格式不正确' };
+  }
+  if (value.meta?.schema !== 'alpha-rebirth-cloud-package/v1'
+    || value.data?.schema !== 'alpha-rebirth-cloud-package/v1'
+    || value.data?.knowledge?.schema !== 'alpha-knowledge-cloud-snapshot/v1') {
+    return { error: '安全快照 Schema 不受支持' };
+  }
+  const privacy = value.data?.privacy || {};
+  const knowledgePrivacy = value.data?.knowledge?.privacy || {};
+  if (
+    privacy.containsNoteBodies !== false
+    || privacy.containsFilePaths !== false
+    || privacy.containsAttachments !== false
+    || privacy.containsPromptsOrTokens !== false
+    || knowledgePrivacy.containsNoteBodies !== false
+    || knowledgePrivacy.containsFilePaths !== false
+    || knowledgePrivacy.containsAttachments !== false
+    || knowledgePrivacy.containsTokens !== false
+  ) {
+    return { error: '安全快照隐私声明不完整' };
+  }
+  const forbiddenField = findForbiddenKnowledgeField(value.data);
+  if (forbiddenField) return { error: `安全快照包含禁用字段：${forbiddenField}` };
+
+  const serializedData = JSON.stringify(value.data);
+  const byteSize = encoder.encode(serializedData).byteLength;
+  if (byteSize > MAX_KNOWLEDGE_SNAPSHOT_BYTES) return { error: '安全快照超过 100 KB 限制', status: 413 };
+  if (Number(value.meta?.byteSize) !== byteSize) return { error: '安全快照体积校验失败' };
+  const digest = await sha256(serializedData);
+  if (String(value.meta?.digestSha256 || '') !== digest) return { error: '安全快照摘要校验失败' };
+  return { value, digest, byteSize };
+}
+
+async function authorizeKnowledgeWrite(context) {
+  const token = (context.request.headers.get('authorization') || '').match(/^Bearer\s+(.+)$/i)?.[1] || '';
+  const syncTokenHash = getEnv(context, 'ALPHA_CLOUD_SYNC_TOKEN_HASH');
+  if (token && syncTokenHash && (await sha256(token)) === syncTokenHash) {
+    return { kv: requireKv(context), mode: 'sync-token' };
+  }
+  const auth = await requireUser(context);
+  if (auth.response) return auth;
+  return { ...auth, mode: 'user-session' };
 }
 
 export async function handleLogin(context) {
@@ -231,5 +326,57 @@ export async function handleSnapshot(context) {
     return json({ error: 'Method not allowed' }, 405);
   } catch (error) {
     return json({ error: error.message || '服务异常' }, 500);
+  }
+}
+
+export async function handleKnowledgeSnapshot(context) {
+  try {
+    const { request } = context;
+    if (isOptions(request)) return optionsResponse();
+
+    if (request.method === 'GET') {
+      const auth = await requireUser(context);
+      if (auth.response) return auth.response;
+      return json(await kvGet(auth.kv, KNOWLEDGE_SNAPSHOT_KEY, {
+        snapshot: null,
+        updatedAt: null,
+        receivedAt: null
+      }));
+    }
+
+    if (request.method === 'PUT') {
+      const auth = await authorizeKnowledgeWrite(context);
+      if (auth.response) return auth.response;
+      const body = await readLimitedJson(request);
+      const validated = await validateKnowledgePackage(body);
+      if (validated.error) return json({ error: validated.error }, validated.status || 400);
+
+      const current = await kvGet(auth.kv, KNOWLEDGE_SNAPSHOT_KEY, null);
+      if (current?.digestSha256 === validated.digest) {
+        return json({
+          ok: true,
+          unchanged: true,
+          updatedAt: current.updatedAt,
+          receivedAt: current.receivedAt
+        });
+      }
+
+      if (current?.snapshot) await kvPutJson(auth.kv, KNOWLEDGE_PREVIOUS_KEY, current);
+      const now = new Date().toISOString();
+      const record = {
+        snapshot: validated.value,
+        digestSha256: validated.digest,
+        byteSize: validated.byteSize,
+        updatedAt: validated.value.meta?.generatedAt || now,
+        receivedAt: now,
+        source: auth.mode
+      };
+      await kvPutJson(auth.kv, KNOWLEDGE_SNAPSHOT_KEY, record);
+      return json({ ok: true, unchanged: false, updatedAt: record.updatedAt, receivedAt: record.receivedAt });
+    }
+
+    return json({ error: 'Method not allowed' }, 405);
+  } catch (error) {
+    return json({ error: error.message || '服务异常' }, error.status || 500);
   }
 }

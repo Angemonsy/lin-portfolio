@@ -92,6 +92,7 @@
 <body class="light">
 <div id="root"></div>
 
+<script type="text/babel" data-presets="env,react" src="./workspace-cloud.js"></script>
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useCallback, useMemo, memo } = React;
 
@@ -333,6 +334,7 @@ const apiFetch = async (url, options = {}) => {
     if (!res.ok) throw new Error(data.error || '服务暂时不可用');
     return data;
 };
+window.alphaApiFetch = apiFetch;
 const CloudAPI = {
     login: (loginId, password) => apiFetch('/api/a8-login', { method:'POST', body: JSON.stringify({ loginId, password }) }),
     me: () => apiFetch('/api/a8-me'),
@@ -4711,6 +4713,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const [showCountdownSettings, setShowCountdownSettings] = useState(false);
     const [showProjects, setShowProjects] = useState(false);
     const [showAcademic, setShowAcademic] = useState(false);
+    const [showWorkspace, setShowWorkspace] = useState(false);
     const [projects, setProjects] = useState(() => LS.get('a8_projects', DEFAULT_PROJECTS));
     // P0-1 内容流水线
     const [showContent, setShowContent] = useState(false);
@@ -5253,6 +5256,12 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             <PostgradTimelineModal isOpen={showTimeline} onClose={() => setShowTimeline(false)} nodes={timelineNodes} onSave={saveTimeline} isDarkMode={isDarkMode} />
             <ContentAnalyticsModal isOpen={showAnalytics} onClose={() => setShowAnalytics(false)} contents={contents} isDarkMode={isDarkMode} />
             <MultiCountdownModal isOpen={showMultiCD} onClose={() => setShowMultiCD(false)} countdowns={countdowns} onSave={saveCountdowns} isDarkMode={isDarkMode} />
+            <CloudKnowledgeWorkspace
+                isOpen={showWorkspace}
+                onClose={() => setShowWorkspace(false)}
+                isDarkMode={isDarkMode}
+                checkin={{ completed:completedCount, total:totalCount, progress:todayPct, streak, pomodoros:todayPomos.length }}
+            />
 
             {/* ── 侧边栏 ── */}
             <Sidebar images={leftImages} title="Aspiration (Up)" side="left" isDarkMode={isDarkMode} onUpload={handleImageUpload} isOpen={isLeftSidebarOpen} onToggle={toggleLeftSidebar} slogan="为你爱的、你追求的Alpha女人，疯狂战斗！疯狂胜利！" />
@@ -5288,6 +5297,9 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                         )}
                         <button onClick={() => setShowHub(true)} className={`p-2.5 rounded-full shadow-lg transition-transform active:scale-95 ${isDarkMode ? 'bg-slate-800 text-indigo-400 border border-indigo-500/30' : 'bg-white text-indigo-600 border border-slate-200'}`} title="个人中转站">
                             <i className="fas fa-th" style={{width:'20px',height:'20px',textAlign:'center'}} />
+                        </button>
+                        <button onClick={() => setShowWorkspace(true)} className={`p-2.5 rounded-full shadow-lg transition-transform active:scale-95 ${isDarkMode ? 'bg-blue-900/50 text-blue-400 border border-blue-500/30' : 'bg-blue-50 text-blue-600 border border-blue-200'}`} title="一人公司经营工作台">
+                            <i className="fas fa-compass" style={{width:'20px',height:'20px',textAlign:'center'}} />
                         </button>
                         <button onClick={() => setShowSearch(true)} className={`p-2.5 rounded-full shadow-lg transition-transform active:scale-95 ${isDarkMode ? 'bg-slate-800 text-slate-400 border border-slate-700' : 'bg-white text-slate-600 border border-slate-200'}`} title="全局搜索 ⌘K">
                             <i className="fas fa-search" style={{width:'20px',height:'20px',textAlign:'center'}} />
@@ -5835,20 +5847,21 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                 </button>
             </div>
 
-            {/* ──── 底部导航（精简版：5 个核心入口）──── */}
+            {/* ──── 底部导航（云端精简版 + 私人经营工作台）──── */}
             <div className="fixed bottom-0 left-0 right-0 z-50 bottom-nav">
                 <div className="max-w-2xl mx-auto px-2 pb-3">
                     <div className={`${card} rounded-2xl p-1.5`}>
                         <div className="flex items-center gap-1">
                             {[
-                                { icon:'fa-home',         label:'主页',    action: () => window.scrollTo({top:0,behavior:'smooth'}), color:'text-slate-500' },
+                                { icon:'fa-home',         label:'主页',    action: () => { setShowWorkspace(false); window.scrollTo({top:0,behavior:'smooth'}); }, color:'text-slate-500' },
+                                { icon:'fa-compass',      label:'工作台',  action: () => setShowWorkspace(true), color:'text-blue-500' },
                                 { icon:'fa-book-open',    label:'复盘',    action: () => setShowReview(true),    color:'text-indigo-500' },
                                 { icon:'fa-search',       label:'搜索',    action: () => setShowSearch(true),    color:'text-purple-500' },
                                 { icon:'fa-calendar-alt', label:'日历',    action: () => setShowCalendar(true),  color:'text-blue-500' },
                                 { icon:'fa-database',     label:'数据',    action: () => setShowData(true),      color:'text-slate-500' },
                             ].map((tab, i) => (
                                 <button key={i} onClick={tab.action || (() => {})}
-                                    className={`flex-1 flex flex-col items-center gap-0.5 py-2 rounded-xl transition-all ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'} ${tab.color}`}>
+                                    className={`flex-1 flex flex-col items-center gap-0.5 py-2 rounded-xl transition-all ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'} ${tab.color} ${showWorkspace && tab.label === '工作台' ? (isDarkMode ? 'bg-slate-800' : 'bg-blue-50') : ''}`}>
                                     <i className={`fas ${tab.icon} text-sm`} />
                                     <span className="text-[9px] font-bold">{tab.label}</span>
                                 </button>
