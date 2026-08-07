@@ -19,6 +19,24 @@ body {
   color: var(--text-main);
 }
 
+.site-particle-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0.48;
+  mix-blend-mode: multiply;
+}
+
+@media (max-width: 720px) {
+  .site-particle-canvas {
+    opacity: 0.34;
+  }
+}
+
 .scroll-progress {
   position: fixed;
   inset: 0 0 auto 0;
@@ -162,6 +180,7 @@ body {
 
 .scroll-hero {
   --hero-progress: 0;
+  isolation: isolate;
 }
 
 .scroll-hero [data-parallax] {
@@ -193,6 +212,7 @@ body {
 }
 
 .scroll-hero__content {
+  z-index: 2;
   transform: translate3d(0, calc(var(--hero-progress) * -18px), 0);
   transition: transform 0.16s linear;
 }
@@ -262,6 +282,12 @@ body {
   100% {
     border-radius: 62% 38% 44% 56% / 48% 38% 62% 52%;
     transform: translate3d(7px, -8px, 0) scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-particle-canvas {
+    display: none;
   }
 }
 

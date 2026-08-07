@@ -280,21 +280,223 @@
     });
   }
 
+  function initSiteParticles() {
+    if (document.body.dataset.siteParticlesBound === "1") return;
+    document.body.dataset.siteParticlesBound = "1";
+
+    var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
+    var canvas = document.createElement("canvas");
+    canvas.className = "site-particle-canvas";
+    canvas.setAttribute("aria-hidden", "true");
+    canvas.setAttribute("data-site-particles", "");
+    document.body.insertBefore(canvas, document.body.firstChild);
+
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    var particles = [];
+    var width = 0;
+    var height = 0;
+    var dpr = 1;
+    var frameId = 0;
+    var resizeTimer = 0;
+    var pointer = {
+      x: 0,
+      y: 0,
+      targetX: 0,
+      targetY: 0,
+      strength: 0.22,
+      targetStrength: 0.22
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function createParticle(index) {
+      var depth = Math.random();
+      var baseX = Math.random() * width;
+      var baseY = Math.random() * height;
+      return {
+        baseX: baseX,
+        baseY: baseY,
+        x: baseX,
+        y: baseY,
+        size: 0.55 + Math.random() * 1.55,
+        alpha: 0.16 + Math.random() * 0.28,
+        depth: 0.55 + depth * 0.75,
+        phase: Math.random() * Math.PI * 2 + index * 0.05,
+        speed: 0.00038 + Math.random() * 0.00064,
+        amplitude: 5 + Math.random() * 15,
+        hueShift: Math.random()
+      };
+    }
+
+    function resetParticles() {
+      var density = window.innerWidth < 720 ? 12000 : 7600;
+      var count = Math.round(clamp((width * height) / density, 56, 165));
+      particles = [];
+      for (var i = 0; i < count; i += 1) {
+        particles.push(createParticle(i));
+      }
+    }
+
+    function resizeCanvas() {
+      width = Math.max(window.innerWidth, 1);
+      height = Math.max(window.innerHeight, 1);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      pointer.x = pointer.targetX = width * 0.62;
+      pointer.y = pointer.targetY = height * 0.38;
+      resetParticles();
+    }
+
+    function updatePointer(event) {
+      pointer.targetX = clamp(event.clientX, 0, width);
+      pointer.targetY = clamp(event.clientY, 0, height);
+      pointer.targetStrength = 1;
+    }
+
+    function fadePointer() {
+      pointer.targetStrength = 0.22;
+    }
+
+    function drawCursorGlow() {
+      if (pointer.strength < 0.04) return;
+      var radius = 92 + pointer.strength * 96;
+      var gradient = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, radius);
+      gradient.addColorStop(0, "rgba(59, 130, 246, " + (0.14 * pointer.strength).toFixed(3) + ")");
+      gradient.addColorStop(0.45, "rgba(99, 102, 241, " + (0.07 * pointer.strength).toFixed(3) + ")");
+      gradient.addColorStop(1, "rgba(99, 102, 241, 0)");
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(pointer.x, pointer.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawParticle(particle, force) {
+      var color = particle.hueShift > 0.78 ? "245, 158, 11" : particle.hueShift > 0.44 ? "99, 102, 241" : "59, 130, 246";
+      var alpha = particle.alpha + force * 0.52;
+      ctx.fillStyle = "rgba(" + color + ", " + alpha.toFixed(3) + ")";
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.size + force * 1.25, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function render(time) {
+      ctx.clearRect(0, 0, width, height);
+      pointer.x += (pointer.targetX - pointer.x) * 0.13;
+      pointer.y += (pointer.targetY - pointer.y) * 0.13;
+      pointer.strength += (pointer.targetStrength - pointer.strength) * 0.08;
+
+      drawCursorGlow();
+
+      var radius = window.innerWidth < 720 ? 145 : 220;
+      var activeParticles = [];
+
+      for (var i = 0; i < particles.length; i += 1) {
+        var particle = particles[i];
+        var ambientX = Math.sin(time * particle.speed + particle.phase) * particle.amplitude;
+        var ambientY = Math.cos(time * particle.speed * 0.82 + particle.phase) * particle.amplitude * 0.68;
+        var targetX = particle.baseX + ambientX;
+        var targetY = particle.baseY + ambientY;
+        var dx = targetX - pointer.x;
+        var dy = targetY - pointer.y;
+        var distance = Math.max(Math.sqrt(dx * dx + dy * dy), 0.001);
+        var force = Math.pow(Math.max(0, 1 - distance / radius), 2) * pointer.strength;
+
+        if (force > 0) {
+          var unitX = dx / distance;
+          var unitY = dy / distance;
+          var push = 56 * particle.depth * force;
+          var swirl = 36 * particle.depth * force;
+          targetX += unitX * push + unitY * swirl;
+          targetY += unitY * push - unitX * swirl;
+        }
+
+        particle.x += (targetX - particle.x) * 0.078;
+        particle.y += (targetY - particle.y) * 0.078;
+
+        if (force > 0.05) {
+          activeParticles.push({ particle: particle, force: force });
+          ctx.strokeStyle = "rgba(59, 130, 246, " + (force * 0.16).toFixed(3) + ")";
+          ctx.lineWidth = 0.7;
+          ctx.beginPath();
+          ctx.moveTo(particle.x, particle.y);
+          ctx.lineTo(pointer.x, pointer.y);
+          ctx.stroke();
+        }
+
+        drawParticle(particle, force);
+      }
+
+      for (var a = 0; a < activeParticles.length; a += 1) {
+        for (var b = a + 1; b < activeParticles.length; b += 1) {
+          var first = activeParticles[a].particle;
+          var second = activeParticles[b].particle;
+          var linkDx = first.x - second.x;
+          var linkDy = first.y - second.y;
+          var linkDistance = Math.sqrt(linkDx * linkDx + linkDy * linkDy);
+          if (linkDistance > 74) continue;
+          var linkAlpha = (1 - linkDistance / 74) * Math.min(activeParticles[a].force, activeParticles[b].force) * 0.22;
+          ctx.strokeStyle = "rgba(99, 102, 241, " + linkAlpha.toFixed(3) + ")";
+          ctx.lineWidth = 0.65;
+          ctx.beginPath();
+          ctx.moveTo(first.x, first.y);
+          ctx.lineTo(second.x, second.y);
+          ctx.stroke();
+        }
+      }
+
+      frameId = window.requestAnimationFrame(render);
+    }
+
+    resizeCanvas();
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("pointerleave", fadePointer);
+    window.addEventListener("blur", fadePointer);
+    window.addEventListener("resize", function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resizeCanvas, 120);
+    });
+
+    frameId = window.requestAnimationFrame(render);
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        window.cancelAnimationFrame(frameId);
+        return;
+      }
+      frameId = window.requestAnimationFrame(render);
+    });
+  }
+
   window.SiteCommon = {
     fetchWithFallback: fetchWithFallback,
     resolvePath: resolvePath,
     initNav: initNav,
     initReveal: initReveal,
     initQrModal: initQrModal,
+    initSiteParticles: initSiteParticles,
     sortByDateDesc: sortByDateDesc,
     uniqueByTitle: uniqueByTitle,
     renderPageOverride: renderPageOverride
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", ensureIcpRecord);
-  } else {
+  function initCommonEffects() {
     ensureIcpRecord();
+    initSiteParticles();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCommonEffects);
+  } else {
+    initCommonEffects();
   }
 })();
-
