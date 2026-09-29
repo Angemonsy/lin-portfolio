@@ -92,14 +92,15 @@
 <body class="light">
 <div id="root"></div>
 
-<script type="text/babel" data-presets="env,react" src="./workspace-cloud.js"></script>
+<script src="./action-ledger.js?v=20.3"></script>
+<script type="text/babel" data-presets="env,react" src="./action-trace-ui.js?v=20.3"></script>
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useCallback, useMemo, memo } = React;
 
 /* ═══════════════════════════════════════════
    常量数据
 ═══════════════════════════════════════════ */
-const PLAN_DATA = [
+const LEGACY_PLAN_DATA = [
     { id: 'daily_review', category: '复盘觉醒', title: '每日结构化复盘',       time: '23:00-23:20', icon: 'fa-book-open',       line: 'review',  xp: 2 },
     { id: 'gym',          category: '体能基建', title: '健身/撸铁/有氧',       time: '17:00-20:00', icon: 'fa-dumbbell',        line: 'image',   xp: 3 },
     { id: 'approach',     category: '社交实战', title: '线上/线下搭讪',        time: '灵活',         icon: 'fa-user-plus',       line: 'social',  xp: 4 },
@@ -112,6 +113,8 @@ const PLAN_DATA = [
     { id: 'looksmax',     category: '形象升级', title: '变帅/提升形象',         time: '灵活',         icon: 'fa-magic',           line: 'image',   xp: 3 },
     { id: 'expression',   category: '表达训练', title: '社交能力/表达能力提升', time: '灵活',         icon: 'fa-comments',        line: 'social',  xp: 3 },
 ];
+
+const PLAN_DATA = AlphaGap.tasks(LEGACY_PLAN_DATA);
 
 const LINES = {
     review:   { label: '每日复盘',   color: '#8b5cf6', icon: 'fa-book-open',     slogan: '复盘是杠杆，每天必做' },
@@ -245,16 +248,13 @@ const COMPANY_KPI_DEFAULT = {
     ip_followers: 1200, ip_content_count: 0, biz_income: 0,
     body_weight: 70, body_gym_days: 0,
     // 保研三维进度 (0-100)
-    academic_study: 20,   // 专业课推进度
-    academic_docs: 10,    // 文书材料准备度
-    academic_english: 15, // 英语学习进度
+    thesis_research: 0,   // 选题与文献推进
+    thesis_draft: 0,    // 论文写作推进
+    ielts_progress: 0, // 英语学习进度
 };
 
 // 默认商业项目列表
-const DEFAULT_PROJECTS = [
-    { id: 'p1', name: '奇绩怪谈 IP', type: 'ip', status: 'active', progress: 30, note: '视频号+小红书双平台，腾讯ima合作中', link: '' },
-    { id: 'p2', name: '攀哥AI项目', type: 'biz', status: 'active', progress: 20, note: '与攀哥合作，待推进', link: '' },
-];
+const DEFAULT_PROJECTS = AlphaGap.projects;
 const PROJECT_STATUS = {
     active:  { label: '进行中', color: '#10b981', dot: 'bg-emerald-500' },
     pending: { label: '待启动', color: '#f59e0b', dot: 'bg-amber-400' },
@@ -893,11 +893,19 @@ const MiniCalendarMonth = ({ year, month, history, onSelectDate, selectedDateStr
     );
 };
 
-const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdateHistory, onAddCustomTask, onDeleteCustomTask }) => {
+const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, actionRecords, onSaveEvidence, isDarkMode, onUpdateHistory, onAddCustomTask, onDeleteCustomTask }) => {
     const [view, setView] = useState('month');
     const [curDate, setCurDate] = useState(new Date());
     const [sel, setSel] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const current = new Date();
+        setCurDate(current);
+        setSel(current);
+        setView('month');
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -910,7 +918,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
     const selReview = selKey ? reviews[selKey] : null;
     const selHist = selKey ? (history[selKey] || {}) : {};
     const dayCustom = selKey ? (customTasks[selKey] || []) : [];
-    const displayTasks = [...PLAN_DATA, ...dayCustom.map(t => ({ ...t, isCustom: true, icon: 'fa-plus-circle' }))];
+    const displayTasks = [...AlphaGap.forDate(PLAN_DATA,selKey), ...dayCustom.map(t => ({ ...t, isCustom: true, icon: 'fa-plus-circle' }))];
 
     const handleToggle = (taskId) => {
         if (!selKey) return;
@@ -919,19 +927,19 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
     };
 
     return (
-        <div className="fixed inset-0 z-[100] bg-white text-slate-900 flex flex-col md:flex-row overflow-hidden">
+        <div className="calendar-shell fixed inset-0 z-[160] bg-white text-slate-900 flex flex-col md:flex-row overflow-hidden">
             {/* ── 左侧导航 ── */}
             <div className="w-full md:w-64 bg-slate-50 border-b md:border-r border-slate-200 p-6 flex flex-col shrink-0">
                 <div className="flex justify-between items-center mb-6">
                     <div>
-                        <h2 className="text-xl font-black italic text-slate-900 tracking-tighter">TACTICAL<br/><span className="text-blue-600">CENTER</span></h2>
+                        <h2 className="text-xl font-black text-slate-900 tracking-tight">行动<br/><span className="text-blue-600">日历</span></h2>
                     </div>
                     <button onClick={onClose} className="md:hidden p-2 text-slate-500 hover:bg-slate-200 rounded-full"><i className="fas fa-times" /></button>
                 </div>
                 <div className="flex md:flex-col gap-2 mb-6">
                     {[
-                        { id:'month', icon:'fa-calendar', label:'月视图 Month' },
-                        { id:'year',  icon:'fa-th',       label:'年度 Year Overview' },
+                        { id:'month', icon:'fa-calendar', label:'月视图' },
+                        { id:'year',  icon:'fa-th',       label:'年度总览' },
                     ].map(tab => (
                         <button key={tab.id} onClick={() => setView(tab.id)}
                             className={`flex-1 text-left py-3 px-4 rounded-xl text-sm font-bold border transition-all flex items-center gap-3 ${view === tab.id ? 'bg-white border-blue-200 text-blue-600 shadow-sm' : 'border-transparent text-slate-500 hover:bg-slate-200/50'}`}>
@@ -941,7 +949,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                 </div>
                 <div className="hidden md:block mt-auto">
                     <button onClick={onClose} className="w-full py-3 rounded-xl bg-slate-200 text-slate-600 font-bold hover:bg-slate-300 transition-colors flex items-center justify-center gap-2">
-                        <i className="fas fa-sign-out-alt" /> Exit System
+                        <i className="fas fa-arrow-left" /> 返回首页
                     </button>
                 </div>
             </div>
@@ -953,7 +961,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                     {view === 'year' && (
                         <div className="max-w-5xl mx-auto">
                             <div className="flex items-center justify-between mb-6 px-2">
-                                <h2 className="text-2xl font-black italic text-slate-800 uppercase tracking-tighter">Annual Overview</h2>
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">年度总览</h2>
                                 <div className="flex gap-2">
                                     <button onClick={() => setCurDate(new Date(y-1, m, 1))} className="p-2 hover:bg-white hover:shadow-md rounded-lg transition-all text-slate-500"><i className="fas fa-chevron-left" /></button>
                                     <span className="px-3 py-2 font-black text-slate-700">{y}</span>
@@ -975,9 +983,11 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                     {/* ── 月视图 ── */}
                     {view === 'month' && (
                         <div className="w-full h-full flex flex-col">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-2xl font-black italic text-slate-800 tracking-tight">{monthLabel}</h2>
-                                <div className="flex gap-2">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+                                <div><h2 className="text-2xl font-black text-slate-800 tracking-tight">{monthLabel}</h2><p className="text-[10px] text-slate-500 mt-1">点开日期即可记录待办、完成打卡或查看复盘</p></div>
+                                <div className="flex gap-2 items-center">
+                                    <button onClick={() => { const d=new Date(); setCurDate(d); setSel(d); }} className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-blue-600">今天</button>
+                                    <button onClick={() => { const d=new Date(); d.setDate(d.getDate()+1); setCurDate(d); setSel(d); }} className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-blue-600">明天</button>
                                     <button onClick={() => setCurDate(new Date(y, m-1, 1))} className="p-2 hover:bg-white hover:shadow-md rounded-lg transition-all text-slate-600"><i className="fas fa-chevron-left" /></button>
                                     <button onClick={() => setCurDate(new Date(y, m+1, 1))} className="p-2 hover:bg-white hover:shadow-md rounded-lg transition-all text-slate-600"><i className="fas fa-chevron-right" /></button>
                                 </div>
@@ -992,6 +1002,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                                     const dObj = new Date(y, m, d);
                                     const dStr = dateKey(dObj);
                                     const cnt = Object.values(history[dStr]||{}).filter(Boolean).length;
+                                    const customCount = (customTasks[dStr]||[]).length;
                                     const isToday = today() === dStr;
                                     const isSel = selKey === dStr;
                                     const rev = reviews[dStr];
@@ -1000,6 +1011,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                                             className={`relative min-h-[50px] md:min-h-[80px] p-2 rounded-xl border flex flex-col items-start transition-all hover:shadow-md hover:-translate-y-0.5 bg-white ${isToday ? 'border-blue-500 ring-2 ring-blue-500/20' : isSel ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-slate-100 hover:border-blue-300'}`}>
                                             <span className={`text-sm font-bold ${isToday ? 'text-blue-600' : 'text-slate-700'}`}>{d}</span>
                                             {rev && <span className="text-[10px] absolute top-1 right-1">{MOODS[rev.mood]}</span>}
+                                            {customCount > 0 && <span className="text-[8px] absolute bottom-1 right-1 rounded-full bg-blue-50 text-blue-600 px-1.5 py-0.5 font-bold">{customCount} 待办</span>}
                                             {cnt > 0 && (
                                                 <div className="mt-auto flex flex-wrap gap-0.5">
                                                     {[...Array(Math.min(cnt, 8))].map((_,idx) => (
@@ -1023,7 +1035,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                             <div className="p-5 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
                                 <div>
                                     <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">
-                                        <button onClick={() => setSel(null)} className="hover:text-blue-600 flex items-center gap-1"><i className="fas fa-arrow-left text-xs" /> Back</button>
+                                        <button onClick={() => setSel(null)} className="hover:text-blue-600 flex items-center gap-1"><i className="fas fa-arrow-left text-xs" /> 返回月历</button>
                                         <span>·</span>
                                         <span>{sel.toLocaleDateString('zh-CN', { weekday:'long' })}</span>
                                     </div>
@@ -1035,16 +1047,16 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                                 {/* 任务列表 */}
                                 <div className="mb-6">
                                     <div className="flex justify-between items-center mb-3">
-                                        <h4 className="text-xs font-black uppercase text-slate-400 tracking-widest">Mission List</h4>
+                                        <h4 className="text-xs font-black text-slate-400 tracking-widest">当日行动</h4>
                                         <button onClick={() => setShowAddModal(true)} className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 bg-blue-50 px-2 py-1 rounded-md">
-                                            <i className="fas fa-plus text-[10px]" /> Add Entry
+                                            <i className="fas fa-plus text-[10px]" /> 添加待办
                                         </button>
                                     </div>
                                     <div className="space-y-1.5">
                                         {displayTasks.map(task => {
                                             const done = !!selHist[task.id];
                                             return (
-                                                <div key={task.id} className={`group flex items-center justify-between p-3 rounded-xl border transition-all ${done ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100 hover:border-blue-200 shadow-sm'}`}>
+                                                <div key={task.id}><div className={`group flex items-center justify-between p-3 rounded-xl border transition-all ${done ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-slate-100 hover:border-blue-200 shadow-sm'}`}>
                                                     <div className="flex items-center gap-3 cursor-pointer overflow-hidden" onClick={() => handleToggle(task.id)}>
                                                         <div className={`p-2 rounded-lg transition-colors ${done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
                                                             <i className={`fas ${task.icon} text-xs`} />
@@ -1061,6 +1073,8 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                                                         </button>
                                                     </div>
                                                 </div>
+                                                <window.ActionEvidence key={`${selKey}-${task.id}`} task={task} value={AlphaLedger.evidence(actionRecords,selKey,task)} onSave={patch=>onSaveEvidence(selKey,task.id,patch)} isDarkMode={false}/>
+                                                </div>
                                             );
                                         })}
                                     </div>
@@ -1068,7 +1082,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                                 {/* 复盘内容 */}
                                 {selReview && (
                                     <div className="space-y-3">
-                                        <h4 className="text-xs font-black uppercase text-slate-400 tracking-widest">Daily Review</h4>
+                                        <h4 className="text-xs font-black text-slate-400 tracking-widest">当日复盘</h4>
                                         {selReview.wins && <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3"><p className="text-[9px] font-black text-emerald-500 uppercase mb-1">🏆 胜利</p><p className="text-xs text-slate-600 leading-relaxed">{selReview.wins}</p></div>}
                                         {selReview.fails && <div className="bg-red-50 border border-red-100 rounded-xl p-3"><p className="text-[9px] font-black text-red-500 uppercase mb-1">⚠️ 踩坑</p><p className="text-xs text-slate-600 leading-relaxed">{selReview.fails}</p></div>}
                                         {selReview.tomorrow && <div className="bg-blue-50 border border-blue-100 rounded-xl p-3"><p className="text-[9px] font-black text-blue-500 uppercase mb-1">➡️ 明日行动</p><p className="text-xs text-slate-600 leading-relaxed">{selReview.tomorrow}</p></div>}
@@ -1082,7 +1096,7 @@ const CalendarModal = ({ isOpen, onClose, history, reviews, customTasks, onUpdat
                 {showAddModal && (
                     <div className="fixed inset-0 z-[350] bg-black/50 flex items-center justify-center p-4" onClick={() => setShowAddModal(false)}>
                         <div className="w-full max-w-sm bg-white rounded-2xl p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
-                            <h3 className="text-lg font-black text-slate-800 mb-4">Manual Entry</h3>
+                            <h3 className="text-lg font-black text-slate-800 mb-4">添加待办</h3>
                             <AddTaskForm onAdd={(data) => { onAddCustomTask(selKey, data); setShowAddModal(false); }} onClose={() => setShowAddModal(false)} />
                         </div>
                     </div>
@@ -1328,22 +1342,22 @@ const ProjectModal = ({ isOpen, onClose, projects, onSave, isDarkMode }) => {
    保研进度编辑弹窗
 ═══════════════════════════════════════════ */
 const AcademicModal = ({ isOpen, onClose, kpi, onSave, isDarkMode }) => {
-    const [form, setForm] = useState({ academic_study: kpi.academic_study||0, academic_docs: kpi.academic_docs||0, academic_english: kpi.academic_english||0 });
-    useEffect(() => { if (isOpen) setForm({ academic_study: kpi.academic_study||0, academic_docs: kpi.academic_docs||0, academic_english: kpi.academic_english||0 }); }, [isOpen, kpi]);
+    const [form, setForm] = useState({ thesis_research: kpi.thesis_research||0, thesis_draft: kpi.thesis_draft||0, ielts_progress: kpi.ielts_progress||0 });
+    useEffect(() => { if (isOpen) setForm({ thesis_research: kpi.thesis_research||0, thesis_draft: kpi.thesis_draft||0, ielts_progress: kpi.ielts_progress||0 }); }, [isOpen, kpi]);
     if (!isOpen) return null;
     const card = isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200';
     const textMain = isDarkMode ? 'text-white' : 'text-slate-900';
     const tracks = [
-        { k: 'academic_study',   label: '专业课推进度',   icon: 'fa-graduation-cap', color: '#3b82f6', hint: '按课程进度/复习轮次估算' },
-        { k: 'academic_docs',    label: '文书材料准备度', icon: 'fa-file-alt',        color: '#6366f1', hint: '个人陈述、推荐信、简历等' },
-        { k: 'academic_english', label: '英语学习进度',   icon: 'fa-headphones',      color: '#0ea5e9', hint: '雅思备考综合进度' },
+        { k: 'thesis_research',   label: '选题与文献推进',   icon: 'fa-graduation-cap', color: '#3b82f6', hint: '按选题、阅读与开题准备估算' },
+        { k: 'thesis_draft',    label: '论文写作推进', icon: 'fa-file-alt',        color: '#6366f1', hint: '初稿、实证与导师修改' },
+        { k: 'ielts_progress', label: '英语学习进度',   icon: 'fa-headphones',      color: '#0ea5e9', hint: '雅思备考综合进度' },
     ];
     return (
         <div className="fixed inset-0 z-[450] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
             <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl border ${card}`} onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-5">
                     <div>
-                        <h3 className={`text-lg font-black ${textMain}`}>保研进度更新</h3>
+                        <h3 className={`text-lg font-black ${textMain}`}>毕业与英语进度</h3>
                         <p className="text-[10px] text-slate-500 mt-0.5">拖动滑块更新各维度推进程度</p>
                     </div>
                     <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><i className="fas fa-times" /></button>
@@ -3077,7 +3091,7 @@ const GlobalSearch = ({ isOpen, onClose, contents, schools, contacts, reviews, m
         { keys:['体能','体重','健身','训练','body','gym','撸铁'],                     icon:'fa-dumbbell',      color:'#10b981', label:'体能追踪',     action:()=>{onOpenBody();onClose();} },
         { keys:['情绪','心情','mood','状态','趋势','分析心情'],                       icon:'fa-brain',         color:'#a855f7', label:'情绪分析',     action:()=>{onOpenMood();onClose();} },
         { keys:['月报','战报','report','月度','成就','总结'],                         icon:'fa-trophy',        color:'#f59e0b', label:'月度战报',     action:()=>{onOpenReport();onClose();} },
-        { keys:['时间线','timeline','保研流程','节点','面试','入学'],                 icon:'fa-route',         color:'#6366f1', label:'保研时间线',   action:()=>{onOpenTimeline();onClose();} },
+        { keys:['时间线','timeline','保研流程','节点','面试','入学'],                 icon:'fa-route',         color:'#6366f1', label:'毕业时间线',   action:()=>{onOpenTimeline();onClose();} },
         { keys:['内容分析','数据','播放','涨粉','analytics','表现'],                  icon:'fa-chart-line',    color:'#a855f7', label:'内容数据分析', action:()=>{onOpenAnalytics();onClose();} },
         { keys:['倒计时','countdown','截止','考试','六级','deadline'],               icon:'fa-clock',         color:'#3b82f6', label:'多倒计时',     action:()=>{onOpenMultiCD();onClose();} },
         { keys:['项目','project','商业','副业','攀哥','奇绩'],                        icon:'fa-project-diagram',color:'#f59e0b',label:'商业项目',     action:()=>{onOpenProjects();onClose();} },
@@ -3113,7 +3127,7 @@ const GlobalSearch = ({ isOpen, onClose, contents, schools, contacts, reviews, m
             results.push({ type:'week', icon:'fa-chess', color:'#6366f1', label:`周计划 ${k}`, sub:(w.goal1||'').slice(0,30), action:()=>{onOpenWeekly();onClose();} });
         });
         (timelineNodes||[]).filter(n=>n.title?.toLowerCase().includes(term)||n.note?.toLowerCase().includes(term)).slice(0,2).forEach(n=>{
-            results.push({ icon:'fa-route', color:'#6366f1', label:n.title, sub:'保研时间线节点', action:()=>{onOpenTimeline();onClose();} });
+            results.push({ icon:'fa-route', color:'#6366f1', label:n.title, sub:'毕业时间线节点', action:()=>{onOpenTimeline();onClose();} });
         });
         (countdowns||[]).filter(c=>c.label?.toLowerCase().includes(term)).slice(0,2).forEach(c=>{
             results.push({ icon:'fa-clock', color:'#3b82f6', label:c.label, sub:'倒计时', action:()=>{onOpenMultiCD();onClose();} });
@@ -3204,7 +3218,7 @@ const SmartTimeBanner = ({ isDarkMode }) => {
         { id:'short_video',  start:20*60,    end:21*60,    label:'🎬 短视频拍摄/发布',  color:'#f59e0b', urgency:'now' },
         { id:'approach',     start:21*60,    end:22*60,    label:'🗣️ 搭讪/社交实战',     color:'#f43f5e', urgency:'now' },
         { id:'daily_review', start:23*60,    end:23*60+20, label:'📖 每日结构化复盘',    color:'#8b5cf6', urgency:'now' },
-    ];
+    ].map(slot=>({...slot,label:PLAN_DATA.find(t=>t.id===slot.id)?.title||slot.label}));
 
     const current = schedule.find(s => totalMins >= s.start && totalMins < s.end);
     const upcoming = !current ? schedule.find(s => s.start > totalMins) : null;
@@ -3526,18 +3540,9 @@ const MonthlyReportModal = ({ isOpen, onClose, history, reviews, moneyRecords, k
 };
 
 /* ─────────────────────────────────────────
-   N4  保研时间线 Postgrad Timeline Modal
+   N4  毕业时间线 Postgrad Timeline Modal
 ───────────────────────────────────────── */
-const DEFAULT_TIMELINE_NODES = [
-    { id:'t1', title:'确定目标院校方向', date:'', done:false, note:'确定报考方向和院校名单', icon:'fa-crosshairs' },
-    { id:'t2', title:'准备个人陈述/简历', date:'', done:false, note:'写初稿，找人修改', icon:'fa-file-alt' },
-    { id:'t3', title:'联系目标导师', date:'', done:false, note:'发套磁邮件，等待回复', icon:'fa-envelope' },
-    { id:'t4', title:'提交预推免申请', date:'', done:false, note:'填写系统，上传材料', icon:'fa-upload' },
-    { id:'t5', title:'参加院校夏令营/面试', date:'', done:false, note:'提前准备问答和自我介绍', icon:'fa-chalkboard-teacher' },
-    { id:'t6', title:'获得预录取意向', date:'', done:false, note:'', icon:'fa-handshake' },
-    { id:'t7', title:'正式推免系统填报', date:'', done:false, note:'9月开放，抓紧时间', icon:'fa-keyboard' },
-    { id:'t8', title:'收到录取通知书 🎓', date:'', done:false, note:'', icon:'fa-graduation-cap' },
-];
+const DEFAULT_TIMELINE_NODES = AlphaGap.timeline;
 
 const PostgradTimelineModal = ({ isOpen, onClose, nodes, onSave, isDarkMode }) => {
     const [list, setList] = useState(nodes);
@@ -3581,7 +3586,7 @@ const PostgradTimelineModal = ({ isOpen, onClose, nodes, onSave, isDarkMode }) =
                             <i className="fas fa-route text-blue-600 text-sm"/>
                         </div>
                         <div>
-                            <h3 className={`text-base font-black ${tMain}`}>保研时间线 Postgrad Timeline</h3>
+                            <h3 className={`text-base font-black ${tMain}`}>毕业时间线 Gap Timeline</h3>
                             <p className={`text-[10px] ${tSub}`}>{doneCount}/{list.length} 节点完成 · 目标 985/211 数字经济</p>
                         </div>
                     </div>
@@ -3594,7 +3599,7 @@ const PostgradTimelineModal = ({ isOpen, onClose, nodes, onSave, isDarkMode }) =
                 {/* 进度条 */}
                 <div className={`px-4 py-2 border-b shrink-0 ${isDarkMode?'border-slate-800':'border-slate-100'}`}>
                     <div className="flex justify-between mb-1">
-                        <span className={`text-[10px] font-bold ${tSub}`}>保研征途进度</span>
+                        <span className={`text-[10px] font-bold ${tSub}`}>毕业阶段进度</span>
                         <span className="text-[10px] font-black text-blue-500">{Math.round((doneCount/list.length)*100)}%</span>
                     </div>
                     <div className="w-full h-2 rounded-full overflow-hidden" style={{background:isDarkMode?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)'}}>
@@ -3828,10 +3833,7 @@ const ContentAnalyticsModal = ({ isOpen, onClose, contents, isDarkMode }) => {
 /* ─────────────────────────────────────────
    N6  多倒计时 Multi Countdown Modal
 ───────────────────────────────────────── */
-const DEFAULT_COUNTDOWNS = [
-    { id:'cd1', title:'距离开学', date:'2026-03-16', color:'#3b82f6', icon:'fa-school' },
-    { id:'cd2', title:'六级考试', date:'2026-06-14', color:'#f59e0b', icon:'fa-pen-alt' },
-];
+const DEFAULT_COUNTDOWNS = AlphaGap.countdowns;
 
 const MultiCountdownModal = ({ isOpen, onClose, countdowns, onSave, isDarkMode }) => {
     const [list, setList] = useState(countdowns);
@@ -4016,7 +4018,7 @@ const CompanyDashboard = ({ kpi, onEdit, onOpenProjects, onEditAcademic, project
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
                             <i className="fas fa-university text-blue-500 text-xs" />
-                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">保研线</span>
+                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">毕业与英语</span>
                         </div>
                         <button onClick={onEditAcademic}
                             className="text-[9px] font-black text-blue-600 hover:text-blue-500 flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-100 hover:bg-blue-200 transition-all">
@@ -4025,9 +4027,9 @@ const CompanyDashboard = ({ kpi, onEdit, onOpenProjects, onEditAcademic, project
                     </div>
                     <div className="space-y-2">
                         {[
-                            { k:'academic_study',   label:'专业课', icon:'fa-graduation-cap', color:'#3b82f6' },
-                            { k:'academic_docs',    label:'文书材料', icon:'fa-file-alt',       color:'#6366f1' },
-                            { k:'academic_english', label:'英语备考', icon:'fa-headphones',     color:'#0ea5e9' },
+                            { k:'thesis_research',   label:'选题文献', icon:'fa-graduation-cap', color:'#3b82f6' },
+                            { k:'thesis_draft',    label:'论文写作', icon:'fa-file-alt',       color:'#6366f1' },
+                            { k:'ielts_progress', label:'英语备考', icon:'fa-headphones',     color:'#0ea5e9' },
                         ].map(t => (
                             <div key={t.k}>
                                 <div className="flex justify-between mb-0.5">
@@ -4040,7 +4042,7 @@ const CompanyDashboard = ({ kpi, onEdit, onOpenProjects, onEditAcademic, project
                             </div>
                         ))}
                     </div>
-                    <p className="text-[9px] text-slate-500 mt-2">目标 → 985/211 数字经济</p>
+                    <p className="text-[9px] text-slate-500 mt-2">已确认复旦拟录取 · 当前主线：顺利毕业</p>
                 </div>
             </div>
 
@@ -4677,6 +4679,7 @@ const LineHubDrawer = ({ isOpen, onClose, zone, isDarkMode, card, sub, textMain,
    主 App
 ═══════════════════════════════════════════ */
 const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, onLogout = null }) => {
+    const gapPlanMeta = useRef({});
     const cloudBootDataRef = useRef(initialCloudData && Object.keys(initialCloudData).length ? initialCloudData : null);
     const [cloudSaveState, setCloudSaveState] = useState('idle');
     const [hasHydrated, setHasHydrated] = useState(false);
@@ -4694,9 +4697,11 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const [reviews, setReviews] = useState(() => normalizeDateMap(LS.get('a8_reviews', {})));
     const [battleLogs, setBattleLogs] = useState(() => normalizeDateArrayMap(LS.get('a8_logs', {})));
     const [customTasks, setCustomTasks] = useState(() => normalizeDateArrayMap(LS.get('a8_custom_tasks', {})));
+    const [actionRecords, setActionRecords] = useState(() => normalizeDateMap(LS.get('a8_action_records', {})));
+    const [showActionCapture, setShowActionCapture] = useState(false);
     const [kpi, setKpi] = useState(() => LS.get('a8_kpi', COMPANY_KPI_DEFAULT));
-    const [targetTitle, setTargetTitle] = useState(() => LS.get('a8_target_title', '距离开学'));
-    const [targetDate, setTargetDate] = useState(() => LS.get('a8_target_date', '2026-03-16'));
+    const [targetTitle, setTargetTitle] = useState(() => LS.get('a8_target_title', AlphaGap.countdowns[0].title));
+    const [targetDate, setTargetDate] = useState(() => LS.get('a8_target_date', AlphaGap.countdowns[0].date));
     const [streak, setStreak] = useState(0);
     const [totalXP, setTotalXP] = useState(0);
     const [quote, setQuote] = useState('');
@@ -4722,7 +4727,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const [pomodoroTask, setPomodoroTask] = useState(null);
     // N3 月度战报
     const [showReport, setShowReport] = useState(false);
-    // N4 保研时间线
+    // N4 毕业时间线
     const [showTimeline, setShowTimeline] = useState(false);
     const [timelineNodes, setTimelineNodes] = useState(() => LS.get('a8_timeline', DEFAULT_TIMELINE_NODES));
     // N5 内容分析
@@ -4825,19 +4830,34 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
         const source = cloudBootDataRef.current || {};
         const useCloud = !!cloudBootDataRef.current;
-        const readSource = (field, localKey, fallback) => useCloud
+        const originalReadSource = (field, localKey, fallback) => useCloud
             ? (source[field] !== undefined ? source[field] : fallback)
             : LS.get(localKey, fallback);
+        const localMeta = LS.get('a8_gap_meta', {});
+        const gapData = AlphaGap.migrate({
+            gapPlanVersion:useCloud?source.gapPlanVersion:localMeta.gapPlanVersion,
+            gapPlanArchive:useCloud?source.gapPlanArchive:localMeta.gapPlanArchive,
+            projects:originalReadSource('projects','a8_projects',DEFAULT_PROJECTS),
+            countdowns:originalReadSource('countdowns','a8_countdowns',DEFAULT_COUNTDOWNS),
+            timelineNodes:originalReadSource('timelineNodes','a8_timeline',DEFAULT_TIMELINE_NODES),
+            targetTitle:originalReadSource('targetTitle','a8_target_title',AlphaGap.countdowns[0].title),
+            targetDate:originalReadSource('targetDate','a8_target_date',AlphaGap.countdowns[0].date)
+        });
+        gapPlanMeta.current = {gapPlanVersion:gapData.gapPlanVersion,gapPlanArchive:gapData.gapPlanArchive};
+        LS.set('a8_gap_meta',gapPlanMeta.current);
+        const readSource = (field,key,fallback) => Object.hasOwn(gapData,field)?gapData[field]:originalReadSource(field,key,fallback);
+
 
         const normalizedHistory = normalizeHistory(readSource('history', 'a8_history', {}));
         const normalizedReviews = normalizeDateMap(readSource('reviews', 'a8_reviews', {}));
         const normalizedLogs = normalizeDateArrayMap(readSource('battleLogs', 'a8_logs', {}));
         const normalizedCustom = normalizeDateArrayMap(readSource('customTasks', 'a8_custom_tasks', {}));
+        const normalizedRecords = normalizeDateMap(readSource('actionRecords','a8_action_records',{}));
         const normalizedPomo = normalizePomodoroLog(readSource('pomodoroLog', 'a8_pomo_log', []));
         const normalizedWeeks = normalizeDateMap(readSource('weeks', 'a8_weeks', {}));
         const restoredKpi = readSource('kpi', 'a8_kpi', COMPANY_KPI_DEFAULT);
-        const restoredTargetTitle = readSource('targetTitle', 'a8_target_title', '距离开学');
-        const restoredTargetDate = readSource('targetDate', 'a8_target_date', '2026-03-16');
+        const restoredTargetTitle = readSource('targetTitle', 'a8_target_title', AlphaGap.countdowns[0].title);
+        const restoredTargetDate = readSource('targetDate', 'a8_target_date', AlphaGap.countdowns[0].date);
         const restoredProjects = readSource('projects', 'a8_projects', DEFAULT_PROJECTS);
         const restoredContents = readSource('contents', 'a8_contents', []);
         const restoredMoney = readSource('moneyRecords', 'a8_money', []);
@@ -4854,6 +4874,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         setReviews(normalizedReviews);
         setBattleLogs(normalizedLogs);
         setCustomTasks(normalizedCustom);
+        setActionRecords(normalizedRecords);
         setPomodoroLog(normalizedPomo);
         setWeeks(normalizedWeeks);
         setKpi(restoredKpi);
@@ -4875,6 +4896,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         LS.set('a8_reviews', normalizedReviews);
         LS.set('a8_logs', normalizedLogs);
         LS.set('a8_custom_tasks', normalizedCustom);
+        LS.set('a8_action_records',normalizedRecords);
         LS.set('a8_pomo_log', normalizedPomo);
         LS.set('a8_weeks', normalizedWeeks);
         LS.set('a8_kpi', restoredKpi);
@@ -4996,12 +5018,31 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
 
     /* ── Custom tasks ── */
     const handleAddCustomTask = useCallback((dateStr, data) => {
-        const newId = `custom_${Date.now()}`;
-        const task = { id: newId, title: data.title, time: data.time || 'Manual', category: 'Extra Mission' };
-        const newCustom = { ...customTasks, [dateStr]: [...(customTasks[dateStr]||[]), task] };
-        setCustomTasks(newCustom);
-        LS.set('a8_custom_tasks', newCustom);
-    }, [customTasks]);
+        const safeDate = normalizeDateKey(dateStr);
+        if (!safeDate || !data.title?.trim()) return;
+        const task = { id: `custom_${crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2)}`, title: data.title.trim().slice(0,180), time: data.time || '自定义', category: data.category || AlphaLedger.fronts.find(f=>f.projectId===data.projectId)?.label || 'Extra Mission',
+            ...(data.projectId ? {projectId:data.projectId, expectedOutput:data.expectedOutput || '', outcome:''} : {}) };
+        setCustomTasks(current => {
+            const next = {...current, [safeDate]: [...(current[safeDate] || []), task]};
+            LS.set('a8_custom_tasks', next);
+            return next;
+        });
+        return task.id;
+    }, []);
+
+    const handleSaveEvidence = useCallback((dateStr, taskId, patch) => {
+        const safeDate = normalizeDateKey(dateStr);
+        if (!safeDate) return;
+        setActionRecords(current => {
+            const previous = current[safeDate]?.[taskId] || {};
+            const record = {...previous, ...patch, outcome:String(patch.outcome ?? previous.outcome ?? '').slice(0,1200), updatedAt:new Date().toISOString()};
+            record.minutes = record.minutes == null || record.minutes === '' ? null : Math.max(0,Math.min(1440,Math.round(Number(record.minutes)||0)));
+            const next = {...current, [safeDate]:{...(current[safeDate] || {}), [taskId]:record}};
+            LS.set('a8_action_records', next);
+            return next;
+        });
+    }, []);
+    const handleUpdateCustomTask = handleSaveEvidence;
 
     const handleDeleteCustomTask = useCallback((dateStr, taskId) => {
         const newCustom = { ...customTasks, [dateStr]: (customTasks[dateStr]||[]).filter(t => t.id !== taskId) };
@@ -5047,7 +5088,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     /* ── KPI save ── */
     const saveKPI = useCallback((form) => { setKpi(form); LS.set('a8_kpi', form); }, []);
     const saveProjects = useCallback((list) => { setProjects(list); LS.set('a8_projects', list); }, []);
-    const saveAcademic = useCallback((form) => { setKpi(form); LS.set('a8_kpi', form); }, []);
+    const saveAcademic = useCallback((form) => { setKpi(prev=>{const next={...prev,...form};LS.set('a8_kpi',next);return next;}); }, []);
     const saveContents = useCallback((list) => { setContents(list); LS.set('a8_contents', list); }, []);
     const saveMoney = useCallback((list) => { setMoneyRecords(list); LS.set('a8_money', list); }, []);
     const saveSchools = useCallback((list) => { setSchools(list); LS.set('a8_schools', list); }, []);
@@ -5126,18 +5167,35 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const toggleRightSidebar = useCallback(() => setIsRightSidebarOpen(p => { LS.set('a8_sidebar_right', !p); return !p; }), []);
 
     /* ── Export / Import ── */
-        const getAllData = () => ({ history, reviews, battleLogs, kpi, customTasks, targetTitle, targetDate, projects, contents, moneyRecords, schools, weeks, bodyLogs, contacts, timelineNodes, countdowns, pomodoroLog, taskOrder, theme, memos });
+        const getAllData = () => ({ ...gapPlanMeta.current, history, reviews, battleLogs, kpi, customTasks, actionRecords, targetTitle, targetDate, projects, contents, moneyRecords, schools, weeks, bodyLogs, contacts, timelineNodes, countdowns, pomodoroLog, taskOrder, theme, memos });
+    const snapshotSaveQueue = useRef(Promise.resolve());
+    const snapshotSaveVersion = useRef(0);
+    const snapshotSaveTimer = useRef(null);
+    const saveSnapshotNow = data => {
+        clearTimeout(snapshotSaveTimer.current);
+        snapshotSaveTimer.current = null;
+        const version = ++snapshotSaveVersion.current;
+        setCloudSaveState('saving');
+        snapshotSaveQueue.current = snapshotSaveQueue.current.catch(() => {}).then(() => onCloudSave(data))
+            .then(() => { if (version === snapshotSaveVersion.current) setCloudSaveState('saved'); return true; })
+            .catch(() => { if (version === snapshotSaveVersion.current) setCloudSaveState('error'); return false; });
+        return snapshotSaveQueue.current;
+    };
     useEffect(() => {
         if (!hasHydrated || !onCloudSave) return;
+        // Invalidate the status of any older in-flight save as soon as data changes.
+        snapshotSaveVersion.current++;
         setCloudSaveState('saving');
-        const timer = setTimeout(() => {
-            onCloudSave(getAllData())
-                .then(() => setCloudSaveState('saved'))
-                .catch(() => setCloudSaveState('error'));
+        snapshotSaveTimer.current = setTimeout(() => {
+            saveSnapshotNow(getAllData());
         }, 700);
-        return () => clearTimeout(timer);
-    }, [hasHydrated, history, reviews, battleLogs, kpi, customTasks, targetTitle, targetDate, projects, contents, moneyRecords, schools, weeks, bodyLogs, contacts, timelineNodes, countdowns, pomodoroLog, taskOrder, theme]);
-    const onRestore = (d) => {
+        return () => clearTimeout(snapshotSaveTimer.current);
+    }, [hasHydrated, history, reviews, battleLogs, kpi, customTasks, actionRecords, targetTitle, targetDate, projects, contents, moneyRecords, schools, weeks, bodyLogs, contacts, timelineNodes, countdowns, pomodoroLog, taskOrder, theme, memos]);
+    const onRestore = (data) => {
+        const d=AlphaGap.migrate(data);
+        gapPlanMeta.current={gapPlanVersion:d.gapPlanVersion,gapPlanArchive:d.gapPlanArchive};
+        LS.set('a8_gap_meta',gapPlanMeta.current);
+
         if (d.history) {
             const h = normalizeHistory(d.history);
             setHistory(h);
@@ -5147,6 +5205,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
         if (d.reviews) { const r = normalizeDateMap(d.reviews); setReviews(r); LS.set('a8_reviews', r); }
         if (d.battleLogs) { const l = normalizeDateArrayMap(d.battleLogs); setBattleLogs(l); LS.set('a8_logs', l); }
         if (d.kpi) { setKpi(d.kpi); LS.set('a8_kpi', d.kpi); }
+        if (d.actionRecords) {const r=normalizeDateMap(d.actionRecords);setActionRecords(r);LS.set('a8_action_records',r);}
         if (d.customTasks) { const c = normalizeDateArrayMap(d.customTasks); setCustomTasks(c); LS.set('a8_custom_tasks', c); }
         if (d.targetTitle) { setTargetTitle(d.targetTitle); LS.set('a8_target_title', d.targetTitle); }
         if (d.targetDate) { setTargetDate(d.targetDate); LS.set('a8_target_date', d.targetDate); }
@@ -5171,8 +5230,8 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const lvlIdx = LEVELS.indexOf(lvl);
     const nextLvl = LEVELS[lvlIdx+1];
     const lvlPct = nextLvl ? ((totalXP - lvl.min) / (nextLvl.min - lvl.min)) * 100 : 100;
-    const completedCount = Object.values(completedToday).filter(Boolean).length;
-    const totalCount = PLAN_DATA.length;
+    const completedCount = [...PLAN_DATA,...(customTasks[today()]||[])].filter(t=>completedToday[t.id]).length;
+    const totalCount = PLAN_DATA.length+(customTasks[today()]||[]).length;
     const todayPct = (completedCount / totalCount) * 100;
     const todaysLogs = battleLogs[today()] || [];
     const todayReview = reviews[today()];
@@ -5211,7 +5270,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             <FocusTimer isOpen={showFocus} onClose={() => setShowFocus(false)} />
             <KPIModal isOpen={showKPI} onClose={() => setShowKPI(false)} kpi={kpi} onSave={saveKPI} isDarkMode={isDarkMode} />
             <ReviewModal isOpen={showReview} onClose={() => setShowReview(false)} dateStr={today()} existing={todayReview} reviews={reviews} history={history} onSave={saveReview} isDarkMode={isDarkMode} />
-            <CalendarModal isOpen={showCalendar} onClose={() => setShowCalendar(false)} history={history} reviews={reviews} customTasks={customTasks} onUpdateHistory={handleUpdateHistory} onAddCustomTask={handleAddCustomTask} onDeleteCustomTask={handleDeleteCustomTask} />
+            <CalendarModal isOpen={showCalendar} onClose={() => setShowCalendar(false)} history={history} reviews={reviews} customTasks={customTasks} actionRecords={actionRecords} onSaveEvidence={handleSaveEvidence} isDarkMode={isDarkMode} onUpdateHistory={handleUpdateHistory} onAddCustomTask={handleAddCustomTask} onDeleteCustomTask={handleDeleteCustomTask} />
             <DataCoreModal isOpen={showData} onClose={() => setShowData(false)} getAllData={getAllData} onRestore={onRestore} isDarkMode={isDarkMode} />
             <ProjectModal isOpen={showProjects} onClose={() => setShowProjects(false)} projects={projects} onSave={saveProjects} isDarkMode={isDarkMode} />
             <AcademicModal isOpen={showAcademic} onClose={() => setShowAcademic(false)} kpi={kpi} onSave={saveAcademic} isDarkMode={isDarkMode} />
@@ -5256,12 +5315,6 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             <PostgradTimelineModal isOpen={showTimeline} onClose={() => setShowTimeline(false)} nodes={timelineNodes} onSave={saveTimeline} isDarkMode={isDarkMode} />
             <ContentAnalyticsModal isOpen={showAnalytics} onClose={() => setShowAnalytics(false)} contents={contents} isDarkMode={isDarkMode} />
             <MultiCountdownModal isOpen={showMultiCD} onClose={() => setShowMultiCD(false)} countdowns={countdowns} onSave={saveCountdowns} isDarkMode={isDarkMode} />
-            <CloudKnowledgeWorkspace
-                isOpen={showWorkspace}
-                onClose={() => setShowWorkspace(false)}
-                isDarkMode={isDarkMode}
-                checkin={{ completed:completedCount, total:totalCount, progress:todayPct, streak, pomodoros:todayPomos.length }}
-            />
 
             {/* ── 侧边栏 ── */}
             <Sidebar images={leftImages} title="Aspiration (Up)" side="left" isDarkMode={isDarkMode} onUpload={handleImageUpload} isOpen={isLeftSidebarOpen} onToggle={toggleLeftSidebar} slogan="为你爱的、你追求的Alpha女人，疯狂战斗！疯狂胜利！" />
@@ -5297,9 +5350,6 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                         )}
                         <button onClick={() => setShowHub(true)} className={`p-2.5 rounded-full shadow-lg transition-transform active:scale-95 ${isDarkMode ? 'bg-slate-800 text-indigo-400 border border-indigo-500/30' : 'bg-white text-indigo-600 border border-slate-200'}`} title="个人中转站">
                             <i className="fas fa-th" style={{width:'20px',height:'20px',textAlign:'center'}} />
-                        </button>
-                        <button onClick={() => setShowWorkspace(true)} className={`p-2.5 rounded-full shadow-lg transition-transform active:scale-95 ${isDarkMode ? 'bg-blue-900/50 text-blue-400 border border-blue-500/30' : 'bg-blue-50 text-blue-600 border border-blue-200'}`} title="一人公司经营工作台">
-                            <i className="fas fa-compass" style={{width:'20px',height:'20px',textAlign:'center'}} />
                         </button>
                         <button onClick={() => setShowSearch(true)} className={`p-2.5 rounded-full shadow-lg transition-transform active:scale-95 ${isDarkMode ? 'bg-slate-800 text-slate-400 border border-slate-700' : 'bg-white text-slate-600 border border-slate-200'}`} title="全局搜索 ⌘K">
                             <i className="fas fa-search" style={{width:'20px',height:'20px',textAlign:'center'}} />
@@ -5493,7 +5543,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                             groups:[
                                 { label:'保研主线', items:[
                                     { icon:'fa-university', label:'目标院校', sub:`${schools.length} 所`, color:'#3b82f6', action:()=>setShowSchools(true) },
-                                    { icon:'fa-route',      label:'保研时间线', sub:`${timelineNodes.filter(n=>n.done).length}/${timelineNodes.length} 节点`, color:'#6366f1', action:()=>setShowTimeline(true) },
+                                    { icon:'fa-route',      label:'毕业时间线', sub:`${timelineNodes.filter(n=>n.done).length}/${timelineNodes.length} 节点`, color:'#6366f1', action:()=>setShowTimeline(true) },
                                 ]},
                                 { label:'学业 · 倒计时', items:[
                                     { icon:'fa-graduation-cap', label:'学业 KPI', sub:'课程/六级/论文', color:'#3b82f6', action:()=>setShowAcademic(true) },
@@ -5541,14 +5591,16 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                                 className={`text-xs font-bold transition-colors ${orderEditMode?'text-amber-400':'text-slate-400 hover:text-slate-300'}`}>
                                 <i className="fas fa-sort"/> {orderEditMode?'完成排序':'排序'}
                             </button>
-                            <button onClick={() => { const t = prompt("Quick Add Extra Task:"); if (t) handleAddCustomTask(today(), { title: t }); }}
-                                className="text-xs font-bold text-emerald-500 hover:text-emerald-400 transition-colors">+ Add Extra</button>
+                            <button onClick={() => setShowActionCapture(v=>!v)}
+                                className="text-xs font-black text-red-500 hover:text-red-400 transition-colors">＋ 记一笔</button>
                         </div>
                     </div>
 
+                    <div className="flex items-center justify-between gap-2 px-1"><p className={`text-[10px] ${textSub}`}>勾选完成 · 展开留痕 · 不用去另一个页面重复记录</p><span role="status" className={`text-[10px] ${cloudSaveState==='error'?'text-red-500':textSub}`}>{cloudSaveState==='saving'?'保存中…':cloudSaveState==='error'?'保存失败':cloudSaveState==='saved'?'已保存':'已连接'}</span>{cloudSaveState==='error'&&<button onClick={()=>saveSnapshotNow(getAllData())} className="text-xs text-red-500">重试保存</button>}</div>
+                    {showActionCapture && <window.ActionQuickCapture isDarkMode={isDarkMode} onClose={()=>setShowActionCapture(false)} onSubmit={(data,done)=>{const id=handleAddCustomTask(today(),data);if(id&&done)handleUpdateHistory(today(),id,true);setShowActionCapture(false);}}/>}
                     {/* 按主线分组渲染 */}
-                    {Object.entries(LINES).map(([lineKey, lineData]) => {
-                        const lineTasks = orderedPlanData.filter(t => t.line === lineKey);
+                    {Object.entries({...LINES,extra:{label:'临时行动',color:'#94a3b8',icon:'fa-plus',slogan:'留下一笔真实记录'}}).map(([lineKey, lineData]) => {
+                        const lineTasks = [...orderedPlanData.filter(t => t.line === lineKey), ...(customTasks[today()]||[]).filter(t=>({business:'biz',academic:'academic',life:'social',other:'extra'})[AlphaLedger.front(t)]===lineKey).map(t=>({...t,icon:'fa-plus-circle',xp:1,isCustom:true}))];
                         if (!lineTasks.length) return null;
                         const doneCount = lineTasks.filter(t => completedToday[t.id]).length;
                         return (
@@ -5567,19 +5619,20 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                                     {lineTasks.map(task => {
                                         const done = !!completedToday[task.id];
                                         return (
-                                            <button key={task.id} onClick={() => toggleTask(task.id)}
+                                            <div key={task.id}><div
+                                                role="group" aria-label={task.title}
                                                 className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all active:scale-[0.97] text-left ${lastActivatedTask === task.id ? 'task-shockwave' : ''} ${done ? 'border-emerald-200 bg-emerald-50' : `${sub} hover:border-blue-200`} ${isDarkMode && done ? 'bg-emerald-900/20 border-emerald-500/30' : ''}`}>
-                                                <div className="flex items-center gap-3">
+                                                <button type="button" onClick={()=>toggleTask(task.id)} aria-label={`${done?'撤销完成':'完成'}：${task.title}`} aria-pressed={done} className="flex items-center gap-3 text-left min-w-0 flex-1">
                                                     <div className={`p-2.5 rounded-xl transition-all duration-500 ${done ? 'bg-emerald-500 text-white scale-105' : isDarkMode ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>
                                                         <i className={`fas ${task.icon} text-xs`} />
                                                     </div>
-                                                    <div className="text-left">
+                                                    <div className="text-left min-w-0 break-words">
                                                         <p className={`text-[9px] font-black opacity-50 uppercase tracking-widest mb-0.5 ${done ? 'text-emerald-600' : textSub}`}>{task.category}</p>
                                                         <p className={`font-bold text-sm ${done ? (isDarkMode ? 'text-emerald-400' : 'text-emerald-700') : textMain}`}>{task.title}</p>
                                                         <p className={`text-[10px] opacity-40 ${textSub}`}>{task.time} · +{task.xp} XP</p>
                                                     </div>
-                                                </div>
-                                                {orderEditMode ? (
+                                                </button>
+                                                {orderEditMode && !task.isCustom ? (
                                                     <div className="flex flex-col gap-0.5">
                                                         <button onClick={e=>{e.stopPropagation();moveTask(task.id,-1);}} className="p-1 text-amber-400 hover:text-amber-300 text-[10px]"><i className="fas fa-chevron-up"/></button>
                                                         <button onClick={e=>{e.stopPropagation();moveTask(task.id,1);}} className="p-1 text-amber-400 hover:text-amber-300 text-[10px]"><i className="fas fa-chevron-down"/></button>
@@ -5589,13 +5642,16 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                                                     : <button onClick={(e) => { e.stopPropagation(); setPomodoroTask(task); }} className="p-1 text-slate-300 hover:text-red-500 transition-all" title="专注此任务">
                                                         <i className="fas fa-crosshairs text-base" />
                                                     </button>}
-                                            </button>
+                                            </div>
+                                            <window.ActionEvidence key={`${today()}-${task.id}`} task={task} value={AlphaLedger.evidence(actionRecords,today(),task)} onSave={patch=>handleSaveEvidence(today(),task.id,patch)} isDarkMode={isDarkMode}/>
+                                            </div>
                                         );
                                     })}
                                 </div>
                             </div>
                         );
                     })}
+                    <window.ActionWeekReview plan={PLAN_DATA} custom={customTasks} history={history} records={actionRecords} date={today()} isDarkMode={isDarkMode} onOpenCalendar={()=>setShowCalendar(true)}/>
                 </section>
 
                 {/* ──── 进化面板 (原版BeastAvatar完整保留) ──── */}
@@ -5854,7 +5910,6 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                         <div className="flex items-center gap-1">
                             {[
                                 { icon:'fa-home',         label:'主页',    action: () => { setShowWorkspace(false); window.scrollTo({top:0,behavior:'smooth'}); }, color:'text-slate-500' },
-                                { icon:'fa-compass',      label:'工作台',  action: () => setShowWorkspace(true), color:'text-blue-500' },
                                 { icon:'fa-book-open',    label:'复盘',    action: () => setShowReview(true),    color:'text-indigo-500' },
                                 { icon:'fa-search',       label:'搜索',    action: () => setShowSearch(true),    color:'text-purple-500' },
                                 { icon:'fa-calendar-alt', label:'日历',    action: () => setShowCalendar(true),  color:'text-blue-500' },
@@ -5972,7 +6027,7 @@ root.render(<SecureApp />);
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+        navigator.serviceWorker.register('./service-worker.js?v=20.3', {updateViaCache:'none'}).catch(() => {});
     });
 }
 </script>

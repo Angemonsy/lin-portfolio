@@ -1,5 +1,5 @@
-const CACHE_NAME = 'alpha-rebirth-v4-cloud-workspace';
-const APP_ASSETS = ['./', './index.html', './workspace-cloud.js', './manifest.webmanifest', './icon.svg'];
+const CACHE_NAME = 'alpha-cloud-v20-3-gap';
+const APP_ASSETS = ['./manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_ASSETS)));
@@ -8,7 +8,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+    caches.keys().then((keys) => Promise.all(keys.filter((k) => k.startsWith('alpha-') && k !== CACHE_NAME).map((k) => caches.delete(k))))
   );
   self.clients.claim();
 });
@@ -19,16 +19,27 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.pathname.startsWith('/api/')) return;
 
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request)
-        .then((resp) => {
-          const copy = resp.clone();
+  const networkFirst = request.mode === 'navigate' || ['document', 'script', 'style'].includes(request.destination) || /\.(?:js|css)$/.test(url.pathname);
+  if (networkFirst) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (!response.ok) return response;
+          const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
-          return resp;
+          return response;
         })
-        .catch(() => caches.match('./index.html'));
-    })
+        .catch(() => caches.match(request).then(cached => cached || caches.match('./index.html', {ignoreSearch:true})))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(request).then(cached => cached || fetch(request).then((response) => {
+      if (!response.ok) return response;
+          const copy = response.clone();
+      caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
+      return response;
+    }))
   );
 });

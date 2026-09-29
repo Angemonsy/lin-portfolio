@@ -318,6 +318,16 @@ export async function handleSnapshot(context) {
       if (!body.data || typeof body.data !== 'object' || Array.isArray(body.data)) {
         return json({ error: '数据格式不正确' }, 400);
       }
+      // Older open tabs must not erase evidence that their code does not yet know about.
+      const previous = await kvGet(auth.kv, snapshotKey, {data:{}});
+      if (!Object.prototype.hasOwnProperty.call(body.data, 'actionRecords') && previous.data?.actionRecords) {
+        body.data.actionRecords = previous.data.actionRecords;
+      }
+      if (previous.data?.gapPlanVersion && !body.data.gapPlanVersion) {
+        for (const key of ['gapPlanVersion','gapPlanArchive','projects','countdowns','timelineNodes','targetTitle','targetDate']) {
+          if (previous.data[key] !== undefined) body.data[key] = previous.data[key];
+        }
+      }
       const snapshot = { data: body.data, updatedAt: new Date().toISOString() };
       await kvPutJson(auth.kv, snapshotKey, snapshot);
       return json({ ok: true, updatedAt: snapshot.updatedAt });
