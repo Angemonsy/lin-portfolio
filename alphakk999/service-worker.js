@@ -1,4 +1,4 @@
-const CACHE_NAME = 'alpha-cloud-v20-3-gap';
+const CACHE_NAME = 'alpha-cloud-v20-4-local-entry';
 const APP_ASSETS = ['./manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
@@ -17,6 +17,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
+  // Local heartbeat must reach the network, never an opaque cached response or HTML fallback.
+  if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith('/api/')) return;
 
   const networkFirst = request.mode === 'navigate' || ['document', 'script', 'style'].includes(request.destination) || /\.(?:js|css)$/.test(url.pathname);
