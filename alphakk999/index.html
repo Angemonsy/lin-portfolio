@@ -29,7 +29,7 @@
         ::-webkit-scrollbar-thumb { background-color: rgba(100,116,139,0.4); border-radius: 20px; }
 
         /* ── Animations (原版保留) ── */
-        @keyframes scroll-vertical { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+        @keyframes scroll-vertical { 0% { transform: translateY(0); } 100% { transform: translateY(calc(-1 * var(--sidebar-loop-distance, 0px))); } }
         .scrolling-sidebar { animation: scroll-vertical linear infinite; }
         .scrolling-sidebar:hover { animation-play-state: paused; }
         @keyframes scroll-horizontal { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -94,6 +94,7 @@
 
 <script src="./action-ledger.js?v=20.3"></script>
 <script src="./local-workspace.js?v=20.4"></script>
+<script src="./local-image-sync.js?v=20.7"></script>
 <script type="text/babel" data-presets="env,react" src="./action-trace-ui.js?v=20.3"></script>
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useCallback, useMemo, memo } = React;
@@ -419,7 +420,8 @@ const BeastAvatar = ({ levelIndex, isAbsorbing }) => {
 ═══════════════════════════════════════════ */
 const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onToggle, slogan }) => {
     const count = images && images.length > 0 ? images.length : 4;
-    const duration = Math.min(180, Math.max(24, count * 4)) + 's';
+    const trackRef = useRef(null);
+    useEffect(() => window.AlphaSidebarScroll.attach(trackRef.current, count), [count]);
     return (
         <>
             <button onClick={onToggle} className={`fixed top-1/2 -translate-y-1/2 z-[60] p-3 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 ${isOpen ? 'opacity-0 pointer-events-none translate-x-full' : 'opacity-100'} ${side === 'left' ? 'left-6' : 'right-6'} ${isDarkMode ? 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700' : 'bg-white text-slate-500 hover:text-slate-900 border border-slate-200 shadow-md'}`}>
@@ -438,8 +440,8 @@ const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onTog
                     </label>
                 </div>
                 <div className="w-full h-full pt-32 px-4 overflow-hidden relative z-10 sidebar-mask">
-                    <div className="scrolling-sidebar flex flex-col gap-6 w-full pb-32" style={{ animationDuration: duration }}>
-                        {(images && images.length > 0 ? [...images, ...images] : [1,2,3,4]).map((img, i) => (
+                    <div ref={trackRef} className="scrolling-sidebar flex flex-col gap-6 w-full pb-32">
+                        {(images && images.length > 0 ? [...images, ...images] : [1,2,3,4,1,2,3,4]).map((img, i) => (
                             <div key={i} className="w-full aspect-[2/3] rounded-xl overflow-hidden bg-slate-800/50 flex-shrink-0 border border-white/5 shadow-xl relative group">
                                 {typeof img === 'string' ? <img src={img} className="w-full h-full object-cover" loading="lazy" /> : <div className="w-full h-full flex flex-col items-center justify-center opacity-10 text-center p-2"><i className="fas fa-image" style={{width:'32px',height:'32px',marginBottom:'8px'}}></i><span className="text-[8px]">Waiting...</span></div>}
                             </div>
@@ -5109,6 +5111,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
     const handleImageUpload = useCallback((e, side) => {
         const files = Array.from(e.target.files);
         if (!files.length) return;
+        window.dispatchEvent(new Event('alpha:manual-images'));
         const readers = files.map(file => new Promise(res => { const r = new FileReader(); r.onload = (e) => res(e.target.result); r.readAsDataURL(file); }));
         Promise.all(readers).then(async (newImages) => {
             if (side === 'left') { setLeftImages(newImages); await saveToDB('left_images', newImages); }
@@ -5378,6 +5381,7 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
                 </header>
 
                 {cloudUser && <window.LocalWorkspaceEntry isDarkMode={isDarkMode} />}
+                {cloudUser && hasHydrated && <window.LocalImageSyncEntry isDarkMode={isDarkMode} onImages={images => { setLeftImages(images.left); setRightImages(images.right); }} />}
 
                 {/* ──── 智能时间提醒横幅 ──── */}
                 <SmartTimeBanner isDarkMode={isDarkMode} />
@@ -6030,7 +6034,7 @@ root.render(<SecureApp />);
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js?v=20.4', {updateViaCache:'none'}).catch(() => {});
+        navigator.serviceWorker.register('./service-worker.js?v=20.7', {updateViaCache:'none'}).catch(() => {});
     });
 }
 </script>

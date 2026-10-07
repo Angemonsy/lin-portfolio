@@ -1,4 +1,4 @@
-const CACHE_NAME = 'alpha-cloud-v20-4-local-entry';
+const CACHE_NAME = 'alpha-cloud-v20-7-image-flow';
 const APP_ASSETS = ['./manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {
