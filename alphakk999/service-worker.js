@@ -1,4 +1,4 @@
-const CACHE_NAME = 'alpha-cloud-v20-8-image-speed';
+const CACHE_NAME = 'alpha-cloud-v20-9-image-speed';
 const APP_ASSETS = ['./manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (event) => {

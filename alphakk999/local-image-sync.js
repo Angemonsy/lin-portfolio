@@ -1,6 +1,6 @@
 /* Measure one complete copy; image count changes the loop time, never its speed. */
 (() => {
-    const SPEED = 45; // CSS pixels per second, about 7 seconds per desktop photo.
+    const SPEED = 78; // CSS pixels per second, about 4 seconds per desktop photo.
     function attach(track, count) {
         if (!track) return () => {};
         const measure = () => {
