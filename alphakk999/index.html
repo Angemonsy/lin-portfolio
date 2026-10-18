@@ -31,7 +31,10 @@
         /* ── Animations (原版保留) ── */
         @keyframes scroll-vertical { 0% { transform: translateY(0); } 100% { transform: translateY(calc(-1 * var(--sidebar-loop-distance, 0px))); } }
         .scrolling-sidebar { animation: scroll-vertical linear infinite; }
-        .scrolling-sidebar:hover { animation-play-state: paused; }
+        .scrolling-sidebar:hover, .scrolling-sidebar:focus-within { animation-play-state: paused; }
+        .sidebar-delete { position:absolute; top:8px; right:8px; z-index:2; width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.45); border-radius:50%; background:rgba(15,23,42,.75); color:white; font:22px/1 system-ui; cursor:pointer; opacity:.8; }
+        .sidebar-delete:hover, .sidebar-delete:focus-visible { background:#dc2626; opacity:1; outline:2px solid white; outline-offset:2px; }
+        .sidebar-delete:disabled { cursor:wait; opacity:.4; }
         @keyframes scroll-horizontal { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .scrolling-gallery { animation: scroll-horizontal linear infinite; width: max-content; will-change: transform; }
         .scrolling-gallery:hover { animation-play-state: paused; }
@@ -94,7 +97,7 @@
 
 <script src="./action-ledger.js?v=20.3"></script>
 <script src="./local-workspace.js?v=20.4"></script>
-<script src="./local-image-sync.js?v=20.9"></script>
+<script src="./local-image-sync.js?v=20.10"></script>
 <script type="text/babel" data-presets="env,react" src="./action-trace-ui.js?v=20.3"></script>
 <script type="text/babel" data-presets="env,react">
 const { useState, useEffect, useRef, useCallback, useMemo, memo } = React;
@@ -418,8 +421,17 @@ const BeastAvatar = ({ levelIndex, isAbsorbing }) => {
 /* ═══════════════════════════════════════════
    Sidebar (原版完整保留 + 适配亮色)
 ═══════════════════════════════════════════ */
-const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onToggle, slogan }) => {
+const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, onDelete, isOpen, onToggle, slogan }) => {
     const count = images && images.length > 0 ? images.length : 4;
+    const [deleting, setDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState('');
+    const deleteSidebarImage = async (image) => {
+        if (deleting) return;
+        setDeleting(true); setDeleteError('');
+        try { await onDelete(image); }
+        catch { setDeleteError('删除失败，图片已保留，请重试'); }
+        finally { setDeleting(false); }
+    };
     const trackRef = useRef(null);
     useEffect(() => window.AlphaSidebarScroll.attach(trackRef.current, count), [count]);
     return (
@@ -439,11 +451,13 @@ const Sidebar = memo(({ images, title, side, isDarkMode, onUpload, isOpen, onTog
                         </div>
                     </label>
                 </div>
+                {deleteError && <div role="alert" className="absolute top-28 left-2 right-2 z-30 text-xs bg-red-950 text-white rounded p-2">{deleteError}</div>}
                 <div className="w-full h-full pt-32 px-4 overflow-hidden relative z-10 sidebar-mask">
                     <div ref={trackRef} className="scrolling-sidebar flex flex-col gap-6 w-full pb-32">
                         {(images && images.length > 0 ? [...images, ...images] : [1,2,3,4,1,2,3,4]).map((img, i) => (
                             <div key={i} className="w-full aspect-[2/3] rounded-xl overflow-hidden bg-slate-800/50 flex-shrink-0 border border-white/5 shadow-xl relative group">
                                 {typeof img === 'string' ? <img src={img} className="w-full h-full object-cover" loading="lazy" /> : <div className="w-full h-full flex flex-col items-center justify-center opacity-10 text-center p-2"><i className="fas fa-image" style={{width:'32px',height:'32px',marginBottom:'8px'}}></i><span className="text-[8px]">Waiting...</span></div>}
+                                {typeof img === 'string' && <button type="button" className="sidebar-delete" disabled={deleting} aria-label={`删除${side === 'left' ? '左' : '右'}侧图片 ${i % count + 1}`} title="删除此图；电脑原文件保留" onClick={() => deleteSidebarImage(img)}>×</button>}
                             </div>
                         ))}
                     </div>
@@ -5118,6 +5132,10 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             else { setRightImages(newImages); await saveToDB('right_images', newImages); }
         });
     }, []);
+    const handleSidebarImageDelete = useCallback(async (image) => {
+        const images = await window.AlphaLocalImages.removeImage(image);
+        setLeftImages(images.left); setRightImages(images.right);
+    }, []);
     const handleGalleryUpload = useCallback(async (e) => {
         const files = Array.from(e.target.files || []);
         e.target.value = '';
@@ -5321,8 +5339,8 @@ const App = ({ initialCloudData = null, cloudUser = null, onCloudSave = null, on
             <MultiCountdownModal isOpen={showMultiCD} onClose={() => setShowMultiCD(false)} countdowns={countdowns} onSave={saveCountdowns} isDarkMode={isDarkMode} />
 
             {/* ── 侧边栏 ── */}
-            <Sidebar images={leftImages} title="Aspiration (Up)" side="left" isDarkMode={isDarkMode} onUpload={handleImageUpload} isOpen={isLeftSidebarOpen} onToggle={toggleLeftSidebar} slogan="为你爱的、你追求的Alpha女人，疯狂战斗！疯狂胜利！" />
-            <Sidebar images={rightImages} title="Pain Fuel (Up)" side="right" isDarkMode={isDarkMode} onUpload={handleImageUpload} isOpen={isRightSidebarOpen} onToggle={toggleRightSidebar} slogan="让伤害你的人痛苦与后悔，掠夺她们的一切！毫不留情！" />
+            <Sidebar images={leftImages} title="Aspiration (Up)" side="left" isDarkMode={isDarkMode} onUpload={handleImageUpload} onDelete={handleSidebarImageDelete} isOpen={isLeftSidebarOpen} onToggle={toggleLeftSidebar} slogan="为你爱的、你追求的Alpha女人，疯狂战斗！疯狂胜利！" />
+            <Sidebar images={rightImages} title="Pain Fuel (Up)" side="right" isDarkMode={isDarkMode} onUpload={handleImageUpload} onDelete={handleSidebarImageDelete} isOpen={isRightSidebarOpen} onToggle={toggleRightSidebar} slogan="让伤害你的人痛苦与后悔，掠夺她们的一切！毫不留情！" />
 
             {/* ── Main Content ── */}
             <div className="max-w-2xl mx-auto px-4 pt-8 md:pt-12 relative z-10">
@@ -6034,7 +6052,7 @@ root.render(<SecureApp />);
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js?v=20.9', {updateViaCache:'none'}).catch(() => {});
+        navigator.serviceWorker.register('./service-worker.js?v=20.10', {updateViaCache:'none'}).catch(() => {});
     });
 }
 </script>

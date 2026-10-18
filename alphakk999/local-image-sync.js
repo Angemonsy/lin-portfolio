@@ -27,6 +27,7 @@
     const META = 'local_image_sync_v1';
     const BACKUP = 'local_image_sync_original_v1';
     const REPLACE_BACKUP = 'local_image_sync_before_replace_v1';
+    const DELETED = 'sidebar_deleted_image_ids_v1';
     const HASH = /^[a-f0-9]{64}$/;
     const DATA = /^data:image\/(?:jpeg|png|gif|webp|bmp|avif);base64,[A-Za-z0-9+/=]+$/;
     const MAX_TOTAL = 120 * 1024 * 1024;
@@ -57,12 +58,14 @@
         return manifest;
     }
     // Keep unmanaged uploads and removed files; replace managed files with the same name.
-    function mergeSide(current, previous, incoming) {
-        const old = Array.isArray(previous) ? previous : [];
+    function mergeSide(current, previous, incoming, deleted = []) {
+        const blocked = new Set(deleted);
+        const previousItems = Array.isArray(previous) ? previous : [];
+        const old = previousItems.filter(item=>!blocked.has(item.id));
         const byKey = new Map(old.map(item => [item.key,item]));
-        for (const item of incoming) byKey.set(item.key,item);
+        for (const item of incoming) if (!blocked.has(item.id)) byKey.set(item.key,item);
         const managed = [...byKey.values()];
-        const replaced = new Set(old.map(item=>item.data));
+        const replaced = new Set(previousItems.map(item=>item.data));
         const images = [...new Set([...(Array.isArray(current)?current:[]).filter(url=>!replaced.has(url)), ...managed.map(item=>item.data)])];
         return {images, managed};
     }
@@ -74,18 +77,19 @@
         signal?.addEventListener('abort',cancel,{once:true});
         const store = tx.objectStore('images_store');
         try {
-            const [left,right,meta,backup] = await Promise.all(['left_images','right_images',META,BACKUP].map(key=>req(store.get(key))));
+            const [left,right,meta,backup,deleted] = await Promise.all(['left_images','right_images',META,BACKUP,DELETED].map(key=>req(store.get(key))));
+            const blocked = new Set(deleted || []);
             signal?.throwIfAborted();
             const nextMeta = {...meta};
             const result = {};
             for (const side of ['left','right']) {
                 const existing = meta?.[side] || [];
-                const incoming = manifest.sides[side].map(item => {
+                const incoming = manifest.sides[side].filter(item=>!blocked.has(item.id)).map(item => {
                     const data = downloaded.get(side+'/'+item.id) || existing.find(old=>old.id===item.id)?.data;
                     if (!data || !DATA.test(data)) throw new Error('图片接收不完整');
                     return {...item,data};
                 });
-                const merged = replace ? {images:[...new Set(incoming.map(i=>i.data))],managed:incoming} : mergeSide(side==='left'?left:right,existing,incoming);
+                const merged = replace ? {images:[...new Set(incoming.map(i=>i.data))],managed:incoming} : mergeSide(side==='left'?left:right,existing,incoming,deleted || []);
                 nextMeta[side] = merged.managed;
                 result[side] = merged.images;
             }
@@ -100,16 +104,53 @@
             throw error;
         } finally {signal?.removeEventListener('abort',cancel);}
     }
+    // Hash the actual image bytes, matching the helper's content ID even after a rename.
+    async function imageId(data) {
+        if (typeof data !== 'string' || !DATA.test(data)) throw new Error('图片数据无效');
+        const bytes = Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0));
+        const digest = await crypto.subtle.digest('SHA-256',bytes);
+        return Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join('');
+    }
+    async function removeImage(data) {
+        const id = await imageId(data);
+        const db = await database();
+        const tx = db.transaction('images_store','readwrite');
+        const done = new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('图片删除取消'));});
+        try {
+            const store = tx.objectStore('images_store');
+            const [left,right,meta,deleted] = await Promise.all(['left_images','right_images',META,DELETED].map(key=>req(store.get(key))));
+            const nextMeta = {...meta};
+            const result = {};
+            for (const side of ['left','right']) {
+                const managed = meta?.[side] || [];
+                const removed = new Set([data,...managed.filter(item=>item.id===id).map(item=>item.data)]);
+                result[side] = ((side==='left'?left:right) || []).filter(url=>!removed.has(url));
+                nextMeta[side] = managed.filter(item=>item.id!==id && item.data!==data);
+                store.put(result[side],side+'_images');
+            }
+            store.put(nextMeta,META);
+            store.put([...new Set([...(deleted || []),id])],DELETED);
+            await done;
+            return result;
+        } catch(error) {
+            try {tx.abort();} catch {}
+            await done.catch(()=>{});
+            throw error;
+        } finally {db.close();}
+    }
     async function restoreOriginal(key=BACKUP) {
         const db = await database();
         try {
+            const original = await req(db.transaction('images_store','readonly').objectStore('images_store').get(key));
+            if (!original) return null;
+            const ids = new Map(await Promise.all([...new Set([...original.left,...original.right])].map(async data=>[data,await imageId(data)])));
             const tx = db.transaction('images_store','readwrite');
             const done = new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});
             const store = tx.objectStore('images_store');
-            const backup = await req(store.get(key));
-            if (!backup) {await done; return null;}
+            const blocked = new Set(await req(store.get(DELETED)) || []);
+            const backup = {...original,left:original.left.filter(data=>!blocked.has(ids.get(data))),right:original.right.filter(data=>!blocked.has(ids.get(data)))};
             store.put(backup.left,'left_images'); store.put(backup.right,'right_images');
-            if (backup.meta) store.put(backup.meta,META); else store.delete(META);
+            if (backup.meta) store.put({...backup.meta,left:(backup.meta.left||[]).filter(item=>!blocked.has(item.id)),right:(backup.meta.right||[]).filter(item=>!blocked.has(item.id))},META); else store.delete(META);
             await done;
             return backup;
         } finally {db.close();}
@@ -126,14 +167,16 @@
             if (m.type === 'hello') {send({type:'start'}); report('已连接，正在检查目录…');}
             if (m.type === 'manifest') {
                 const manifest = validateManifest(m.manifest);
-                const meta = await req(db.transaction('images_store','readonly').objectStore('images_store').get(META)) || {};
+                const read = db.transaction('images_store','readonly').objectStore('images_store');
+                const [metaValue,deleted] = await Promise.all([META,DELETED].map(key=>req(read.get(key))));
+                const meta = metaValue || {}, blocked = new Set(deleted || []);
                 if (stopped || run !== generation) return;
                 const items = [], expected = new Map();
                 for (const side of ['left','right']) {
                     const known = new Set((meta[side]||[]).map(i=>i.id));
                     for (const item of manifest.sides[side]) {
                         const key = side+'/'+item.id;
-                        if (!known.has(item.id) && !expected.has(key)) {items.push({side,id:item.id}); expected.set(key,item);}
+                        if (!blocked.has(item.id) && !known.has(item.id) && !expected.has(key)) {items.push({side,id:item.id}); expected.set(key,item);}
                     }
                 }
                 batch = {manifest,expected,downloaded:new Map()}; received = 0;
@@ -191,7 +234,7 @@
             dispose() {stop();window.removeEventListener('message',listener);window.removeEventListener('beforeunload',stop);queue.finally(()=>db?.close());}
         };
     }
-    window.AlphaLocalImages = {createConnection,mergeSide,validateManifest,saveBatch,restoreOriginal,database};
+    window.AlphaLocalImages = {createConnection,mergeSide,validateManifest,saveBatch,restoreOriginal,database,imageId,removeImage};
     window.LocalImageSyncEntry = ({isDarkMode=false,onImages}) => {
         const h = React.createElement;
         const [status,setStatus] = React.useState('图片只保存在当前浏览器');
@@ -219,6 +262,7 @@
             help && h('div',{className:`text-xs leading-6 mt-2 ${muted}`},
                 h('p',null,'启动本机图片助手后连接，保留助手窗口。每 10 秒读取 left_images / right_images；手机与其他浏览器的图片不会改变。刷新网页后需重新连接。手动上传会暂停目录同步。'),
                 h('p',null,'移走文件不会删除浏览器里的旧图。同名文件更新会替换；首次同步前自动备份原有图片。'),
+                h('p',null,'图片右上角 × 会删除当前浏览器中的该图，并阻止目录同步再次加入相同图片；电脑原文件保留。'),
                 h('p',null,'“用目录替换两侧图片”在新图完整接收后替换当前两侧，并备份替换前的图片。'),
                 h('button',{type:'button',className:'underline mr-3',onClick:()=>connection.current?.undoReplace().catch(()=>setStatus('撤销失败，已有图片保留'))},'撤销上一次替换'),
                 h('button',{type:'button',className:'underline',onClick:()=>connection.current?.restore().catch(()=>setStatus('恢复失败，已有图片保留'))},'恢复第一次同步前的图片')));
