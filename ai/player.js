@@ -11,6 +11,12 @@
   const volume = root.querySelector('[data-volume]');
   const time = root.querySelector('[data-time]');
   const status = root.querySelector('[role="status"]');
+  let previousOverflow = '';
+  function closeExpanded() {
+    root.classList.remove('expanded-player');
+    document.body.style.overflow = previousOverflow;
+    fullscreen.textContent = '全屏';
+  }
   const format = value => {
     const seconds = Math.max(0, Math.floor(Number.isFinite(value) ? value : 0));
     return Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
@@ -53,13 +59,22 @@
   mute.addEventListener('click', () => { video.muted = !video.muted; update(); });
   volume.addEventListener('input', () => { video.volume = Number(volume.value); video.muted = video.volume === 0; update(); });
   fullscreen.addEventListener('click', async () => {
+    if (root.classList.contains('expanded-player')) { closeExpanded(); return; }
     try {
       if (document.fullscreenElement) await document.exitFullscreen();
       else if (root.requestFullscreen) await root.requestFullscreen();
       else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-    } catch { status.textContent = '当前浏览器不支持全屏，可直接在页面中观看。'; }
+      else throw new Error('Use expanded player');
+    } catch {
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      root.classList.add('expanded-player');
+      fullscreen.textContent = '退出全屏';
+      status.textContent = '';
+    }
   });
   document.addEventListener('fullscreenchange', () => { fullscreen.textContent = document.fullscreenElement ? '退出全屏' : '全屏'; });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && root.classList.contains('expanded-player')) closeExpanded(); });
   for (const event of ['timeupdate', 'loadedmetadata', 'play', 'pause', 'ended', 'volumechange']) video.addEventListener(event, update);
   video.addEventListener('error', () => { status.textContent = '视频载入失败，请刷新页面后重试。'; });
   update();
